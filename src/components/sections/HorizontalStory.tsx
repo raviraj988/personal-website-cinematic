@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { areaSlides } from "@/lib/data/cinematic-content";
+import { Arrow } from "@/components/ui/Arrow";
 
 export function HorizontalStory() {
   const [active, setActive] = useState(0);
@@ -77,7 +78,7 @@ export function HorizontalStory() {
               <h3>{slide.title}</h3>
               <p>{slide.description}</p>
               <a href="#contact" className="text-link text-link--dark">
-                Start a conversation <span aria-hidden="true">↗</span>
+                Start a conversation <Arrow />
               </a>
             </div>
           </article>
@@ -86,7 +87,7 @@ export function HorizontalStory() {
 
       <div className="story__controls">
         <button type="button" onClick={() => goTo(active - 1)}>
-          <span aria-hidden="true">←</span> Previous
+          <Arrow direction="left" /> Previous
         </button>
         <ol aria-label="Choose an area of work">
           {areaSlides.map((slide, index) => (
@@ -110,7 +111,7 @@ export function HorizontalStory() {
           {paused ? "Resume" : "Pause"}
         </button>
         <button type="button" onClick={() => goTo(active + 1)}>
-          Next <span aria-hidden="true">→</span>
+          Next <Arrow direction="right" />
         </button>
       </div>
     </section>

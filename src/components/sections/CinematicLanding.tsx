@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { AmbientLayer, BackgroundText } from "@/components/motion/AmbientLayer";
+import { AmbientLayer } from "@/components/motion/AmbientLayer";
+import { Arrow } from "@/components/ui/Arrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { ScrollWords } from "@/components/motion/ScrollWords";
@@ -9,7 +10,6 @@ import {
   cinematicAreaImages,
   cinematicApproach,
   cinematicAreas,
-  cinematicBackdrop,
   cinematicHero,
   cinematicNavigation,
   cinematicResources,
@@ -38,12 +38,7 @@ export function CinematicLanding() {
       </section>
 
       <section id="about" className="about-editorial section-shell" aria-labelledby="about-title" data-scroll-theme="paper">
-        <AmbientLayer rules blooms={1} marks />
-        <BackgroundText
-          text={cinematicBackdrop.about}
-          className="bg-word--about"
-          drift={90}
-        />
+        <AmbientLayer blooms={1} marks />
         <div className="about-editorial__grid">
           <Reveal className="about-editorial__heading">
             <p className="section-label">01 — {cinematicAbout.eyebrow}</p>
@@ -73,10 +68,10 @@ export function CinematicLanding() {
             ))}
             <div className="link-row">
               <a className="text-link" href="#selected-work">
-                Explore selected work <span aria-hidden="true">→</span>
+                Explore selected work <Arrow direction="right" />
               </a>
               <a className="text-link" href="#contact">
-                Download résumé <span aria-hidden="true">↓</span>
+                Download résumé <Arrow direction="down" />
               </a>
             </div>
           </Reveal>
@@ -84,12 +79,7 @@ export function CinematicLanding() {
       </section>
 
       <section className="image-essay section-shell" aria-labelledby="essay-title" data-scroll-theme="cream">
-        <AmbientLayer rules blooms={2} />
-        <BackgroundText
-          text={cinematicBackdrop.essay}
-          className="bg-word--essay"
-          drift={120}
-        />
+        <AmbientLayer blooms={2} />
 
         <div className="image-essay__heading">
           <p className="section-label">Observation and participation</p>
@@ -148,12 +138,6 @@ export function CinematicLanding() {
           alt="Homes on a wooded hillside overlooking a broad river in warm evening light."
           zoom="out"
         />
-        <BackgroundText
-          text={cinematicBackdrop.interlude}
-          className="bg-word--interlude bg-word--over-image"
-          variant="outline"
-          drift={140}
-        />
         <p>Place, history, and relationships shape every environmental decision.</p>
       </section>
 
@@ -163,13 +147,7 @@ export function CinematicLanding() {
         aria-labelledby="areas-title"
         data-scroll-theme="moss"
       >
-        <AmbientLayer rules blooms={2} marks />
-        <BackgroundText
-          text="02"
-          className="bg-word--areas"
-          variant="numeral"
-          drift={110}
-        />
+        <AmbientLayer blooms={2} marks />
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">02 — Areas of work</p>
           <ScrollWords as="h2" id="areas-title" text="Where I focus my work" />
@@ -194,10 +172,14 @@ export function CinematicLanding() {
                 </div>
                 <div className="area-visual-card__body">
                   <p className="area-visual-card__note">{cinematicAreaImages[index].note}</p>
-                  <h3>{area.title}</h3>
+                  <h3>
+                    <span className="mask-rise">
+                      <span className="mask-rise__inner">{area.title}</span>
+                    </span>
+                  </h3>
                   <p>{area.description}</p>
                   <a className="text-link" href="#selected-work">
-                    {area.linkLabel} <span aria-hidden="true">↗</span>
+                    {area.linkLabel} <Arrow />
                   </a>
                 </div>
               </article>
@@ -208,12 +190,6 @@ export function CinematicLanding() {
 
       <section id="approach" className="approach-editorial" aria-labelledby="approach-title" data-scroll-theme="sage">
         <AmbientLayer blooms={1} marks />
-        <BackgroundText
-          text={cinematicBackdrop.approach}
-          className="bg-word--approach"
-          variant="solid"
-          drift={100}
-        />
         <div className="approach-editorial__media">
           <ParallaxImage
             src="/images/environmental-fieldwork.jpg"
@@ -264,12 +240,7 @@ export function CinematicLanding() {
         aria-labelledby="work-title"
         data-scroll-theme="sand"
       >
-        <AmbientLayer rules blooms={1} />
-        <BackgroundText
-          text={cinematicBackdrop.work}
-          className="bg-word--work"
-          drift={110}
-        />
+        <AmbientLayer blooms={1} />
         <Reveal className="section-heading-row section-heading-row--work" variant="rule">
           <p className="section-label">04 — Selected work</p>
           <ScrollWords as="h2" id="work-title" text="Stories, projects, and useful resources" />
@@ -297,10 +268,14 @@ export function CinematicLanding() {
                   <p className="work-card__meta">
                     {work.contentType} {work.date ? `— ${work.date}` : ""}
                   </p>
-                  <h3>{work.title}</h3>
+                  <h3>
+                    <span className="mask-rise">
+                      <span className="mask-rise__inner">{work.title}</span>
+                    </span>
+                  </h3>
                   <p>{work.summary}</p>
                   <a className="text-link" href={work.action.href}>
-                    {work.action.label} <span aria-hidden="true">↗</span>
+                    {work.action.label} <Arrow />
                   </a>
                 </div>
               </article>
@@ -309,13 +284,8 @@ export function CinematicLanding() {
         </div>
       </section>
 
-      <section id="resources" className="resource-library section-shell" aria-labelledby="resources-title" data-scroll-theme="sage">
-        <AmbientLayer rules blooms={2} marks />
-        <BackgroundText
-          text={cinematicBackdrop.resources}
-          className="bg-word--resources"
-          drift={120}
-        />
+      <section id="resources" className="resource-library section-shell" aria-labelledby="resources-title" data-scroll-theme="clay">
+        <AmbientLayer blooms={2} marks />
         <Reveal className="resource-library__heading">
           <p className="section-label">05 — Resources</p>
           <ScrollWords
@@ -348,10 +318,14 @@ export function CinematicLanding() {
               </div>
               <div className="resource-card__body">
                 <p className="resource-card__meta">{resource.type} — {resource.year}</p>
-                <h3>{resource.title}</h3>
+                <h3>
+                  <span className="mask-rise">
+                    <span className="mask-rise__inner">{resource.title}</span>
+                  </span>
+                </h3>
                 <p>{resource.summary}</p>
                 <a className="text-link" href="#contact">
-                  {resource.action} <span aria-hidden="true">↗</span>
+                  {resource.action} <Arrow />
                 </a>
               </div>
             </Reveal>
@@ -365,12 +339,7 @@ export function CinematicLanding() {
       <HorizontalStory />
 
       <footer id="contact" className="cinematic-footer" data-scroll-theme="forest">
-        <AmbientLayer blooms={2} marks tone="dark" />
-        <BackgroundText
-          text={cinematicBackdrop.contact}
-          className="bg-word--contact bg-word--on-dark"
-          drift={90}
-        />
+        <AmbientLayer blooms={2} marks vignette tone="dark" />
         <div className="cinematic-footer__visual">
           <ParallaxImage
             src="/images/contact-river-sunset.jpg"
@@ -388,7 +357,7 @@ export function CinematicLanding() {
             opportunities to support communities and public-interest work.
           </p>
           <a className="footer-button" href="mailto:replace-before-launch@example.com">
-            Start a conversation <span aria-hidden="true">↗</span>
+            Start a conversation <Arrow />
           </a>
           <small>Placeholder action — replace with Laura&apos;s approved contact method.</small>
         </div>
@@ -405,7 +374,7 @@ export function CinematicLanding() {
           </nav>
           <div className="cinematic-footer__legal">
             <p>All copy and photography are provisional design content.</p>
-            <a href="#top">Back to top ↑</a>
+            <a href="#top">Back to top <Arrow direction="up" /></a>
           </div>
         </div>
       </footer>

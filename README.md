@@ -30,13 +30,18 @@ The development server defaults to `http://localhost:3000`.
 - Four large, photography-led Areas of Work cards with staggered reveal, scroll zoom, and hover movement
 - A compact three-card Selected Work editorial grid
 - An image-paired opening statement and panoramic contact transition so major copy sections retain strong visuals
-- Scroll-aware cream, sage, moss, sand, and forest background transitions
-- Ambient section backdrops: film grain, drifting light fields, faint column
-  rules, and stroked botanical marks — all CSS-only, so they add no JavaScript
-- Oversized decorative background typography per section, `aria-hidden` and
-  hidden below 680px so it never crosses body copy
+- Scroll-aware cream, paper, sage, moss, sand, clay, and forest page tones,
+  crossfading over 1400ms. Every tone is verified to keep muted secondary copy
+  above 4.5:1.
+- Ambient section backdrops: film grain, drifting light fields, an inner
+  vignette on the dark sections, and stroked botanical marks — all CSS-only, so
+  they add no JavaScript
+- Text animation on real copy: uppercase labels settle in from wide tracking,
+  and card headings wipe up from behind a mask
 - A reading-progress hairline above the header
 - Hairline separators that draw in from the left as a section heading arrives
+- Arrows drawn as inline SVG rather than typed as Unicode, so iOS cannot
+  substitute the emoji form of ↗ / → / ↓ / ↑ / ←
 - A single shared scroll loop: every scroll-linked component subscribes to one
   `requestAnimationFrame` pass instead of registering its own listener
 - Compact four-column Area and Resource card grids on wide screens, reducing to two and one columns responsively
@@ -58,7 +63,7 @@ The development server defaults to `http://localhost:3000`.
 - Layout and responsive styling: `src/app/globals.css`
 - Motion primitives: `src/components/motion/`
 - Shared scroll loop and reduced-motion watcher: `src/lib/scroll.ts`
-- Decorative background words: `cinematicBackdrop` in `cinematic-content.ts`
+- Page tones: the `html[data-scroll-theme=...]` block at the top of `globals.css`
 - Landing-page composition: `src/components/sections/CinematicLanding.tsx`
 
 ## Committing
@@ -92,6 +97,10 @@ unapproved copy before publishing. The website remains `noindex, nofollow`.
   800px, where the trigger is rendered
 - One `h1`, one `main`, and alt attributes on all images verified
 - All decorative layers verified `aria-hidden` and absent from the reading order
+- Muted secondary copy measured against every settled page tone: cream 5.87:1,
+  paper 6.3:1, sage 5.31:1, sand 4.94:1, clay 4.78:1, moss 4.75:1
+- Zero Unicode arrow code points left in rendered text; 21 inline SVG arrows
+  confirmed rendering identically on desktop and at 390px
 - Reduced motion verified clearing parallax, word scrub, background drift, and
   ambient animation, with all content and controls preserved
 - No browser console warnings or errors during the test pass

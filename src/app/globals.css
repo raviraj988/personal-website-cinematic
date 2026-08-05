@@ -26,15 +26,25 @@ body {
   line-height: 1.65;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 900ms var(--ease-standard);
+  /* Long, eased crossfade between section tones — the transition should be felt
+     rather than noticed. */
+  transition: background-color 1400ms var(--ease-standard);
 }
 
-html[data-scroll-theme="cream"] { --page-background: #faf8f1; }
+/* Scroll-linked page tones.
+ *
+ * Warmed and deepened away from the earlier pastel greens: sage and moss now sit
+ * closer to stone and olive than to mint, and sand reads as linen. The result is
+ * a quieter, more expensive-looking progression through the page. */
+html[data-scroll-theme="cream"] { --page-background: #f8f5ec; }
 html[data-scroll-theme="paper"] { --page-background: #fffdf8; }
-html[data-scroll-theme="sage"] { --page-background: #e8eee5; }
-html[data-scroll-theme="moss"] { --page-background: #dce6d8; }
-html[data-scroll-theme="sand"] { --page-background: #eee6d8; }
-html[data-scroll-theme="forest"] { --page-background: #102c1e; }
+html[data-scroll-theme="sage"] { --page-background: #e5e9df; }
+html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
+html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
+/* Warm clay-brown. Kept light enough that muted secondary copy still clears
+   4.5:1 against it — verified, not assumed. */
+html[data-scroll-theme="clay"] { --page-background: #e7d9c0; }
+html[data-scroll-theme="forest"] { --page-background: #0e2719; }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -127,10 +137,9 @@ p {
 .section-shell {
   /* `isolation` lets ambient backdrops sit at z-index -1 above the page
      background but below every piece of content.
-     `overflow-x: clip` contains the oversized decorative type, which is meant
-     to bleed past the container but must never make the document scroll
-     sideways. `clip` rather than `hidden` so no scroll container is created and
-     descendant `position: sticky` keeps working. */
+     `overflow-x: clip` keeps oversized backdrop layers from ever making the
+     document scroll sideways. `clip` rather than `hidden` so no scroll container
+     is created and descendant `position: sticky` keeps working. */
   position: relative;
   isolation: isolate;
   overflow-x: clip;
@@ -192,6 +201,23 @@ p {
 
 .text-link--dark {
   --line-color: var(--color-paper);
+}
+
+/* Inline SVG arrow (see components/ui/Arrow.tsx). Sized in `em` so it tracks
+   whatever text it sits beside, and drawn rather than typed so iOS cannot
+   substitute the emoji form of ↗ / → / ↓ / ↑ / ←. */
+.arrow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow svg {
+  width: 0.95em;
+  height: 0.95em;
+  /* Nudge onto the cap-height line of uppercase link labels. */
+  margin-block: -0.1em;
 }
 
 /* Opening sequence */
@@ -288,9 +314,8 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
  *
  * Everything here is decorative and `aria-hidden` in the markup. All animation
  * runs on composited properties (transform/opacity only) through CSS keyframes,
- * so no scroll work or client JavaScript is involved except for the optional
- * drift on background words and the progress rule. The global reduced-motion
- * block at the end of this file freezes the lot.
+ * so no scroll work or client JavaScript is involved apart from the progress
+ * rule. The global reduced-motion block at the end of this file freezes the lot.
  */
 
 /* Reading-progress hairline, above the header. */
@@ -334,67 +359,60 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 .ambient--light {
-  --ambient-rule: rgba(28, 48, 37, 0.055);
-  --ambient-bloom: rgba(113, 130, 101, 0.17);
-  --ambient-bloom-alt: rgba(184, 95, 61, 0.09);
-  --ambient-mark: rgba(28, 48, 37, 0.11);
+  --ambient-bloom: rgba(120, 138, 106, 0.2);
+  --ambient-bloom-alt: rgba(186, 121, 82, 0.13);
+  --ambient-mark: rgba(28, 48, 37, 0.1);
+  --ambient-vignette: rgba(28, 48, 37, 0.05);
 }
 
 .ambient--dark {
-  --ambient-rule: rgba(255, 255, 255, 0.05);
-  --ambient-bloom: rgba(113, 130, 101, 0.2);
-  --ambient-bloom-alt: rgba(223, 173, 148, 0.09);
+  --ambient-bloom: rgba(126, 150, 112, 0.22);
+  --ambient-bloom-alt: rgba(214, 160, 136, 0.12);
   --ambient-mark: rgba(255, 255, 255, 0.1);
-}
-
-/* Faint 12-track column field, feathered at both ends. */
-.ambient__rules {
-  position: absolute;
-  inset: -3rem 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    var(--ambient-rule) 0 1px,
-    transparent 1px calc(100% / 12)
-  );
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
-  animation: rules-drift 26s ease-in-out infinite alternate;
-}
-
-@keyframes rules-drift {
-  to { transform: translate3d(0, 2.5rem, 0); }
+  --ambient-vignette: rgba(3, 14, 8, 0.5);
 }
 
 /* Slow soft light fields. Radial gradients only — no blur filter, so these stay
    cheap to composite. */
 .ambient__bloom {
   position: absolute;
-  width: clamp(20rem, 44vw, 46rem);
+  width: clamp(22rem, 52vw, 58rem);
   aspect-ratio: 1;
   border-radius: 50%;
   will-change: transform;
 }
 
 .ambient__bloom--a {
-  top: -10%;
-  right: -12%;
-  background: radial-gradient(circle at center, var(--ambient-bloom), transparent 68%);
+  top: -14%;
+  right: -14%;
+  background: radial-gradient(circle at center, var(--ambient-bloom), transparent 70%);
   animation: bloom-drift-a 38s ease-in-out infinite alternate;
 }
 
 .ambient__bloom--b {
-  bottom: -14%;
-  left: -10%;
-  background: radial-gradient(circle at center, var(--ambient-bloom-alt), transparent 66%);
+  bottom: -18%;
+  left: -12%;
+  background: radial-gradient(circle at center, var(--ambient-bloom-alt), transparent 68%);
   animation: bloom-drift-b 46s ease-in-out infinite alternate;
 }
 
 @keyframes bloom-drift-a {
-  to { transform: translate3d(-5%, 7%, 0) scale(1.14); }
+  to { transform: translate3d(-6%, 8%, 0) scale(1.16); }
 }
 
 @keyframes bloom-drift-b {
-  to { transform: translate3d(6%, -6%, 0) scale(1.1); }
+  to { transform: translate3d(7%, -7%, 0) scale(1.12); }
+}
+
+/* Inner vignette — settles the edges of the dark sections. */
+.ambient__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 50% 42%,
+    transparent 42%,
+    var(--ambient-vignette) 100%
+  );
 }
 
 /* Stroked, not filled — the mark is a line drawing (see PageIntro); filling the
@@ -429,63 +447,46 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
   to { transform: translate3d(-1.5rem, 1.75rem, 0) rotate(-11deg); }
 }
 
-/* Oversized decorative type. Outlined by default so it reads as texture and
-   never competes with real copy for contrast. */
-.bg-word {
-  position: absolute;
-  z-index: -1;
-  font-family: var(--font-serif);
-  font-size: clamp(6rem, 17vw, 17rem);
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-  transform: translate3d(0, var(--bg-word-y, 0), 0);
-  will-change: transform;
+/* ------------------------------------------------------- text animation
+ *
+ * Applied to real copy rather than decorative type. Everything animates
+ * transform/opacity plus letter-spacing on short uppercase labels only, so the
+ * cost stays low and no layout is disturbed on long-form text.
+ */
+
+/* Small uppercase labels settle inward from wide tracking as they arrive. */
+.section-label {
+  --label-track: 0.1em;
+  letter-spacing: var(--label-track);
+  transition:
+    letter-spacing var(--motion-cinematic) var(--ease-out-expo) var(--reveal-delay, 0ms),
+    opacity var(--motion-reveal) var(--ease-standard) var(--reveal-delay, 0ms);
 }
 
-.bg-word--outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(28, 48, 37, 0.11);
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .section-label {
+  --label-track: 0.32em;
+  opacity: 0;
 }
 
-.bg-word--solid {
-  color: rgba(28, 48, 37, 0.045);
+/* Serif headings wipe up from behind a mask as their card reveals — reads
+   noticeably richer than the plain fade the reveal alone gives. */
+.mask-rise {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders so the mask never shaves a 'y', 'g', or 'p'. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
 }
 
-.bg-word--numeral {
-  color: rgba(184, 95, 61, 0.08);
-  font-size: clamp(9rem, 26vw, 26rem);
-  letter-spacing: -0.06em;
+.mask-rise__inner {
+  display: block;
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--motion-cinematic) var(--ease-out-expo) var(--reveal-delay, 0ms);
 }
 
-/* Over photography rather than behind copy. */
-.bg-word--over-image {
-  z-index: 2;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.26);
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .mask-rise__inner {
+  transform: translate3d(0, 100%, 0);
 }
-
-.bg-word--on-dark.bg-word--outline {
-  -webkit-text-stroke-color: rgba(255, 255, 255, 0.14);
-}
-
-.bg-word--on-dark.bg-word--solid {
-  color: rgba(255, 255, 255, 0.05);
-}
-
-/* Section placements. Kept here so the layout stays in one file. */
-.bg-word--about { top: 6%; right: -3%; }
-.bg-word--essay { bottom: 9%; left: -4%; }
-.bg-word--interlude { bottom: 14%; left: 4%; font-size: clamp(5rem, 13vw, 13rem); }
-.bg-word--areas { top: 3%; right: -4%; }
-.bg-word--approach { right: 4%; bottom: 5%; }
-.bg-word--work { top: 4%; left: -5%; }
-.bg-word--resources { bottom: 7%; right: -4%; }
-/* Sits behind the closing call to action rather than being bisected by the
-   footer's top edge and the panoramic image. */
-.bg-word--contact { top: 58%; left: 50%; translate: -50% 0; }
 
 /* Hairline that draws in from the left as a section heading arrives — spec §4.5.
  *
@@ -542,7 +543,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .cinematic-header--solid {
-  background: rgba(250, 248, 241, 0.96);
+  background: rgba(248, 245, 236, 0.96);
   color: var(--color-ink);
   border-color: var(--color-line);
   backdrop-filter: blur(10px);
@@ -1307,7 +1308,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 /* Resource library */
 .resource-library {
   border-top: 1px solid var(--color-line);
-  background: rgba(255, 253, 248, 0.36);
+  /* Light enough to lift the section, sheer enough to let the clay tone read. */
+  background: rgba(255, 253, 248, 0.12);
 }
 .resource-library__heading {
   display: grid;
@@ -1372,7 +1374,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .story__slide { position: relative; flex: 0 0 100%; display: grid; place-items: center; min-height: calc(100svh - var(--header-height)); padding: 7rem var(--gutter); overflow: hidden; scroll-snap-align: start; isolation: isolate; }
 .story__slide > img { z-index: -3; object-fit: cover; }
 .story__scrim { position: absolute; inset: 0; z-index: -2; background: rgba(8, 27, 17, 0.56); }
-.story__panel { width: min(100%, 35rem); min-height: 25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(2.5rem, 6vw, 5rem); background: rgba(250, 248, 241, 0.95); color: var(--color-ink); text-align: center; }
+.story__panel { width: min(100%, 35rem); min-height: 25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(2.5rem, 6vw, 5rem); background: rgba(248, 245, 236, 0.95); color: var(--color-ink); text-align: center; }
 .story__counter { color: var(--color-text-muted); font-size: 0.7rem; letter-spacing: 0.09em; }
 .story__counter span { color: var(--color-clay); }
 .story__panel h3 { margin-top: 1.2rem; font-size: var(--type-h3); line-height: 1.12; }
@@ -1497,10 +1499,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
      `margin: 0` at a higher specificity and would silently win. */
   .image-essay__aside { display: block; margin-top: 3rem; }
   .image-essay__text-panel { margin-top: 3rem; padding-left: 1rem; }
-
-  /* Oversized decorative type has nowhere to sit on a narrow screen without
-     crossing body copy, so it steps aside. Grain, blooms and rules remain. */
-  .bg-word { display: none; }
   .section-heading-row h2 { margin-top: 1.2rem; }
   .section-heading-row > p:last-child { margin-top: 1.5rem; }
   .area-card-grid { grid-template-columns: 1fr; }
@@ -1563,12 +1561,22 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   /* Ambient decoration stays, but stops moving. The blanket rule above already
      collapses these; naming them keeps the intent explicit. */
   .page-grain,
-  .ambient__rules,
   .ambient__bloom,
   .ambient__mark { animation: none !important; transform: none !important; }
-  .bg-word { transform: none !important; }
   .reveal--rule::before,
   html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
+    transform: none;
+  }
+
+  /* Text animation resolves to its settled state, with no tracking shift. */
+  .section-label,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .section-label {
+    --label-track: 0.1em;
+    opacity: 1;
+  }
+  .mask-rise { overflow: visible; clip-path: none; }
+  .mask-rise__inner,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .mask-rise__inner {
     transform: none;
   }
 }

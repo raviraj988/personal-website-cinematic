@@ -32,25 +32,6 @@ export const cinematicAreas = areasOfWork;
 export const cinematicApproach = approach.steps;
 export const cinematicWork = selectedWork;
 
-/**
- * Decorative background typography — spec §6.3 keeps text out of the animation
- * components even when it is texture rather than content.
- *
- * These are single words already drawn from the approved-pending copy above.
- * They assert nothing about Laura, her clients, or her outcomes, and every one
- * is rendered `aria-hidden`, so they stay out of the reading order. Safe to
- * change or empty without touching layout.
- */
-export const cinematicBackdrop = {
-  about: "listening",
-  essay: "observation",
-  interlude: "place",
-  areas: "focus",
-  approach: "context",
-  work: "record",
-  resources: "practice",
-  contact: "connect",
-} as const;
 
 export const cinematicAreaImages = [
   {
