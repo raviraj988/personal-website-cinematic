@@ -1,0 +1,15 @@
+# `node_modules` here is a SYMLINK to ../personal-website/node_modules.
+# Git treats a symlink as a file, and a pattern with a trailing slash matches
+# directories only — so `node_modules/` alone would NOT ignore it and the link
+# would get committed. Both forms are listed deliberately.
+node_modules
+node_modules/
+
+.next/
+out/
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# Local, machine-specific Claude Code permissions.
+.claude/settings.local.json
