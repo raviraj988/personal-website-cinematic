@@ -32,9 +32,9 @@ The development server defaults to `http://localhost:3000`.
 - An image-paired opening statement and panoramic contact transition so major copy sections retain strong visuals
 - Scroll-aware cream, paper, sage, moss, clay, and forest page tones,
   crossfading over 1400ms. Green carries the page: the image essay and Approach
-  sit on sage, Areas of Work and Selected Work on moss, with the four forest
-  interludes between them and clay as the single warm break. Every tone is
-  verified to keep muted secondary copy above 4.5:1.
+  sit on sage, Areas of Work on moss, and Selected Work on the dark forest tone
+  with its heading copy inverted, leaving clay as the single warm break. Every
+  tone is verified to keep muted secondary copy above 4.5:1.
 - Ambient section backdrops: film grain, drifting light fields, an inner
   vignette on the dark sections, and stroked botanical marks — all CSS-only, so
   they add no JavaScript
@@ -99,8 +99,20 @@ unapproved copy before publishing. The website remains `noindex, nofollow`.
   800px, where the trigger is rendered
 - One `h1`, one `main`, and alt attributes on all images verified
 - All decorative layers verified `aria-hidden` and absent from the reading order
-- Muted secondary copy measured against every settled page tone: paper 6.3:1,
-  cream 5.87:1, sage 5.03:1, clay 4.78:1, moss 4.75:1
+- Muted secondary copy measured against every settled page tone: forest 9.22:1,
+  paper 6.3:1, cream 5.87:1, sage 5.03:1, clay 4.78:1, moss 4.75:1
+- Selected Work's inverted heading measured on forest (heading 15.62:1, eyebrow
+  7.91:1, lede 9.22:1) with its cards confirmed still dark-on-paper (13.78:1,
+  6.3:1), so no light text leaked onto the light cards
+
+### Known accessibility gap
+
+`--color-clay` (`#b85f3d`) on paper measures **4.36:1**, just under the 4.5:1
+AA floor for normal-size text. It is used for every small eyebrow label and card
+meta line (`.section-label`, `.work-card__meta`, `.area-visual-card__note`,
+`.resource-card__meta`), all at 0.68–0.75rem, so large-text allowances do not
+apply. This predates the current work and is unchanged. Darkening the token to
+about `#ac5733` clears it at 4.96:1 with almost no visible difference.
 - Zero Unicode arrow code points left in rendered text; 21 inline SVG arrows
   confirmed rendering identically on desktop and at 390px
 - Reduced motion verified clearing parallax, word scrub, background drift, and

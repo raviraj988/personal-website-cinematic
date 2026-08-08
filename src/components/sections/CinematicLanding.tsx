@@ -238,9 +238,9 @@ export function CinematicLanding() {
         id="selected-work"
         className="selected-stories section-shell"
         aria-labelledby="work-title"
-        data-scroll-theme="moss"
+        data-scroll-theme="forest"
       >
-        <AmbientLayer blooms={1} />
+        <AmbientLayer blooms={1} vignette tone="dark" />
         <Reveal className="section-heading-row section-heading-row--work" variant="rule">
           <p className="section-label">04 — Selected work</p>
           <ScrollWords as="h2" id="work-title" text="Stories, projects, and useful resources" />

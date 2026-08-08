@@ -1272,7 +1272,19 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .principle-band .scroll-words__word { color: var(--color-paper); }
 .principle-band__content > p:last-child { margin-top: 2rem; color: rgba(255, 255, 255, 0.7); font-size: 0.72rem; }
 
-/* Work */
+/* Work
+ *
+ * This section sits on the dark forest tone, so its heading copy inverts.
+ * Scoped to `.section-heading-row` on purpose: `.selected-work-grid` is a
+ * sibling, and a blanket `color` on `.selected-stories` would be inherited by
+ * `.work-card h3`, painting it near-white on its own paper card. */
+.selected-stories .section-heading-row { color: var(--color-paper); }
+.selected-stories .section-heading-row .section-label { color: #e5aa8d; }
+.selected-stories .section-heading-row > p:last-child { color: rgba(255, 255, 255, 0.74); }
+.selected-stories .reveal--rule::before { background: rgba(255, 255, 255, 0.24); }
+/* Belt and braces: cards always read on their own light background. */
+.selected-stories .work-card { color: var(--color-ink); }
+
 .section-heading-row--work { margin-bottom: clamp(3.5rem, 6vw, 5rem); }
 .selected-stories__list { display: grid; gap: clamp(7rem, 12vw, 11rem); }
 .selected-story { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 1.5rem; align-items: center; }
