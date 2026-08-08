@@ -78,7 +78,7 @@ export function CinematicLanding() {
         </div>
       </section>
 
-      <section className="image-essay section-shell" aria-labelledby="essay-title" data-scroll-theme="cream">
+      <section className="image-essay section-shell" aria-labelledby="essay-title" data-scroll-theme="sage">
         <AmbientLayer blooms={2} />
 
         <div className="image-essay__heading">
@@ -238,7 +238,7 @@ export function CinematicLanding() {
         id="selected-work"
         className="selected-stories section-shell"
         aria-labelledby="work-title"
-        data-scroll-theme="sand"
+        data-scroll-theme="moss"
       >
         <AmbientLayer blooms={1} />
         <Reveal className="section-heading-row section-heading-row--work" variant="rule">

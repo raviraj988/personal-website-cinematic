@@ -30,9 +30,11 @@ The development server defaults to `http://localhost:3000`.
 - Four large, photography-led Areas of Work cards with staggered reveal, scroll zoom, and hover movement
 - A compact three-card Selected Work editorial grid
 - An image-paired opening statement and panoramic contact transition so major copy sections retain strong visuals
-- Scroll-aware cream, paper, sage, moss, sand, clay, and forest page tones,
-  crossfading over 1400ms. Every tone is verified to keep muted secondary copy
-  above 4.5:1.
+- Scroll-aware cream, paper, sage, moss, clay, and forest page tones,
+  crossfading over 1400ms. Green carries the page: the image essay and Approach
+  sit on sage, Areas of Work and Selected Work on moss, with the four forest
+  interludes between them and clay as the single warm break. Every tone is
+  verified to keep muted secondary copy above 4.5:1.
 - Ambient section backdrops: film grain, drifting light fields, an inner
   vignette on the dark sections, and stroked botanical marks — all CSS-only, so
   they add no JavaScript
@@ -97,8 +99,8 @@ unapproved copy before publishing. The website remains `noindex, nofollow`.
   800px, where the trigger is rendered
 - One `h1`, one `main`, and alt attributes on all images verified
 - All decorative layers verified `aria-hidden` and absent from the reading order
-- Muted secondary copy measured against every settled page tone: cream 5.87:1,
-  paper 6.3:1, sage 5.31:1, sand 4.94:1, clay 4.78:1, moss 4.75:1
+- Muted secondary copy measured against every settled page tone: paper 6.3:1,
+  cream 5.87:1, sage 5.03:1, clay 4.78:1, moss 4.75:1
 - Zero Unicode arrow code points left in rendered text; 21 inline SVG arrows
   confirmed rendering identically on desktop and at 390px
 - Reduced motion verified clearing parallax, word scrub, background drift, and

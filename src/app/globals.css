@@ -38,13 +38,14 @@ body {
  * a quieter, more expensive-looking progression through the page. */
 html[data-scroll-theme="cream"] { --page-background: #f8f5ec; }
 html[data-scroll-theme="paper"] { --page-background: #fffdf8; }
-html[data-scroll-theme="sage"] { --page-background: #e5e9df; }
+html[data-scroll-theme="sage"] { --page-background: #e0e6d8; }
 html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
-html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
 /* Warm clay-brown. Kept light enough that muted secondary copy still clears
    4.5:1 against it — verified, not assumed. */
 html[data-scroll-theme="clay"] { --page-background: #e7d9c0; }
 html[data-scroll-theme="forest"] { --page-background: #0e2719; }
+/* Available but currently unused; kept as a palette option. */
+html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -1230,7 +1231,9 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   min-height: 60rem;
-  background: #e8ebe3;
+  /* Matches the `sage` page tone. This section paints its own full-bleed
+     background, so it would otherwise drift away from the scroll palette. */
+  background: #e0e6d8;
 }
 
 .approach-editorial__media { position: sticky; top: 0; height: 100vh; overflow: hidden; }
