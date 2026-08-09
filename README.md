@@ -30,11 +30,17 @@ The development server defaults to `http://localhost:3000`.
 - Four large, photography-led Areas of Work cards with staggered reveal, scroll zoom, and hover movement
 - A compact three-card Selected Work editorial grid
 - An image-paired opening statement and panoramic contact transition so major copy sections retain strong visuals
-- Scroll-aware cream, paper, sage, moss, clay, and forest page tones,
+- Newsreader for display and editorial headings, Inter for body and UI. The type
+  scale runs to 7.25rem display and 4rem h2 — close to spec §2.2, where the
+  earlier 4.5rem/2.75rem ceiling was the main reason the page read restrained
+  rather than cinematic.
+- Scroll-aware cream, paper, sage, moss, clay, forest, and umber page tones,
   crossfading over 1400ms. Green carries the page: the image essay and Approach
   sit on sage, Areas of Work on moss, and Selected Work on the dark forest tone
-  with its heading copy inverted, leaving clay as the single warm break. Every
-  tone is verified to keep muted secondary copy above 4.5:1.
+  with its heading copy inverted. Brown answers it: clay under Resources and a
+  dark umber ground for the closing footer, which also stops the footer and the
+  forest-green story slider above it reading as one block. Every tone is
+  verified to keep muted secondary copy above 4.5:1.
 - Ambient section backdrops: film grain, drifting light fields, an inner
   vignette on the dark sections, and stroked botanical marks — all CSS-only, so
   they add no JavaScript
@@ -105,14 +111,12 @@ unapproved copy before publishing. The website remains `noindex, nofollow`.
   7.91:1, lede 9.22:1) with its cards confirmed still dark-on-paper (13.78:1,
   6.3:1), so no light text leaked onto the light cards
 
-### Known accessibility gap
-
-`--color-clay` (`#b85f3d`) on paper measures **4.36:1**, just under the 4.5:1
-AA floor for normal-size text. It is used for every small eyebrow label and card
-meta line (`.section-label`, `.work-card__meta`, `.area-visual-card__note`,
-`.resource-card__meta`), all at 0.68–0.75rem, so large-text allowances do not
-apply. This predates the current work and is unchanged. Darkening the token to
-about `#ac5733` clears it at 4.96:1 with almost no visible difference.
+- The clay accent measured on every ground it is used on — paper 5.85:1, cream
+  and moss 5.46:1, clay 5.5:1, sage 4.67:1 — all clearing AA. Sage is the
+  tightest ground and is what the token is tuned against.
+- The hero headline measured against the actual rendered pixels behind it
+  (photograph plus scrim, text hidden): worst-case 3.81:1 and median 10.69:1,
+  against the 3:1 large-text floor at 104px
 - Zero Unicode arrow code points left in rendered text; 21 inline SVG arrows
   confirmed rendering identically on desktop and at 390px
 - Reduced motion verified clearing parallax, word scrub, background drift, and

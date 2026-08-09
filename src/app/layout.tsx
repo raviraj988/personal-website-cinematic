@@ -1,17 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import { site } from "@/lib/data/site-content";
 import "./globals.css";
 
 /**
- * Fonts via next/font — spec §5.2. Two families, three weights in total, all
- * self-hosted at build time and subset to Latin.
+ * Fonts via next/font — spec §5.2. Two families, self-hosted at build time and
+ * subset to Latin.
+ *
+ * Newsreader is the display face the spec names first (§2.2). It carries more
+ * stroke contrast and finer serifs than Source Serif 4, which reads closer to
+ * documentation than to the art-directed publication this is meant to be. The
+ * italic is loaded for editorial emphasis.
  */
-const sourceSerif = Source_Serif_4({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
   display: "swap",
-  variable: "--font-source-serif",
+  variable: "--font-newsreader",
 });
 
 const inter = Inter({
@@ -56,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sourceSerif.variable} ${inter.variable}`}
+      className={`${newsreader.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

@@ -5,18 +5,31 @@
   --color-forest: #173d2a;
   --color-forest-deep: #0e2719;
   --color-moss: #718265;
-  --color-clay: #b85f3d;
+  /* Deepened from #b85f3d, which measured 4.36:1 on paper and failed AA for the
+     small labels it is used on. Set against the *sage* tone, not paper — that is
+     the tightest ground the accent sits on. Clears 4.67:1 there, 5.85:1 on
+     paper, and reads browner than the original. */
+  --color-clay: #9a4f2d;
+  /* Warm browns. `umber` is the dark brown ground; `bark` its lighter partner. */
+  --color-umber: #2c1e14;
+  --color-bark: #6b4a32;
   --color-line: #d9d4c8;
   --color-text-muted: #596159;
   --color-white: #fcfcfa;
 
-  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
   --font-sans: var(--font-inter), Arial, sans-serif;
 
-  --type-display: clamp(3.25rem, 5vw, 4.5rem);
-  --type-h2: clamp(2.25rem, 3.2vw, 2.75rem);
-  --type-h3: clamp(1.375rem, 2vw, 1.75rem);
-  --type-body-lg: clamp(1.125rem, 1.35vw, 1.25rem);
+  /* Type scale.
+   *
+   * The previous values topped out at 4.5rem display and 2.75rem h2 — well under
+   * spec §2.2 and the reason the page read restrained rather than cinematic.
+   * These move most of the way to the spec while staying inside the column
+   * widths the editorial grid actually provides. */
+  --type-display: clamp(3.25rem, 7.2vw, 7.25rem);
+  --type-h2: clamp(2.4rem, 4.4vw, 4rem);
+  --type-h3: clamp(1.5rem, 2.3vw, 2.05rem);
+  --type-body-lg: clamp(1.125rem, 1.4vw, 1.3rem);
   --type-body: 1rem;
   --type-meta: 0.75rem;
 

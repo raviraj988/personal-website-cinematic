@@ -338,7 +338,7 @@ export function CinematicLanding() {
 
       <HorizontalStory />
 
-      <footer id="contact" className="cinematic-footer" data-scroll-theme="forest">
+      <footer id="contact" className="cinematic-footer" data-scroll-theme="umber">
         <AmbientLayer blooms={2} marks vignette tone="dark" />
         <div className="cinematic-footer__visual">
           <ParallaxImage

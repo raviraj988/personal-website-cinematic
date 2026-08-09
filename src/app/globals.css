@@ -44,6 +44,9 @@ html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
    4.5:1 against it — verified, not assumed. */
 html[data-scroll-theme="clay"] { --page-background: #e7d9c0; }
 html[data-scroll-theme="forest"] { --page-background: #0e2719; }
+/* Dark brown ground for the closing footer, so it reads warm and distinct from
+   the forest-green story slider immediately above it. */
+html[data-scroll-theme="umber"] { --page-background: #2c1e14; }
 /* Available but currently unused; kept as a palette option. */
 html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
 
@@ -367,8 +370,8 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 .ambient--dark {
-  --ambient-bloom: rgba(126, 150, 112, 0.22);
-  --ambient-bloom-alt: rgba(214, 160, 136, 0.12);
+  --ambient-bloom: rgba(150, 108, 72, 0.26);
+  --ambient-bloom-alt: rgba(214, 160, 136, 0.14);
   --ambient-mark: rgba(255, 255, 255, 0.1);
   --ambient-vignette: rgba(3, 14, 8, 0.5);
 }
@@ -1405,7 +1408,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .story__autoplay:hover { border-color: white !important; }
 
 /* Footer */
-.cinematic-footer { position: relative; isolation: isolate; overflow-x: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-forest-deep); color: var(--color-paper); }
+.cinematic-footer { position: relative; isolation: isolate; overflow-x: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-umber); color: var(--color-paper); }
 .cinematic-footer__visual {
   position: relative;
   width: min(100%, var(--container));
