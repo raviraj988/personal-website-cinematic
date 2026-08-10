@@ -44,10 +44,9 @@ html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
    4.5:1 against it — verified, not assumed. */
 html[data-scroll-theme="clay"] { --page-background: #e7d9c0; }
 html[data-scroll-theme="forest"] { --page-background: #0e2719; }
-/* Dark brown ground for the closing footer, so it reads warm and distinct from
-   the forest-green story slider immediately above it. */
+/* Defined but currently unused; kept as palette options so setting either later
+   works instead of silently falling back to cream. */
 html[data-scroll-theme="umber"] { --page-background: #2c1e14; }
-/* Available but currently unused; kept as a palette option. */
 html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
 
 main > .section-shell {
@@ -153,12 +152,23 @@ p {
 }
 
 .section-label {
-  color: var(--color-clay);
+  color: var(--label-color, var(--color-clay));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1.3;
   text-transform: uppercase;
+}
+
+/* On the warm clay grounds the clay accent would be brown on brown — legible by
+   the numbers but muddy to read. Deep forest green separates cleanly and keeps
+   the section labels tied to the site palette.
+   Only labels sitting directly on the page tone change; card meta lines
+   (`.work-card__meta`, `.resource-card__meta`, `.area-visual-card__note`) sit on
+   their own paper cards and set their colour independently. */
+.image-essay,
+.resource-library {
+  --label-color: var(--color-forest);
 }
 
 .section-label--light {
@@ -1408,7 +1418,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .story__autoplay:hover { border-color: white !important; }
 
 /* Footer */
-.cinematic-footer { position: relative; isolation: isolate; overflow-x: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-umber); color: var(--color-paper); }
+.cinematic-footer { position: relative; isolation: isolate; overflow-x: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-forest-deep); color: var(--color-paper); }
 .cinematic-footer__visual {
   position: relative;
   width: min(100%, var(--container));

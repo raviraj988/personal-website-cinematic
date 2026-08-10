@@ -78,7 +78,7 @@ export function CinematicLanding() {
         </div>
       </section>
 
-      <section className="image-essay section-shell" aria-labelledby="essay-title" data-scroll-theme="sage">
+      <section className="image-essay section-shell" aria-labelledby="essay-title" data-scroll-theme="clay">
         <AmbientLayer blooms={2} />
 
         <div className="image-essay__heading">
@@ -338,7 +338,7 @@ export function CinematicLanding() {
 
       <HorizontalStory />
 
-      <footer id="contact" className="cinematic-footer" data-scroll-theme="umber">
+      <footer id="contact" className="cinematic-footer" data-scroll-theme="forest">
         <AmbientLayer blooms={2} marks vignette tone="dark" />
         <div className="cinematic-footer__visual">
           <ParallaxImage

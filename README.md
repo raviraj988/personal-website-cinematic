@@ -34,13 +34,15 @@ The development server defaults to `http://localhost:3000`.
   scale runs to 7.25rem display and 4rem h2 — close to spec §2.2, where the
   earlier 4.5rem/2.75rem ceiling was the main reason the page read restrained
   rather than cinematic.
-- Scroll-aware cream, paper, sage, moss, clay, forest, and umber page tones,
-  crossfading over 1400ms. Green carries the page: the image essay and Approach
-  sit on sage, Areas of Work on moss, and Selected Work on the dark forest tone
-  with its heading copy inverted. Brown answers it: clay under Resources and a
-  dark umber ground for the closing footer, which also stops the footer and the
-  forest-green story slider above it reading as one block. Every tone is
-  verified to keep muted secondary copy above 4.5:1.
+- Scroll-aware cream, paper, sage, moss, clay, and forest page tones,
+  crossfading over 1400ms. Green and brown alternate: the Observation and
+  participation essay and Resources sit on warm clay, Approach on sage, Areas of
+  Work on moss, and Selected Work and the contact footer on dark forest with
+  their heading copy inverted. Every tone is verified to keep muted secondary
+  copy above 4.5:1.
+- Section labels take their colour from a `--label-color` property. On the clay
+  grounds it flips to deep forest green, because the clay accent on a clay
+  background is legible by the numbers but muddy to read.
 - Ambient section backdrops: film grain, drifting light fields, an inner
   vignette on the dark sections, and stroked botanical marks — all CSS-only, so
   they add no JavaScript
@@ -106,7 +108,10 @@ unapproved copy before publishing. The website remains `noindex, nofollow`.
 - One `h1`, one `main`, and alt attributes on all images verified
 - All decorative layers verified `aria-hidden` and absent from the reading order
 - Muted secondary copy measured against every settled page tone: forest 9.22:1,
-  paper 6.3:1, cream 5.87:1, sage 5.03:1, clay 4.78:1, moss 4.75:1
+  paper 6.3:1, cream 5.87:1, sage 5.03:1, clay 4.78:1 washed / 4.60:1 plain,
+  moss 4.75:1
+- Section labels on the clay grounds measured at 11.09:1 and 11.19:1 in forest
+  green, against 5.5:1 for the clay accent they replaced
 - Selected Work's inverted heading measured on forest (heading 15.62:1, eyebrow
   7.91:1, lede 9.22:1) with its cards confirmed still dark-on-paper (13.78:1,
   6.3:1), so no light text leaked onto the light cards
