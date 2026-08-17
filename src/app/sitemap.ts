@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/data/ese-content";
 import { BLOG_PATH, SITE_ORIGIN, absoluteUrl, postUrl } from "@/lib/blog/config";
 import { NEWS_PATH } from "@/lib/news/config";
+import { ese } from "@/lib/data/ese-content";
 import { getSitemapPosts } from "@/lib/blog/queries";
 import { getPublishedNewsletters } from "@/lib/news/queries";
 
@@ -65,6 +66,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  /**
+   * The five service pages. Static, known at build time, and each is a real
+   * landing target for a search like "Tribal cumulative impacts assessment" —
+   * which is the whole reason they exist, so they belong in the sitemap.
+   */
+  const serviceRoutes: MetadataRoute.Sitemap = ese.services.items.map((service) => ({
+    url: absoluteUrl(`/services/${service.slug}`),
+    changeFrequency: "monthly",
+    priority: 0.75,
+  }));
+
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
     url: postUrl(post.slug),
     lastModified: new Date(post.updated_at),
@@ -79,5 +91,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...newsRoutes];
+  return [...staticRoutes, ...serviceRoutes, ...blogRoutes, ...newsRoutes];
 }

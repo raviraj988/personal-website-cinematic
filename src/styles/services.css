@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Service area pages — /services/[slug]
+
+   Built on the article measure the blog already uses, so a service page and a
+   post read as the same publication. Tokens only.
+   ========================================================================== */
+
+.service-page__header {
+  max-width: 46rem;
+}
+
+.service-page__title {
+  margin-top: 1.1rem;
+  font-size: var(--type-h2);
+}
+
+.service-page__lede {
+  max-width: 46ch;
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+.service-page__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+  background: #dfe5dd;
+}
+
+.service-page__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+.service-page__body {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.75rem);
+  max-width: 44rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.service-page__heading {
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  line-height: 1.15;
+}
+
+.service-page__body p {
+  margin-top: 1.25rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+/* The capability list — the reason these pages exist. A reader scanning for one
+   specific thing ESE does should find it without reading a paragraph. */
+.service-page__covers {
+  display: grid;
+  gap: 0;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.service-page__covers li {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--type-body-md);
+  line-height: 1.5;
+}
+
+.service-page__audiences {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 2rem;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+}
+
+.service-page__audiences li::before {
+  content: "";
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-right: 0.7rem;
+  margin-bottom: 0.15rem;
+  background: var(--color-clay);
+  vertical-align: middle;
+}
+
+.service-page__related {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--color-line);
+  background: rgba(255, 253, 248, 0.6);
+}
+
+.service-page__related .service-page__heading {
+  margin-top: 0.75rem;
+}
+
+.service-page__status {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1.25rem !important;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-forest) !important;
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* The stated gap. Marked with a rule rather than a box: it is a note about what
+   is not here yet, not a feature of the service. */
+.service-page__pending {
+  padding-left: clamp(1rem, 2.5vw, 1.5rem);
+  border-left: 2px solid var(--color-line);
+}
+
+.service-page__pending p {
+  font-style: italic;
+}
+
+.service-page__scholarship {
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.service-page__scholarship p {
+  margin-top: 0 !important;
+  max-width: 52ch;
+}
+
+.service-page__scholarship .text-link {
+  margin-top: 1.25rem;
+}
+
+.service-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+  align-items: center;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+@media (max-width: 40rem) {
+  .service-page__audiences {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-page__media {
+    aspect-ratio: 4 / 3;
+  }
+}

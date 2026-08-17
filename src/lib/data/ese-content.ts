@@ -301,6 +301,13 @@ export const ese = {
     items: [
       {
         slug: "policy-support-and-sovereignty",
+        covers: [
+          "Understanding federal and state rules",
+          "Crafting environmental policy",
+          "Enforcing sovereignty",
+          "Translating legal language into plain terms",
+          "Building a plan to work within those systems",
+        ],
         title: "Policy Support & Sovereignty Services",
         description:
           "We help Native Nations and underserved communities understand federal and state rules, craft environmental policy, and enforce sovereignty. We cut through the legalese to help you understand how the law works in your area and its impact on your community. Then we'll help you craft a plan to work within those systems and solve problems effectively.",
@@ -313,6 +320,13 @@ export const ese = {
       },
       {
         slug: "grant-development",
+        covers: [
+          "Identifying funding",
+          "Writing proposals",
+          "Developing budgets",
+          "Developing work plans",
+          "Grant implementation, as needed",
+        ],
         title: "Grant Development",
         description:
           "Need money? Not a problem. We can help you identify funding, write proposals, develop budgets, and work plans. As needed, we can even help with grant implementation.",
@@ -325,6 +339,15 @@ export const ese = {
       },
       {
         slug: "project-implementation",
+        covers: [
+          "Environmental cleanup",
+          "Renewable energy",
+          "Water systems",
+          "Carbon offset work",
+          "Air quality program development and implementation",
+          "Reviewing permits",
+          "Cumulative impacts assessments for affected communities",
+        ],
         title: "Project Implementation (Technical)",
         description:
           "ESE partners can help with a wide array of technical support, including environmental cleanup, renewable energy, water systems, carbon offset work, air quality program development and implementation, and reviewing permits. We can also help conduct cumulative impacts assessments for affected communities.",
@@ -337,6 +360,13 @@ export const ese = {
       },
       {
         slug: "sustainability-and-climate-resilience",
+        covers: [
+          "Strategic plans",
+          "Vulnerability assessments",
+          "Energy audits",
+          "Climate adaptation plans",
+          "Climate mitigation plans",
+        ],
         title: "Sustainability & Climate Resilience Planning",
         description:
           "We can help you develop strategic plans, conduct vulnerability assessments, energy audits, and climate adaptation and mitigation plans.",
@@ -355,6 +385,15 @@ export const ese = {
       },
       {
         slug: "communications-support",
+        covers: [
+          "Communicating initiatives to Tribal members",
+          "Reaching youth",
+          "Briefing elected leaders",
+          "PR support",
+          "Advertising",
+          "Marketing",
+          "Other outreach strategies",
+        ],
         title: "Communications Support",
         description:
           "Good work needs a good message. We help tribal programs communicate initiatives to members, youth, and elected leaders. Through PR support, advertising, marketing, and other outreach strategies, we can help you get the word out.",
@@ -366,6 +405,32 @@ export const ese = {
         ),
       },
     ],
+  },
+
+  /**
+   * Blocks shared by every service page at /services/[slug].
+   *
+   * `covers` on each service above is the document's own prose list, pulled out
+   * as a list — extraction, not invention. A reader scanning for "cumulative
+   * impacts assessment" will not find it inside a paragraph.
+   *
+   * `awaiting` is rendered as a stated gap. How a project runs and what a client
+   * receives are not in the source document and are not inferable, and a service
+   * page that invents a process is a claim about a real business that a real
+   * client may act on. See content-plan/04-service-pages.md.
+   */
+  servicePage: {
+    eyebrow: "Service area",
+    coversHeading: "What this covers",
+    audienceHeading: "Who this is for",
+    scholarshipNote:
+      "ESE's profits go back to supporting communities who might not be able to afford in-depth consultation and technical assistance.",
+    scholarshipCta: { label: "About the scholarship programme", href: "/#contact" },
+    awaitingHeading: "How a project runs",
+    awaiting:
+      "How a project runs, and what you receive at the end of it, will be published here.",
+    contactCta: { label: "Talk to us about this", href: "/#contact" },
+    backCta: { label: "All service areas", href: "/#services" },
   },
 
   caseStudy: {

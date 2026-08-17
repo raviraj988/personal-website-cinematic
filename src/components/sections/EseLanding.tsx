@@ -219,6 +219,14 @@ export function EseLanding() {
                     </span>
                   </h3>
                   <p>{service.description}</p>
+                  {/* Pushed to the foot of the card by `margin-top: auto`, so the
+                      five buttons sit on one line regardless of how much
+                      description each service has. */}
+                  <Link className="button service-card__cta" href={`/services/${service.slug}`}>
+                    Learn more
+                    <span className="visually-hidden">{` about ${service.title}`}</span>
+                    <Arrow />
+                  </Link>
                 </div>
               </article>
             </Reveal>
