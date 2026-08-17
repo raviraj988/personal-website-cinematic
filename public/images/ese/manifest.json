@@ -1,0 +1,54 @@
+{
+  "hero-pines": {
+    "width": 1200,
+    "height": 1600
+  },
+  "portrait-laura": {
+    "width": 1068,
+    "height": 1600
+  },
+  "working-session": {
+    "width": 1600,
+    "height": 1201
+  },
+  "conference-session": {
+    "width": 1600,
+    "height": 1200
+  },
+  "service-policy": {
+    "width": 1050,
+    "height": 1400
+  },
+  "service-grants": {
+    "width": 1050,
+    "height": 1400
+  },
+  "service-technical": {
+    "width": 1050,
+    "height": 1400
+  },
+  "service-resilience": {
+    "width": 1050,
+    "height": 1400
+  },
+  "service-communications": {
+    "width": 1050,
+    "height": 1400
+  },
+  "case-study-water": {
+    "width": 1600,
+    "height": 1200
+  },
+  "approach-roots": {
+    "width": 1500,
+    "height": 2000
+  },
+  "contact-horizon": {
+    "width": 1600,
+    "height": 1200
+  },
+  "news-shoreline": {
+    "width": 1050,
+    "height": 1400
+  }
+}

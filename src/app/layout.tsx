@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Newsreader } from "next/font/google";
-import { site } from "@/lib/data/site-content";
+import { site } from "@/lib/data/ese-content";
+import { SEARCH_ENGINE_INDEXING } from "@/lib/blog/config";
 import "./globals.css";
 
 /**
@@ -44,9 +45,14 @@ export const metadata: Metadata = {
     url: "/",
   },
   robots: {
-    // Flip to `index: true` once the domain and content are approved.
-    index: false,
-    follow: false,
+    /**
+     * One switch for the whole site, shared with `app/robots.ts` so the meta tag
+     * and robots.txt can never disagree. Flip `SEARCH_ENGINE_INDEXING` in
+     * `lib/blog/config.ts` once the domain and content are approved. The admin
+     * console overrides this back to `noindex` in its own layout regardless.
+     */
+    index: SEARCH_ENGINE_INDEXING,
+    follow: SEARCH_ENGINE_INDEXING,
   },
 };
 

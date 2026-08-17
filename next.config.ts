@@ -20,6 +20,25 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    /**
+     * Blog cover images live in the public `blog-images` Supabase Storage bucket
+     * and are served from the project's own CDN hostname.
+     *
+     * Scoped to the public-object path rather than the whole host: next/image is
+     * an open proxy for whatever it is allowed to fetch, so the allowance is kept
+     * to the one prefix that can only ever return public bucket contents.
+     *
+     * The wildcard subdomain avoids pinning the project ref here — it is the one
+     * value that legitimately differs per environment, and it is already in
+     * `NEXT_PUBLIC_SUPABASE_URL`.
+     */
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];

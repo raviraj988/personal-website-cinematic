@@ -1,0 +1,177 @@
+/* ==========================================================================
+   People — the cards on the landing page and the /people page.
+
+   The card deliberately mirrors `.service-card` in `globals.css`: same border,
+   same paper ground, same 4:3 media block above a padded body, same serif
+   heading. Two card types on one page should look like one component, so if you
+   change the service card, change this to match.
+   ========================================================================== */
+
+.person-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--card-border, var(--color-line));
+  background: var(--card-ground, var(--color-paper));
+  color: var(--card-ink, var(--color-ink));
+}
+
+.person-card__media {
+  position: relative;
+  /* 2:3, which is the portrait's own ratio (1068x1600 = 0.6675, against 0.6667),
+     so `cover` crops essentially nothing and the whole photograph is visible. The
+     service cards' 4:3 was cutting a portrait down to head and shoulders. */
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #dfe5dd;
+}
+
+.person-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Only one portrait exists. Initials in the display face keep every card the
+   same shape and read as a treatment rather than a missing asset. */
+.person-card__media--monogram {
+  display: grid;
+  place-items: center;
+  background: var(--monogram-ground, rgba(28, 48, 37, 0.07));
+}
+
+.person-card__media--monogram span {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  letter-spacing: 0.02em;
+  color: var(--monogram-ink, var(--color-moss));
+}
+
+.person-card__body {
+  flex: 1;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+.person-card__body h2,
+.person-card__body h3 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.12;
+}
+
+.person-card__role {
+  margin-top: 0.75rem;
+  color: var(--card-meta, var(--color-clay));
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.person-card__body p:not(.person-card__role) {
+  margin-top: 1rem;
+  color: var(--card-muted, var(--color-text-muted));
+  font-size: var(--type-body-md);
+  line-height: 1.65;
+}
+
+.person-card__pending {
+  font-style: italic;
+}
+
+/* ------------------------------------------- the group on the landing page */
+
+/* The cards keep the paper body the service cards use, even though this section
+   sits on the dark umber ground — exactly as the service cards sit on moss.
+   The earlier version tinted them to 6% white so they blended into the section,
+   which made the card look like a dim panel rather than a card, and pushed the
+   text it contains down to the edge of legibility.
+
+   Only the monogram tile is toned, because it is a stand-in for a photograph and
+   should read as part of the media block rather than as body copy. */
+.people-group {
+  --monogram-ground: rgba(28, 48, 37, 0.07);
+  --monogram-ink: var(--color-moss);
+
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
+  padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.people-group__title {
+  margin-top: 1rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  line-height: 1.15;
+}
+
+.people-group__lede {
+  max-width: 52ch;
+  margin-top: 1rem;
+  /* Sits on the umber ground itself, not on a card, so it stays light. */
+  color: rgba(238, 240, 234, 0.86);
+  font-size: var(--type-body-md);
+  line-height: 1.65;
+}
+
+/* `auto-fit` rather than a fixed three columns.
+ *
+ * The service grid is three across because it always holds five services. This
+ * one holds however many people exist — two today — and three fixed columns left
+ * them at a third of the width each, with the portraits too small to read and a
+ * third of the row empty. `auto-fit` gives two people two large cards and three
+ * people three, with no rule to change when someone joins. */
+.people-group__grid,
+.people-page__grid {
+  display: grid;
+  /* Bounded columns rather than `1fr`: with two people, `1fr` stretched each card
+     to half the container — far larger than a card needs to be. These sit between
+     15rem and 19rem and pack from the left, so adding a third person fills the row
+     rather than resizing everyone. */
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 19rem));
+  justify-content: start;
+  gap: clamp(1.25rem, 2.2vw, 1.75rem);
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  padding: 0;
+  list-style: none;
+}
+
+.people-group .button {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* ------------------------------------------------------------ /people page */
+
+.people-page__header {
+  max-width: 46rem;
+  margin-bottom: clamp(3rem, 6vw, 4.5rem);
+}
+
+.people-page__title {
+  margin-top: 1.1rem;
+  font-size: var(--type-h2);
+}
+
+.people-page__lede {
+  max-width: 52ch;
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+.people-page__note {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-size: var(--type-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* No responsive overrides for the grid: `auto-fit` with a `min()` floor already
+   collapses to one column when the viewport cannot hold two. */

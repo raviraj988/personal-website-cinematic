@@ -1,59 +1,56 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SkipLink } from "@/components/layout/SkipLink";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { SiteHeader } from "@/components/navigation/SiteHeader";
-import { ButtonLink } from "@/components/ui/Button";
-import { TextLink } from "@/components/ui/TextLink";
-import { primaryNavigation } from "@/lib/data/site-content";
+import { CinematicHeader } from "@/components/navigation/CinematicHeader";
+import { BlogFooter } from "@/components/blog/BlogFooter";
+import { Arrow } from "@/components/ui/Arrow";
+import { navigation } from "@/lib/data/ese-content";
+import "@/styles/blog.css";
 
 export const metadata: Metadata = {
   title: "Page not found",
   robots: { index: false, follow: false },
 };
 
-/** Custom 404 — spec §17. Same visual language as the rest of the site. */
+/**
+ * Custom 404.
+ *
+ * Uses the same chrome as the blog and news routes — `solid` header, no
+ * `PageIntro` overture — because this page opens on type, with no photographic
+ * hero for white-on-transparent text to sit against.
+ */
 export default function NotFound() {
   return (
     <>
       <SkipLink />
-      <SiteHeader />
-      <main id="main-content">
-        <section className="section" aria-labelledby="not-found-heading">
-          <div className="container container--reading">
-            <p className="eyebrow">Error 404</p>
-            <h1 id="not-found-heading" className="section-heading">
-              That page could not be found
-            </h1>
-            <p className="section-lede">
+      <CinematicHeader solid />
+      <div className="page-grain" aria-hidden="true" />
+      <main id="main-content" className="blog-main">
+        <div className="blog-index section-shell">
+          <header className="blog-index__header">
+            <p className="section-label">Error 404</p>
+            <h1 className="blog-index__title">That page could not be found</h1>
+            <p className="blog-index__lede">
               The address may have changed, or the page may never have existed.
               Nothing has gone wrong on your end.
             </p>
+            <Link className="text-link" href="/">
+              Go to the homepage <Arrow />
+            </Link>
+          </header>
 
-            <div className="button-row" style={{ marginTop: "var(--space-8)" }}>
-              <ButtonLink href="/" variant="primary">
-                Go to the homepage
-              </ButtonLink>
-            </div>
-
-            <ul
-              style={{
-                marginTop: "var(--space-12)",
-                paddingTop: "var(--space-6)",
-                borderTop: "1px solid var(--border-hairline)",
-                display: "grid",
-                gap: "var(--space-3)",
-              }}
-            >
-              {primaryNavigation.map((item) => (
-                <li key={`${item.label}-${item.href}`}>
-                  <TextLink href={item.href}>{item.label}</TextLink>
+          <nav className="not-found__links" aria-label="Site navigation">
+            <ul>
+              {navigation.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
+          </nav>
+        </div>
       </main>
-      <SiteFooter />
+      <BlogFooter />
     </>
   );
 }

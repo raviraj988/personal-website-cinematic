@@ -1,18 +1,18 @@
-import { CinematicLanding } from "@/components/sections/CinematicLanding";
+import { EseLanding } from "@/components/sections/EseLanding";
 import { StructuredData } from "@/components/seo/StructuredData";
 
 /**
- * Landing page — spec §8.
+ * Landing page.
  *
- * Section order and visibility are content-driven. Collaborators and Tools stay
- * switched off until approved profiles and tool entries exist, so neither an
- * empty directory nor a fake action can appear (spec §8.6, §8.7, §27).
+ * Environment Sovereignty & Equity. Section copy and photography are
+ * content-driven from `lib/data/ese-content.ts`; see the ordering note on
+ * `EseLanding`.
  */
 export default function LandingPage() {
   return (
     <>
       <StructuredData />
-      <CinematicLanding />
+      <EseLanding />
     </>
   );
 }

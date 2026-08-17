@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { BotanicalMark } from "./BotanicalMark";
+import { site } from "@/lib/data/ese-content";
 
-const SESSION_KEY = "laura-cinematic-intro-seen";
+const SESSION_KEY = "ese-intro-seen";
 
 export function PageIntro() {
   const [visible, setVisible] = useState(true);
@@ -47,7 +48,7 @@ export function PageIntro() {
       <div className="page-intro__mark">
         <BotanicalMark />
       </div>
-      <p>Laura McKelvey</p>
+      <p>{site.name}</p>
     </div>
   );
 }

@@ -1,0 +1,155 @@
+/* News & Updates.
+ *
+ * Loaded alongside `blog.css`, which already supplies the index header, the
+ * article body, and the `work-card` language news items reuse. Everything here
+ * is specific to newsletter issues and the signup block.
+ */
+
+.news-index__section {
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.news-index__section-title {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------- issue cards */
+
+.newsletter-grid {
+  display: grid;
+  gap: clamp(1.5rem, 2.6vw, 2.25rem);
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.newsletter-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.newsletter-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.newsletter-card__body {
+  flex: 1;
+  padding: clamp(1.35rem, 2.2vw, 1.85rem);
+}
+
+.newsletter-card__meta {
+  color: var(--color-clay);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.newsletter-card h3 {
+  margin-top: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 300;
+  line-height: 1.16;
+}
+
+.newsletter-card__body > p {
+  margin-top: 0.85rem;
+  margin-bottom: 1.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+/* -------------------------------------------------------------- signup */
+
+.newsletter-signup {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  border: 1px solid var(--color-line);
+  border-left: 3px solid var(--color-clay);
+  background: rgba(255, 253, 248, 0.6);
+}
+
+.newsletter-signup h2 {
+  margin-top: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+  font-weight: 300;
+  line-height: 1.12;
+}
+
+.newsletter-signup > p {
+  max-width: 52ch;
+  margin-top: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.62;
+}
+
+.newsletter-signup__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.newsletter-signup__form input {
+  flex: 1 1 18rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.newsletter-signup__form input:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+}
+
+.newsletter-signup__form button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid var(--color-forest);
+  background: var(--color-forest);
+  color: var(--color-white);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition: background-color var(--motion-ui) var(--ease-standard);
+}
+
+.newsletter-signup__form button:hover {
+  background: var(--color-forest-deep);
+}
+
+.newsletter-signup--pending .text-link {
+  margin-top: 1.35rem;
+}
+
+@media (max-width: 60rem) {
+  .newsletter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .newsletter-grid {
+    grid-template-columns: 1fr;
+  }
+}

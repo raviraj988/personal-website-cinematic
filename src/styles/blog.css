@@ -1,0 +1,454 @@
+/* ==========================================================================
+   Public blog styling.
+
+   Imported from `app/blog/layout.tsx` rather than `globals.css` for two
+   reasons: it lands after globals in the cascade, so it can refine the shared
+   `work-card` language without specificity games; and the landing page does not
+   download rules it never uses.
+
+   Tokens only — no new colours. The blog is the same publication as the rest
+   of the site, set in the same two faces on the same cream ground.
+   ========================================================================== */
+
+.blog-main {
+  /* The header is fixed, so the first line of type needs to clear it. */
+  padding-top: var(--header-height);
+}
+
+/* ------------------------------------------------------------------- index */
+
+.blog-index__header {
+  max-width: 46rem;
+  margin-bottom: clamp(3.5rem, 7vw, 6rem);
+}
+
+.blog-index__title {
+  margin-top: 1.1rem;
+  font-size: var(--type-h2);
+}
+
+.blog-index__lede {
+  max-width: 44ch;
+  margin-top: 1.75rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-lg);
+}
+
+.blog-index__empty {
+  padding-block: clamp(3rem, 8vw, 6rem);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  line-height: 1.3;
+}
+
+.blog-index__note {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-size: var(--type-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* `.post-card` carries `.work-card` for its border, paper ground, and hover
+   lift. The landing page's cards wrap their content in an inner `<article>`,
+   which is what `.work-card article` lays out; these are the article, so the
+   column direction is set here instead. */
+.post-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card .work-card__media img {
+  object-fit: cover;
+}
+
+/* ---------------------------------------------------------------- post page */
+
+.post {
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin-inline: auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gutter) 0;
+}
+
+.post__header {
+  max-width: 48rem;
+}
+
+.post__title {
+  margin-top: 1.25rem;
+  /* One step below the landing hero: a post title is the loudest thing on its
+     own page, not the loudest thing on the site. */
+  font-size: clamp(2.6rem, 5.4vw, 4.75rem);
+}
+
+.post__standfirst {
+  max-width: 40ch;
+  margin-top: 1.9rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--type-body-lg);
+  line-height: 1.45;
+}
+
+.post__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.post__meta-sep {
+  width: 1.5rem;
+  height: 1px;
+  background: var(--color-line);
+}
+
+.post__cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  background: #dfe5dd;
+}
+
+.post__cover img {
+  object-fit: cover;
+}
+
+.post__body-shell {
+  /* ~68 characters at the body size below — the measure long-form prose reads
+     most comfortably at. */
+  max-width: 40rem;
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+/* --------------------------------------------------------------- post body */
+
+/* Long-form copy is set in Newsreader rather than the site's Inter. Newsreader
+   is a text serif, not a display face — it is what the spec names first, and an
+   1,800-word field note is the one place on this site with enough continuous
+   prose to earn it. Meta lines, links, and UI stay in Inter. */
+.post-body {
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.35vw, 1.3rem);
+  line-height: 1.68;
+}
+
+.post-body > * + * {
+  margin-top: 1.45em;
+}
+
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.post-body h2 {
+  margin-top: 2.4em;
+  font-size: clamp(1.85rem, 2.6vw, 2.35rem);
+}
+
+.post-body h3 {
+  margin-top: 2em;
+  font-size: clamp(1.4rem, 1.9vw, 1.7rem);
+}
+
+.post-body h4 {
+  margin-top: 1.9em;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* A heading immediately after another heading should not carry the full
+   stack-space intended to separate it from a paragraph. */
+.post-body h2 + h3,
+.post-body h3 + h4 {
+  margin-top: 1.1em;
+}
+
+.post-body a {
+  color: var(--color-clay);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color var(--motion-fast) ease;
+}
+
+.post-body a:hover {
+  color: var(--color-forest);
+}
+
+.post-body strong {
+  font-weight: 600;
+}
+
+.post-body em {
+  font-style: italic;
+}
+
+.post-body del {
+  color: var(--color-text-muted);
+}
+
+/* `globals.css` strips list markers site-wide for the navigation and card
+   grids. Prose needs them back. */
+.post-body ul,
+.post-body ol {
+  padding-left: 1.5em;
+  list-style: revert;
+}
+
+.post-body ul {
+  list-style-type: disc;
+}
+
+.post-body li + li {
+  margin-top: 0.55em;
+}
+
+.post-body li > ul,
+.post-body li > ol {
+  margin-top: 0.55em;
+}
+
+/* GFM task lists. */
+.post-body li input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: var(--color-forest);
+}
+
+.post-body blockquote {
+  padding-left: clamp(1.25rem, 3vw, 2rem);
+  border-left: 2px solid var(--color-clay);
+  color: var(--color-text-muted);
+  font-size: 1.1em;
+  font-style: italic;
+}
+
+.post-body blockquote > * + * {
+  margin-top: 1em;
+}
+
+.post-body hr {
+  height: 1px;
+  margin-block: 2.75em;
+  border: 0;
+  background: var(--color-line);
+}
+
+.post-body img {
+  width: 100%;
+  height: auto;
+  background: #dfe5dd;
+}
+
+.post-body figcaption,
+.post-body img + em {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+/* ------------------------------------------------- code, tables, overflow */
+
+/* The site guarantees zero horizontal document overflow at every tested width.
+   A long code line and a wide GFM table are the two things a post body can
+   contain that would break that promise, so each scrolls inside its own box.
+   `tabIndex` on both in `PostBody.tsx` makes those boxes keyboard-scrollable,
+   which is a WCAG 2.1.1 requirement for a scroll container. */
+.post-body code {
+  padding: 0.15em 0.4em;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84em;
+}
+
+.post-body__pre {
+  overflow-x: auto;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+  background: var(--color-forest-deep);
+  color: var(--color-paper);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.post-body__pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1em;
+}
+
+.post-body__scroller {
+  overflow-x: auto;
+}
+
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.post-body th,
+.post-body td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+
+.post-body th {
+  border-bottom-color: var(--color-ink);
+  font-size: var(--type-meta);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ return */
+
+.post__return {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin: clamp(4rem, 8vw, 6rem) auto 0;
+  padding: 2rem var(--gutter) clamp(5rem, 10vw, 8rem);
+}
+
+.post__permalink {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  /* A long slug on a narrow screen must wrap rather than widen the document. */
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.blog-footer {
+  padding: clamp(4rem, 8vw, 6rem) var(--gutter) 2.5rem;
+  background: var(--color-forest-deep);
+  color: var(--color-paper);
+}
+
+.blog-footer__inner {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 3rem;
+  width: min(100%, var(--container));
+  margin-inline: auto;
+  font-size: 0.72rem;
+}
+
+.blog-footer__inner > div:first-child p:not(.cinematic-footer__name) {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.62);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.blog-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+.blog-footer nav a {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid transparent;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color var(--motion-ui) ease;
+}
+
+.blog-footer nav a:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.7);
+}
+
+.blog-footer .cinematic-footer__legal a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  color: var(--color-paper);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 959px) {
+  /* The landing page pulls its third and final work card to half width so a
+     row of three does not leave a stranded full-bleed card in a two-column
+     grid. The blog has an arbitrary number of posts, where that rule would
+     leave the newest-but-one post looking broken. */
+  .blog-index__grid .work-card:last-child {
+    grid-column: auto;
+    width: auto;
+  }
+
+  .post__cover {
+    aspect-ratio: 3 / 2;
+  }
+
+  .blog-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .blog-footer nav {
+    justify-content: flex-end;
+  }
+
+  .blog-footer .cinematic-footer__legal {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    text-align: left;
+  }
+}
+
+@media (max-width: 680px) {
+  .blog-index__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .post__cover {
+    aspect-ratio: 4 / 3;
+    margin-inline: calc(var(--gutter) * -1);
+  }
+
+  .post__return {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .blog-footer__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+  }
+
+  .blog-footer nav {
+    justify-content: flex-start;
+  }
+}

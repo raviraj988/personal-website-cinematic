@@ -30,8 +30,16 @@
   --type-h2: clamp(2.4rem, 4.4vw, 4rem);
   --type-h3: clamp(1.5rem, 2.3vw, 2.05rem);
   --type-body-lg: clamp(1.125rem, 1.4vw, 1.3rem);
+  /* A step between `body` and `body-lg`, for lede and intro copy that wants to
+     read as secondary to a heading rather than compete with it. `body-lg` at
+     1.3rem is right for a short pull line and too heavy for a full paragraph. */
+  --type-body-md: clamp(1rem, 1.15vw, 1.125rem);
   --type-body: 1rem;
-  --type-meta: 0.75rem;
+  /* The label size. Matches the primary navigation exactly, which is the
+     reference every small uppercase label on the site is now set against —
+     previously they ranged from 0.6rem to 0.95rem with six different trackings. */
+  --type-meta: 0.72rem;
+  --track-label: 0.06em;
 
   --container: 75rem;
   --gutter: clamp(1.5rem, 4.3vw, 3.5rem);

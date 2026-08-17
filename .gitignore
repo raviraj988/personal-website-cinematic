@@ -11,5 +11,12 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 
+# Supabase credentials. `.env.local.example` is the committed template and is
+# explicitly re-included; everything holding a real value stays out.
+.env
+.env.local
+.env*.local
+!.env.local.example
+
 # Local, machine-specific Claude Code permissions.
 .claude/settings.local.json

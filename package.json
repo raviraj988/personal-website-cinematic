@@ -7,12 +7,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:covers": "node --import ./scripts/register-ts.mjs scripts/test-cover-uploads.mjs",
+    "test:validation": "node --import ./scripts/register-ts.mjs scripts/test-validation.mjs",
+    "verify:contract": "node --import ./scripts/register-ts.mjs scripts/verify-contract.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.3",
     "next": "15.5.22",
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

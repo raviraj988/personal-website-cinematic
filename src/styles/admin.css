@@ -1,0 +1,801 @@
+/* ==========================================================================
+   Admin console.
+
+   Same palette, same two faces, same hairlines and sharp corners as the public
+   site — no borrowed dashboard language, no rounded cards, no new colours. What
+   changes is density: this is a working surface, so the type is smaller, the
+   rhythm is tighter, and nothing animates on scroll.
+
+   Imported from `app/admin/layout.tsx`, so it lands after `globals.css` in the
+   cascade and the public pages never download it.
+   ========================================================================== */
+
+.admin {
+  --admin-bar-height: 4.25rem;
+  --admin-measure: 52rem;
+  background: var(--color-canvas);
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------------------------- the bar */
+
+.admin-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: minmax(9rem, 1fr) auto minmax(9rem, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  height: var(--admin-bar-height);
+  padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--color-line);
+  background: rgba(255, 253, 248, 0.96);
+  backdrop-filter: blur(10px);
+}
+
+.admin-bar__brand a {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  line-height: 1.15;
+}
+
+.admin-bar__brand span {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+}
+
+.admin-bar__brand small {
+  margin-top: 0.15rem;
+  color: var(--color-text-muted);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-bar__nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2rem);
+  justify-content: center;
+}
+
+.admin-bar__nav a {
+  padding-block: 0.35rem;
+  border-bottom: 1px solid transparent;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color var(--motion-fast) ease;
+}
+
+.admin-bar__nav a:hover {
+  border-bottom-color: var(--color-ink);
+}
+
+.admin-bar__viewer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.admin-bar__name {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  /* A long email must not widen the bar past the viewport. */
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- layout */
+
+.admin-main {
+  width: min(100%, 78rem);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem)
+    clamp(5rem, 10vw, 8rem);
+}
+
+.admin-page__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.admin-page__head h1 {
+  margin-top: 0.75rem;
+  font-size: clamp(2rem, 3.4vw, 2.85rem);
+}
+
+.admin-page__lede {
+  max-width: 52ch;
+  margin-top: 0.9rem;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.admin-page__aside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.admin-page .section-label a {
+  border-bottom: 1px solid currentColor;
+}
+
+.admin-section {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.admin-section__heading {
+  font-size: var(--type-meta);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------------- chips */
+
+.admin-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.admin-chip--live { color: var(--color-forest); }
+.admin-chip--draft { color: var(--color-text-muted); }
+.admin-chip--scheduled { color: var(--color-bark); }
+/* The one chip with a filled ground: an unreviewed machine-written draft is the
+   thing on this screen most worth noticing. */
+.admin-chip--ai {
+  border-color: var(--color-clay);
+  background: var(--color-clay);
+  color: var(--color-white);
+}
+/* Was `--color-moss`, which measured 4.06:1 on the paper ground and fails AA for
+   a 0.6rem label. Muted also reads correctly here: a role is quiet metadata, not
+   a status that needs to catch the eye. */
+.admin-chip--role { color: var(--color-text-muted); }
+
+/* ------------------------------------------------------------------ buttons */
+
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.05rem;
+  border: 1px solid var(--color-ink);
+  background: none;
+  color: var(--color-ink);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.admin-button:hover {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.admin-button--primary {
+  border-color: var(--color-forest);
+  background: var(--color-forest);
+  color: var(--color-paper);
+}
+
+.admin-button--primary:hover {
+  border-color: var(--color-forest-deep);
+  background: var(--color-forest-deep);
+}
+
+.admin-button--quiet {
+  border-color: var(--color-line);
+  color: var(--color-text-muted);
+}
+
+.admin-button--quiet:hover {
+  border-color: var(--color-ink);
+  background: none;
+  color: var(--color-ink);
+}
+
+.admin-button--danger {
+  border-color: var(--color-clay);
+  color: var(--color-clay);
+}
+
+.admin-button--danger:hover {
+  background: var(--color-clay);
+  color: var(--color-white);
+}
+
+.admin-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-button:disabled:hover {
+  background: none;
+  color: inherit;
+}
+
+.admin-button--primary:disabled:hover {
+  background: var(--color-forest);
+  color: var(--color-paper);
+}
+
+/* -------------------------------------------------------------- post list */
+
+.admin-list {
+  display: grid;
+  gap: 1px;
+  background: var(--color-line);
+  border: 1px solid var(--color-line);
+}
+
+.admin-list__row {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) auto;
+  gap: 1.5rem 2rem;
+  align-items: start;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  background: var(--color-paper);
+}
+
+.admin-list__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.admin-list__main h2 {
+  margin-top: 0.75rem;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.admin-list__main h2 a {
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--motion-fast) ease;
+}
+
+.admin-list__main h2 a:hover {
+  border-bottom-color: var(--color-ink);
+}
+
+.admin-list__excerpt {
+  margin-top: 0.65rem;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  /* Two lines is enough to recognise a post; more turns the list into a wall. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.admin-list__meta {
+  display: grid;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+}
+
+.admin-list__meta dt {
+  color: var(--color-text-muted);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-list__meta dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-list__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-empty {
+  padding: clamp(2.5rem, 6vw, 4rem);
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------- forms */
+
+.admin-form {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.admin-form--narrow {
+  max-width: 26rem;
+}
+
+.admin-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.admin-field label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-required {
+  color: var(--color-clay);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+
+.admin-field input[type="text"],
+.admin-field input[type="email"],
+.admin-field input[type="password"],
+.admin-field select,
+.admin-field textarea,
+.admin-people__form input,
+.admin-people__form select {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  /* iOS zooms the page when a focused input is under 16px. 0.95rem clears it. */
+  transition: border-color var(--motion-fast) ease;
+}
+
+.admin-field input:focus,
+.admin-field select:focus,
+.admin-field textarea:focus {
+  border-color: var(--color-forest);
+}
+
+.admin-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.admin-field input[type="file"] {
+  padding: 0.6rem 0;
+  border: 0;
+  font-size: 0.85rem;
+}
+
+.admin-field__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.admin-field__error {
+  color: var(--color-clay);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.admin-hint {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.admin-hint code,
+.admin-danger code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+
+.admin-count {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.admin-count--close { color: var(--color-bark); }
+.admin-count--over { color: var(--color-clay); font-weight: 600; }
+
+.admin-fieldset {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--color-line);
+  background: rgba(255, 253, 248, 0.6);
+}
+
+.admin-fieldset legend {
+  padding-inline: 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.admin-actions--sticky {
+  position: sticky;
+  bottom: 0;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--color-line);
+  background: rgba(248, 245, 236, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.admin-publish {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: start;
+  margin-top: 1.25rem;
+}
+
+/* --------------------------------------------------------------- notices */
+
+.admin-notice {
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--color-line);
+  border-left-width: 3px;
+  background: var(--color-paper);
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.admin-notice a {
+  border-bottom: 1px solid currentColor;
+  color: var(--color-clay);
+}
+
+.admin-notice--error {
+  border-left-color: var(--color-clay);
+  color: var(--color-ink);
+}
+
+.admin-notice--success {
+  border-left-color: var(--color-forest);
+  color: var(--color-ink);
+}
+
+/* ------------------------------------------------------ body editor + tabs */
+
+.admin-field--body {
+  gap: 0;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.admin-tab {
+  padding: 0.65rem 0.9rem;
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+  border-bottom-color: transparent;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-tab--active {
+  border-color: var(--color-line);
+  border-bottom-color: var(--color-paper);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.admin-tabs__meta {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+}
+
+.admin-textarea--body {
+  border-top: 0 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.admin-preview {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--color-line);
+  border-top: 0;
+  background: var(--color-paper);
+}
+
+/* The preview panel renders the real `PostBody`, so it inherits the article
+   measure rather than stretching to the width of the editor. */
+.admin-preview .post-body {
+  max-width: 40rem;
+}
+
+/* -------------------------------------------------------------- cover field */
+
+.admin-cover {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-cover img {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border: 1px solid var(--color-line);
+  background: #dfe5dd;
+}
+
+.admin-cover__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-cover__url {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------------ danger */
+
+.admin-danger {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid var(--color-clay);
+}
+
+.admin-danger h2 {
+  font-size: 1.35rem;
+}
+
+.admin-danger .admin-field {
+  width: min(100%, 26rem);
+}
+
+/* ------------------------------------------------------------------ people */
+
+.admin-people {
+  display: grid;
+  gap: 1px;
+  background: var(--color-line);
+  border: 1px solid var(--color-line);
+}
+
+.admin-people__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem 2rem;
+  align-items: center;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  background: var(--color-paper);
+}
+
+.admin-people__email {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-people__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.admin-people__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.admin-people__form input { width: 11rem; }
+.admin-people__form select { width: 7rem; }
+
+.admin-people__controls .admin-notice {
+  flex-basis: 100%;
+}
+
+/* ----------------------------------------------------------- gate + preview */
+
+.admin-gate {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: clamp(2rem, 6vw, 5rem) 1.5rem;
+}
+
+.admin-gate__panel {
+  width: min(100%, 30rem);
+  padding: clamp(2rem, 4vw, 3rem);
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.admin-gate__panel h1 {
+  margin-top: 0.9rem;
+  font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+}
+
+.admin-gate__lede {
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.admin-gate .admin-form {
+  margin-top: 2rem;
+}
+
+.admin-setup {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.75rem;
+  padding-left: 1.4rem;
+  /* `globals.css` strips list markers site-wide; numbered setup steps need them. */
+  list-style: decimal;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.admin-setup code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--color-line);
+  background: var(--color-canvas);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+.admin-preview-page__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.admin-preview-page__note {
+  margin-top: 0.6rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.admin-preview-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+/* The preview renders the live article component, which sets its own page-width
+   container. Inside the console that container has already been applied, so the
+   article's own gutters are removed to avoid doubling them. */
+.admin-preview-page .post,
+.admin-preview-page .post__return {
+  width: 100%;
+  padding-inline: 0;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 959px) {
+  .admin-bar {
+    grid-template-columns: 1fr auto;
+    height: auto;
+    padding-block: 0.85rem;
+  }
+
+  .admin-bar__nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .admin-list__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-list__actions {
+    flex-direction: row;
+  }
+
+  .admin-people__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-people__controls {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .admin-bar__name { max-width: 8rem; }
+  .admin-page__head { flex-direction: column; }
+  .admin-tabs__meta { margin-left: 0; flex-basis: 100%; }
+  .admin-people__form input,
+  .admin-people__form select { width: 100%; }
+}

@@ -1,22 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { cinematicNavigation } from "@/lib/data/cinematic-content";
+import { navigation, site } from "@/lib/data/ese-content";
 import { onScrollFrame } from "@/lib/scroll";
 
-export function CinematicHeader() {
+/**
+ * `solid` forces the opaque state from the first pixel. The transparent-then-
+ * solid transition exists so the header can sit over the landing page's
+ * full-viewport photographic hero; a page that opens on type instead — a blog
+ * post, the journal index — has nothing for white-on-transparent text to sit on,
+ * and would render an invisible header until you scrolled.
+ */
+export function CinematicHeader({ solid = false }: { solid?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(
-    () =>
-      onScrollFrame(() => {
-        setScrolled(window.scrollY > window.innerHeight * 0.72);
-      }),
-    [],
-  );
+  useEffect(() => {
+    if (solid) return;
+    return onScrollFrame(() => {
+      setScrolled(window.scrollY > window.innerHeight * 0.72);
+    });
+  }, [solid]);
 
   useEffect(() => {
     document.body.dataset.menuOpen = String(open);
@@ -55,15 +61,22 @@ export function CinematicHeader() {
   return (
     <>
       <header
-        className={`cinematic-header${scrolled || open ? " cinematic-header--solid" : ""}`}
+        className={`cinematic-header${solid || scrolled || open ? " cinematic-header--solid" : ""}`}
       >
-        <a className="cinematic-header__brand" href="#top" aria-label="Laura McKelvey, home">
-          <span>Laura McKelvey</span>
-          <small>Environmental &amp; Community Practice</small>
+        <a
+          className="cinematic-header__brand"
+          href="/"
+          aria-label={`${site.name}, home`}
+        >
+          {/* The abbreviation is the wordmark; the full name is the subtitle.
+              "Environment Sovereignty & Equity" set at wordmark size wraps to two
+              lines in the header's fixed 12rem column at every breakpoint. */}
+          <span>{site.shortName}</span>
+          <small>{site.name}</small>
         </a>
 
         <nav className="cinematic-header__desktop" aria-label="Primary navigation">
-          {cinematicNavigation.map((item) => (
+          {navigation.map((item) => (
             <a key={item.href} href={item.href}>
               {item.label}
             </a>
@@ -98,7 +111,7 @@ export function CinematicHeader() {
         <div className="fullscreen-menu__inner">
           <p>Navigate</p>
           <nav aria-label="Menu navigation">
-            {cinematicNavigation.map((item, index) => (
+            {navigation.map((item, index) => (
               <a
                 key={item.href}
                 href={item.href}

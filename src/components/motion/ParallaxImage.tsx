@@ -11,6 +11,17 @@ type ParallaxImageProps = {
   priority?: boolean;
   sizes?: string;
   zoom?: "in" | "out";
+  /**
+   * How far the image travels and scales.
+   *
+   * `full` peaks at 1.46x, which was built for full-bleed photography with
+   * pixels to spare. The supplied archive has none — most sources are 480px on
+   * their long edge — and scaling one of those by 1.46 resolves visible
+   * softness that the same image, held near 1x, does not show. `soft` keeps the
+   * motion legible while staying inside what the source can support, and is the
+   * right default for anything drawn from `public/images/ese/`.
+   */
+  intensity?: "full" | "soft";
 };
 
 export function ParallaxImage({
@@ -20,6 +31,7 @@ export function ParallaxImage({
   priority = false,
   sizes = "100vw",
   zoom = "out",
+  intensity = "full",
 }: ParallaxImageProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -29,12 +41,22 @@ export function ParallaxImage({
 
     let stopScroll: (() => void) | undefined;
 
+    const soft = intensity === "soft";
+    const travel = soft ? 26 : 70;
+    const drift = soft ? -0.04 : -0.1;
+
     const update = () => {
       const rect = wrapper.getBoundingClientRect();
       const progress = viewportProgress(rect);
       const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-      const shift = Math.max(-70, Math.min(70, center * -0.1));
-      const scale = zoom === "out" ? 1.46 - progress * 0.36 : 1.02 + progress * 0.3;
+      const shift = Math.max(-travel, Math.min(travel, center * drift));
+      const scale = soft
+        ? zoom === "out"
+          ? 1.12 - progress * 0.1
+          : 1.0 + progress * 0.09
+        : zoom === "out"
+          ? 1.46 - progress * 0.36
+          : 1.02 + progress * 0.3;
       wrapper.style.setProperty("--parallax-y", `${shift}px`);
       wrapper.style.setProperty("--scroll-scale", scale.toFixed(4));
       wrapper.style.setProperty("--scroll-progress", progress.toFixed(4));
@@ -57,12 +79,12 @@ export function ParallaxImage({
       stopMotionWatch();
       stopScroll?.();
     };
-  }, [zoom]);
+  }, [zoom, intensity]);
 
   return (
     <div
       ref={wrapperRef}
-      className={`parallax-media parallax-media--zoom-${zoom} ${className}`.trim()}
+      className={`parallax-media parallax-media--zoom-${zoom} parallax-media--${intensity} ${className}`.trim()}
     >
       <Image src={src} alt={alt} fill priority={priority} sizes={sizes} />
     </div>

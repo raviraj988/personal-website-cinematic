@@ -155,20 +155,28 @@ p {
   color: var(--label-color, var(--color-clay));
   font-size: var(--type-meta);
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--track-label);
   line-height: 1.3;
   text-transform: uppercase;
 }
 
-/* On the warm clay grounds the clay accent would be brown on brown — legible by
-   the numbers but muddy to read. Deep forest green separates cleanly and keeps
-   the section labels tied to the site palette.
-   Only labels sitting directly on the page tone change; card meta lines
-   (`.work-card__meta`, `.resource-card__meta`, `.area-visual-card__note`) sit on
-   their own paper cards and set their colour independently. */
-.image-essay,
-.resource-library {
+/* On the warm clay ground the clay accent is brown on brown — it measured
+   3.59:1 there, against the 4.5:1 a small label needs. Deep forest green
+   separates cleanly and stays inside the palette. The original site carried this
+   rule for its clay sections; it was lost in the redesign when those sections
+   were removed, and the scholarship band inherited the problem. */
+[data-scroll-theme="clay"] .section-label,
+[data-scroll-theme="sand"] .section-label,
+[data-scroll-theme="sage"] .section-label {
   --label-color: var(--color-forest);
+}
+
+/* Muted copy on clay measured 4.50:1 — technically at the line and below it once
+   an ambient bloom drifts across. This is the same green, one step darker. */
+[data-scroll-theme="clay"] .scholarship-band__inner p:not(.section-label),
+[data-scroll-theme="sage"] .scholarship-band__inner p:not(.section-label),
+[data-scroll-theme="sand"] .tools-list li p {
+  color: #454d45;
 }
 
 .section-label--light {
@@ -183,9 +191,9 @@ p {
   gap: 0.75rem;
   width: fit-content;
   padding-block: 0.35rem;
-  font-size: 0.88rem;
+  font-size: var(--type-meta);
   font-weight: 500;
-  letter-spacing: 0.045em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -215,6 +223,67 @@ p {
 
 .text-link--dark {
   --line-color: var(--color-paper);
+}
+
+
+/* ------------------------------------------------------------------ button
+ *
+ * The bordered pill the contact footer already used. Promoted to a shared class
+ * so a primary action looks like an action everywhere — the hero's "What ESE
+ * does" and the scholarship and partner asks were underlined text links, which
+ * read as "more reading" rather than "do this".
+ *
+ * `.text-link` stays for genuinely secondary, inline navigation.
+ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.9rem 1.35rem;
+  border: 1px solid var(--button-border, var(--color-ink));
+  color: var(--button-ink, var(--color-ink));
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition:
+    background-color var(--motion-ui) ease,
+    color var(--motion-ui) ease,
+    border-color var(--motion-ui) ease;
+}
+
+.button:hover {
+  background: var(--button-hover-ground, var(--color-ink));
+  color: var(--button-hover-ink, var(--color-paper));
+}
+
+/* On a dark or photographic ground. */
+.button--light {
+  --button-border: rgba(255, 253, 248, 0.7);
+  --button-ink: var(--color-paper);
+  --button-hover-ground: var(--color-paper);
+  --button-hover-ink: var(--color-forest-deep);
+}
+
+/* The quieter of two adjacent actions on a dark ground. */
+.button--ghost-light {
+  --button-border: rgba(255, 253, 248, 0.34);
+  --button-ink: rgba(255, 253, 248, 0.86);
+  --button-hover-ground: transparent;
+  --button-hover-ink: var(--color-paper);
+}
+
+.button--ghost-light:hover {
+  border-color: rgba(255, 253, 248, 0.8);
+}
+
+.button .arrow {
+  margin-left: auto;
+}
+
+/* Two buttons side by side in the hero. */
+.lede-hero .link-row {
+  gap: 0.85rem;
 }
 
 /* Inline SVG arrow (see components/ui/Arrow.tsx). Sized in `em` so it tracks
@@ -470,7 +539,10 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 
 /* Small uppercase labels settle inward from wide tracking as they arrive. */
 .section-label {
-  --label-track: 0.1em;
+  /* The settled value. Must stay in step with `--track-label`: this rule comes
+     after the base `.section-label` and wins, so hard-coding a tracking here is
+     how the label size unification gets quietly undone. */
+  --label-track: var(--track-label);
   letter-spacing: var(--label-track);
   transition:
     letter-spacing var(--motion-cinematic) var(--ease-out-expo) var(--reveal-delay, 0ms),
@@ -633,9 +705,9 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .menu-trigger__label {
-  font-size: 0.68rem;
+  font-size: var(--type-meta);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -697,7 +769,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   align-self: start;
   color: #d6a088;
   font-size: var(--type-meta);
-  letter-spacing: 0.1em;
+  font-weight: 500;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -741,16 +814,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   font-size: 1.2rem;
 }
 
-/* Hero */
-.cinematic-hero {
-  position: relative;
-  display: flex;
-  min-height: max(43rem, 100svh);
-  overflow: hidden;
-  color: var(--color-white);
-  isolation: isolate;
-}
-
 .parallax-media {
   position: relative;
   overflow: hidden;
@@ -764,192 +827,13 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   will-change: transform;
 }
 
-.cinematic-hero__media {
-  position: absolute;
-  inset: -5rem 0;
-  z-index: -3;
-}
-
-.cinematic-hero__media img {
-  animation: hero-settle 1.4s var(--ease-out-expo) forwards;
-}
-
-@keyframes hero-settle {
-  from { opacity: 0.72; filter: saturate(0.75); }
-  to { opacity: 1; filter: saturate(1); }
-}
-
-.cinematic-hero__content {
-  align-self: flex-end;
-  width: min(100%, calc(var(--container) + var(--gutter) * 2));
-  margin-inline: auto;
-  padding: 0 var(--gutter) clamp(7rem, 13vh, 9rem);
-}
-
-.cinematic-hero__eyebrow {
-  margin-bottom: 1.35rem;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  opacity: 0;
-  animation: hero-copy 700ms var(--ease-out-expo) 780ms forwards;
-}
-
-.cinematic-hero h1 {
-  max-width: 13.5ch;
-  font-size: var(--type-display);
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  transform: translateY(1.5rem);
-  animation: hero-copy 800ms var(--ease-out-expo) 900ms forwards;
-}
-
 @keyframes hero-copy {
   to { opacity: 1; transform: none; }
-}
-
-.cinematic-hero__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: rgba(8, 26, 17, 0.37);
-}
-
-.cinematic-hero__scrim::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(8, 25, 17, 0.48), transparent 65%);
-}
-
-.scroll-cue {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 2.2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.scroll-cue i {
-  position: relative;
-  display: block;
-  width: 1px;
-  height: 3.2rem;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.35);
-}
-
-.scroll-cue i::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: white;
-  animation: scroll-cue 1.8s ease-in-out infinite;
 }
 
 @keyframes scroll-cue {
   0% { transform: translateY(-100%); }
   50%, 100% { transform: translateY(100%); }
-}
-
-/* Intro */
-.editorial-intro {
-  padding-block: clamp(7rem, 13vw, 12rem);
-}
-
-/* Image mosaic */
-.visual-mosaic {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 1.5rem;
-  align-items: end;
-  padding-top: clamp(3rem, 5vw, 5rem);
-  padding-bottom: clamp(4rem, 7vw, 7rem);
-}
-.visual-mosaic figure { margin: 0; overflow: hidden; background: #dfe5dd; }
-.visual-mosaic figure .parallax-media { width: 100%; height: 100%; }
-.visual-mosaic__fieldwork { grid-column: 1 / span 4; aspect-ratio: 4 / 5; }
-.visual-mosaic__community { grid-column: 5 / span 5; aspect-ratio: 5 / 4; }
-.visual-mosaic__place { grid-column: 10 / -1; aspect-ratio: 4 / 5; }
-.visual-mosaic > p {
-  grid-column: 1 / -1;
-  margin-top: 0.25rem;
-  color: var(--color-text-muted);
-  font-size: 0.68rem;
-}
-
-.editorial-intro__grid {
-  display: grid;
-  grid-template-columns: repeat(24, minmax(0, 1fr));
-  gap: 1.5rem;
-  align-items: end;
-}
-
-.editorial-intro__statement {
-  grid-column: 1 / span 14;
-  grid-row: 1;
-  align-self: start;
-}
-.editorial-intro__statement p {
-  font-family: var(--font-serif);
-  font-size: clamp(2.1rem, 3.6vw, 3rem);
-  line-height: 1.03;
-  letter-spacing: -0.025em;
-}
-
-.editorial-intro__statement .scroll-words__word {
-  transition: color 120ms linear;
-}
-
-.editorial-intro__media {
-  grid-column: 16 / -1;
-  grid-row: 1 / span 2;
-  align-self: stretch;
-}
-
-.editorial-intro__media .parallax-media {
-  width: 100%;
-  min-height: 35rem;
-  height: 100%;
-  aspect-ratio: 4 / 5;
-  background: #dfe5dd;
-}
-
-.editorial-intro__media > p {
-  width: min(100%, 31ch);
-  margin: 1rem 0 0 auto;
-  padding-left: 1rem;
-  border-left: 1px solid var(--color-clay);
-  color: var(--color-text-muted);
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  line-height: 1.35;
-}
-
-.editorial-intro__aside {
-  grid-column: 3 / span 9;
-  grid-row: 2;
-  margin-top: 4rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--color-line);
-}
-
-.editorial-intro__aside > span {
-  color: var(--color-clay);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.editorial-intro__aside p {
-  margin: 1rem 0 2rem;
-  color: var(--color-text-muted);
 }
 
 /* About */
@@ -1002,147 +886,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .about-editorial__copy > p { color: var(--color-text-muted); }
 .link-row { display: flex; flex-wrap: wrap; gap: 1rem 2rem; margin-top: 2.3rem; }
 
-/* Landscape */
-.landscape-interlude {
-  position: relative;
-  height: 100svh;
-  min-height: 42rem;
-  overflow: hidden;
-  background: var(--color-forest-deep);
-  color: var(--color-white);
-}
-
-.landscape-interlude .parallax-media {
-  position: absolute;
-  inset: -5rem 0;
-}
-
-.landscape-interlude::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(7, 30, 17, 0.16), rgba(5, 25, 15, 0.72)),
-    linear-gradient(90deg, transparent 45%, rgba(5, 25, 15, 0.18));
-}
-
-.landscape-interlude > p {
-  position: absolute;
-  z-index: 2;
-  right: var(--gutter);
-  bottom: 3rem;
-  max-width: 34ch;
-  padding-left: 1rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.65);
-  font-family: var(--font-serif);
-  font-size: 1.35rem;
-  line-height: 1.35;
-}
-
-/* Image essay
- *
- * Two columns rather than a 24-track grid. The old version placed both images
- * on one auto row and the text panel on the next, so the shorter 3:2 image left
- * a ~240px void beneath it and the row gap added another ~112px before the
- * panel appeared. The right-hand column now stacks image → caption → panel and
- * stretches to the height of the tall 4:5 portrait, with the panel bottom-
- * aligned to it. Image tops are flush: the composition reads from the differing
- * aspect ratios, not from a small ambiguous offset.
- */
-.image-essay {
-  position: relative;
-  isolation: isolate;
-  padding-top: var(--section-space);
-  padding-bottom: calc(var(--section-space) * 1.1);
-}
-
-.image-essay__heading {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 18fr);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: start;
-}
-
-.image-essay__title {
-  max-width: 30ch;
-  font-size: var(--type-h2);
-}
-
-.image-essay__motion-note {
-  grid-column: 2;
-  width: fit-content;
-  margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--color-line);
-  color: var(--color-text-muted);
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.image-essay__columns {
-  display: grid;
-  grid-template-columns: minmax(0, 11fr) minmax(0, 12fr);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: start;
-  /* The only gap between the heading and the images. */
-  margin-top: clamp(3rem, 6vw, 5.5rem);
-}
-
-.image-essay figure {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
-.image-essay figure .parallax-media {
-  width: 100%;
-  background: #e3e5dc;
-}
-
-.image-essay__portrait .parallax-media {
-  aspect-ratio: 4 / 5;
-}
-
-/* Stretches to the portrait's height so the panel can sit on its baseline. */
-.image-essay__aside {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: clamp(2rem, 4vw, 3.25rem);
-  align-self: stretch;
-}
-
-.image-essay__wide .parallax-media {
-  aspect-ratio: 3 / 2;
-}
-
-.image-essay figcaption {
-  margin-top: 0.8rem;
-  color: var(--color-text-muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.035em;
-}
-
-.image-essay__text-panel {
-  align-self: end;
-  padding: clamp(1.5rem, 3vw, 2.5rem) 0 0 clamp(1rem, 2vw, 2rem);
-  border-top: 1px solid var(--color-line);
-  border-left: 1px solid var(--color-line);
-}
-
-.image-essay__text-panel h3 {
-  max-width: 18ch;
-  margin-top: 1rem;
-  font-size: var(--type-h3);
-  line-height: 1.15;
-}
-
-.image-essay__text-panel > p:last-child {
-  max-width: 46ch;
-  margin-top: 1.2rem;
-  color: var(--color-text-muted);
-}
-
 /* Area cards */
 .section-heading-row {
   display: grid;
@@ -1157,85 +900,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   max-width: 40ch;
   color: var(--color-text-muted);
 }
-
-.area-card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-}
-
-.area-visual-card {
-  min-width: 0;
-  border: 1px solid var(--color-line);
-  background: var(--color-paper);
-  box-shadow: 0 1.5rem 4rem rgba(29, 48, 36, 0.06);
-  transition: border-color var(--motion-ui), transform 500ms var(--ease-out-expo), box-shadow 500ms var(--ease-out-expo);
-}
-
-.area-visual-card:nth-child(even) { margin-top: 0; }
-.area-visual-card:hover {
-  border-color: rgba(28, 48, 37, 0.45);
-  transform: translateY(-0.3rem);
-  box-shadow: 0 1.5rem 3rem rgba(29, 48, 36, 0.1);
-}
-.area-visual-card:hover .parallax-media img,
-.resource-card:hover .parallax-media img,
-.work-card:hover .parallax-media img { filter: saturate(1.08) contrast(1.02); }
-
-/* Flex chain so the body fills the stretched card and every card's bottom link
-   lands on the same baseline regardless of eyebrow or description length. */
-.area-visual-card article { display: flex; flex-direction: column; height: 100%; }
-.area-visual-card__media {
-  position: relative;
-  /* Never let the flex column squeeze the fixed-ratio media. */
-  flex: none;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: #dfe5dd;
-}
-.area-visual-card__media .parallax-media { width: 100%; height: 100%; }
-.area-visual-card__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(8, 25, 17, 0.03) 55%, rgba(8, 25, 17, 0.45));
-  pointer-events: none;
-}
-.area-visual-card__number {
-  position: absolute;
-  z-index: 2;
-  right: 1rem;
-  bottom: 0.85rem;
-  color: white;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-}
-.area-visual-card__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  /* Grid stretch already equalises card heights; a tall floor here only opened
-     a gap between the description and the bottom-anchored link. */
-  min-height: 15rem;
-  padding: 1.35rem;
-}
-.area-visual-card__note,
-.resource-card__meta {
-  color: var(--color-clay) !important;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.area-visual-card h3 { margin-top: 0.75rem; font-size: clamp(1.3rem, 1.7vw, 1.55rem); line-height: 1.12; }
-.area-visual-card__body > p:not(.area-visual-card__note) {
-  max-width: 49ch;
-  margin-top: 1.35rem;
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-.area-visual-card .text-link { margin-top: auto; padding-top: 1.5rem; font-size: 0.75rem; }
 
 /* Approach */
 .approach-editorial {
@@ -1268,49 +932,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .approach-editorial li h3 { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.2; }
 .approach-editorial li p { max-width: 45ch; margin-top: 0.55rem; color: var(--color-text-muted); font-size: 0.92rem; }
 
-/* Principle */
-.principle-band {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 78vh;
-  padding: var(--section-space) var(--gutter);
-  overflow: hidden;
-  color: var(--color-white);
-}
-.principle-band > img { object-fit: cover; z-index: -2; }
-.principle-band__scrim { position: absolute; inset: 0; z-index: -1; background: rgba(6, 24, 14, 0.82); }
-.principle-band__content { width: min(100%, 52rem); text-align: center; }
-.principle-band h2 { margin-top: 1.5rem; color: var(--color-paper); font-size: var(--type-h2); line-height: 1.08; }
-.principle-band .scroll-words__word { color: var(--color-paper); }
-.principle-band__content > p:last-child { margin-top: 2rem; color: rgba(255, 255, 255, 0.7); font-size: 0.72rem; }
-
-/* Work
- *
- * This section sits on the dark forest tone, so its heading copy inverts.
- * Scoped to `.section-heading-row` on purpose: `.selected-work-grid` is a
- * sibling, and a blanket `color` on `.selected-stories` would be inherited by
- * `.work-card h3`, painting it near-white on its own paper card. */
-.selected-stories .section-heading-row { color: var(--color-paper); }
-.selected-stories .section-heading-row .section-label { color: #e5aa8d; }
-.selected-stories .section-heading-row > p:last-child { color: rgba(255, 255, 255, 0.74); }
-.selected-stories .reveal--rule::before { background: rgba(255, 255, 255, 0.24); }
-/* Belt and braces: cards always read on their own light background. */
-.selected-stories .work-card { color: var(--color-ink); }
-
-.section-heading-row--work { margin-bottom: clamp(3.5rem, 6vw, 5rem); }
-.selected-stories__list { display: grid; gap: clamp(7rem, 12vw, 11rem); }
-.selected-story { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 1.5rem; align-items: center; }
-.selected-story__media { grid-column: 1 / span 14; position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #e7e2d7; }
-.selected-story__parallax { width: 100%; height: 100%; }
-.selected-story__copy { grid-column: 17 / -1; }
-.selected-story--reverse .selected-story__media { grid-column: 11 / -1; }
-.selected-story--reverse .selected-story__copy { grid-column: 1 / span 8; grid-row: 1; }
-.selected-story__meta { color: var(--color-clay); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; }
-.selected-story h3 { margin-top: 1.25rem; font-size: clamp(2rem, 3.4vw, 3.4rem); }
-.selected-story__copy > p:not(.selected-story__meta) { margin-top: 1.5rem; color: var(--color-text-muted); }
-.selected-story__copy .text-link { margin-top: 2.2rem; }
-
 .selected-work-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1328,129 +949,18 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #dfe5dd; }
 .work-card__media .parallax-media { width: 100%; height: 100%; }
 .work-card__body { display: flex; flex: 1; flex-direction: column; padding: clamp(1.35rem, 2.4vw, 2rem); }
-.work-card__meta { color: var(--color-clay); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; }
+.work-card__meta { color: var(--color-clay); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; }
 .work-card h3 { margin-top: 0.9rem; font-size: var(--type-h3); line-height: 1.12; }
 .work-card__body > p:not(.work-card__meta) { margin-top: 1.15rem; color: var(--color-text-muted); }
 .work-card .text-link { margin-top: auto; padding-top: 1.5rem; font-size: 0.75rem; }
 
-/* Resource library */
-.resource-library {
-  border-top: 1px solid var(--color-line);
-  /* Light enough to lift the section, sheer enough to let the clay tone read. */
-  background: rgba(255, 253, 248, 0.12);
-}
-.resource-library__heading {
-  display: grid;
-  grid-template-columns: 5fr 12fr 7fr;
-  gap: 1.5rem;
-  align-items: start;
-  margin-bottom: clamp(4rem, 8vw, 7rem);
-}
-.resource-library__heading h2 { font-size: var(--type-h2); }
-.resource-library__heading > p:last-child { max-width: 38ch; color: var(--color-text-muted); }
-.resource-card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  align-items: stretch;
-}
-.resource-card {
-  grid-column: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid rgba(28, 48, 37, 0.2);
-  background: var(--color-paper);
-  box-shadow: 0 1.4rem 4rem rgba(29, 48, 36, 0.055);
-  transition: transform 500ms var(--ease-out-expo), box-shadow 500ms var(--ease-out-expo);
-}
-.resource-card--featured,
-.resource-card--featured + .resource-card { grid-column: auto; margin-top: 0; }
-.resource-card:nth-child(4) { margin-top: 0; }
-.resource-card:hover { transform: translateY(-0.4rem); box-shadow: 0 2rem 4rem rgba(29, 48, 36, 0.12); }
-.resource-card__media,
-.resource-card--featured .resource-card__media { position: relative; flex: none; aspect-ratio: 4 / 3; overflow: hidden; background: #dfe5dd; }
-.resource-card__media .parallax-media { width: 100%; height: 100%; }
-.resource-card__media > span {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 0.8rem 1rem;
-  background: var(--color-paper);
-  color: var(--color-clay);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-}
-.resource-card__body { display: flex; flex: 1; flex-direction: column; min-height: 15rem; padding: 1.35rem; }
-.resource-card h3 { max-width: 21ch; margin-top: 0.75rem; font-size: clamp(1.3rem, 1.7vw, 1.55rem); line-height: 1.12; }
-.resource-card__body > p:not(.resource-card__meta) { max-width: 50ch; margin-top: 1rem; color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.55; }
-.resource-card .text-link { margin-top: auto; padding-top: 1.4rem; font-size: 0.75rem; }
-.resource-library__disclaimer {
-  width: fit-content;
-  margin: clamp(4rem, 7vw, 6rem) 0 0 auto;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--color-line);
-  color: var(--color-text-muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-}
-
-/* Full-screen story */
-.story { position: relative; background: var(--color-forest-deep); color: var(--color-white); }
-.story__track { display: flex; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.story__track::-webkit-scrollbar { display: none; }
-.story__slide { position: relative; flex: 0 0 100%; display: grid; place-items: center; min-height: calc(100svh - var(--header-height)); padding: 7rem var(--gutter); overflow: hidden; scroll-snap-align: start; isolation: isolate; }
-.story__slide > img { z-index: -3; object-fit: cover; }
-.story__scrim { position: absolute; inset: 0; z-index: -2; background: rgba(8, 27, 17, 0.56); }
-.story__panel { width: min(100%, 35rem); min-height: 25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: clamp(2.5rem, 6vw, 5rem); background: rgba(248, 245, 236, 0.95); color: var(--color-ink); text-align: center; }
-.story__counter { color: var(--color-text-muted); font-size: 0.7rem; letter-spacing: 0.09em; }
-.story__counter span { color: var(--color-clay); }
-.story__panel h3 { margin-top: 1.2rem; font-size: var(--type-h3); line-height: 1.12; }
-.story__panel > p:not(.story__counter) { margin-top: 1.5rem; color: var(--color-text-muted); }
-.story__panel .text-link { margin-top: 2rem; }
-.story__controls { position: absolute; z-index: 3; right: var(--gutter); bottom: 2rem; left: var(--gutter); display: grid; grid-template-columns: auto 1fr auto auto; gap: 2rem; align-items: center; }
-.story__controls > button { border: 0; background: transparent; color: white; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; }
-.story__controls > button:disabled { opacity: 0.35; cursor: default; }
-.story__controls ol { display: flex; justify-content: center; gap: clamp(1rem, 3vw, 3rem); }
-.story__controls ol button { padding: 0.5rem 0; border: 0; border-bottom: 1px solid transparent; background: transparent; color: rgba(255, 255, 255, 0.68); font-size: 0.68rem; letter-spacing: 0.05em; cursor: pointer; }
-.story__controls ol button[aria-current="true"] { color: white; border-color: white; }
-.story__autoplay { min-width: 4.5rem; padding-inline: 0.75rem !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; }
-.story__autoplay:hover { border-color: white !important; }
-
 /* Footer */
-.cinematic-footer { position: relative; isolation: isolate; overflow-x: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-forest-deep); color: var(--color-paper); }
-.cinematic-footer__visual {
-  position: relative;
-  width: min(100%, var(--container));
-  height: clamp(24rem, 56vw, 48rem);
-  margin: 0 auto clamp(6rem, 10vw, 9rem);
-  overflow: hidden;
-}
-.cinematic-footer__visual .parallax-media { position: absolute; inset: -5rem 0; }
-.cinematic-footer__visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 48%, rgba(5, 20, 12, 0.7));
-}
-.cinematic-footer__visual > p {
-  position: absolute;
-  z-index: 2;
-  right: clamp(1.5rem, 4vw, 4rem);
-  bottom: clamp(1.5rem, 4vw, 4rem);
-  max-width: 30ch;
-  padding-left: 1rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.7);
-  font-family: var(--font-serif);
-  font-size: clamp(1.3rem, 2.2vw, 2rem);
-  line-height: 1.25;
-}
-.cinematic-footer__cta { width: min(100%, 52rem); margin-inline: auto; text-align: center; }
-.cinematic-footer__cta h2 { margin-top: 1rem; color: var(--color-paper); font-size: var(--type-h2); }
-.cinematic-footer__cta > p:not(.section-label) { max-width: 47ch; margin: 2rem auto 0; color: rgba(255, 255, 255, 0.72); }
-.footer-button { display: inline-flex; align-items: center; gap: 2rem; margin-top: 2.5rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
+/* `overflow: clip`, not `overflow-x: clip`: the background photograph is inset
+   -4rem top and bottom so its parallax travel never reveals an edge, and clipping
+   only the horizontal axis would let it spill into the section above. */
+.cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-forest-deep); color: var(--color-paper); }
+.footer-button { display: inline-flex; align-items: center; gap: 2rem; margin-top: 2.5rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
 .footer-button:hover { background: var(--color-paper); color: var(--color-forest-deep); }
-.cinematic-footer__cta small { display: block; margin-top: 1rem; color: rgba(255, 255, 255, 0.45); font-size: 0.65rem; }
 .cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.22); font-size: 0.72rem; }
 .cinematic-footer__name { font-family: var(--font-serif); font-size: 1.5rem; }
 .cinematic-footer__bottom > div:first-child > p:last-child { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.65); }
@@ -1458,11 +968,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .cinematic-footer__bottom nav a:hover { color: #dfad94; }
 .cinematic-footer__legal { justify-self: end; text-align: right; color: rgba(255, 255, 255, 0.55); }
 .cinematic-footer__legal a { display: inline-block; margin-top: 0.75rem; color: white; }
-
-@media (max-width: 1100px) {
-  .area-card-grid,
-  .resource-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 
 @media (max-width: 959px) {
   :root { --header-height: 4.5rem; --section-space: clamp(5rem, 16vw, 7rem); }
@@ -1474,26 +979,16 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .fullscreen-menu__inner > p:first-child { margin-top: 2rem; }
   .fullscreen-menu nav { margin-block: auto; }
   .fullscreen-menu__foot { display: none; }
-  .cinematic-hero__content { padding-bottom: 7rem; }
-  .scroll-cue { right: 1.5rem; }
-  .editorial-intro__statement { grid-column: 1 / span 12; }
-  .editorial-intro__media { grid-column: 14 / -1; }
-  .editorial-intro__aside { grid-column: 2 / span 9; }
   .about-editorial__heading { grid-column: 1 / span 12; }
   .about-editorial__portrait { grid-column: 15 / -1; }
   .about-editorial__copy { grid-column: 2 / span 10; }
   .section-heading-row { grid-template-columns: 1fr 2fr; }
   .section-heading-row > p:last-child { grid-column: 2; }
-  .image-essay__heading { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
-  .image-essay__columns { gap: clamp(1.25rem, 2.5vw, 2rem); }
   .approach-editorial { grid-template-columns: 1fr; }
   .approach-editorial__media { position: relative; height: 58vh; min-height: 29rem; }
   .approach-editorial__content { padding: var(--section-space) var(--gutter); }
   .selected-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .work-card:last-child { grid-column: 1 / -1; width: calc(50% - 0.75rem); }
-  .resource-library__heading { grid-template-columns: 1fr 2fr; }
-  .resource-library__heading > p:last-child { grid-column: 2; }
-  .story__controls ol { display: none; }
   .cinematic-footer__bottom { grid-template-columns: 1fr 1fr; }
   .cinematic-footer__bottom nav { justify-content: flex-end; }
   .cinematic-footer__legal { grid-column: 1 / -1; justify-self: stretch; text-align: left; }
@@ -1502,66 +997,18 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 @media (max-width: 680px) {
   .cinematic-header { padding-inline: 1.25rem; }
   .cinematic-header__brand span { font-size: 1.2rem; }
-  .cinematic-hero { min-height: 100svh; }
-  .cinematic-hero__content { padding-right: 1.5rem; padding-left: 1.5rem; }
-  .cinematic-hero h1 { max-width: 12ch; font-size: clamp(2.75rem, 12vw, 3.6rem); }
-  .cinematic-hero__scrim::after { background: linear-gradient(0deg, rgba(8, 25, 17, 0.55), transparent 68%); }
-  .scroll-cue span { display: none; }
-  .editorial-intro__grid,
-  .about-editorial__grid,
-  .section-heading-row { display: block; }
-  .editorial-intro__statement p { font-size: clamp(2rem, 9vw, 2.75rem); }
-  .editorial-intro__media { margin-top: 3rem; }
-  .editorial-intro__media .parallax-media { min-height: 0; aspect-ratio: 4 / 5; }
-  .editorial-intro__aside { margin-top: 3.5rem; }
   .about-editorial__portrait { margin-top: 3rem; }
   .about-editorial__copy { margin-top: 3rem; }
   .about-editorial__portrait figure { aspect-ratio: 4 / 5.25; }
-  .landscape-interlude { height: 100svh; min-height: 36rem; }
-  .landscape-interlude > p { right: 1.5rem; bottom: 2rem; left: 1.5rem; }
-  .image-essay__heading { display: block; }
-  .image-essay__title { margin-top: 1.2rem; }
-  .image-essay__motion-note { margin-top: 1.5rem; }
-  .image-essay__columns { display: block; margin-top: 3rem; }
-  /* Spacing goes on the wrapper, not the figure: `.image-essay figure` sets
-     `margin: 0` at a higher specificity and would silently win. */
-  .image-essay__aside { display: block; margin-top: 3rem; }
-  .image-essay__text-panel { margin-top: 3rem; padding-left: 1rem; }
   .section-heading-row h2 { margin-top: 1.2rem; }
   .section-heading-row > p:last-child { margin-top: 1.5rem; }
-  .area-card-grid { grid-template-columns: 1fr; }
-  .area-visual-card:nth-child(even) { margin-top: 0; }
-  .area-visual-card__body { min-height: 0; }
   .approach-editorial__content h2 { max-width: none; }
-  .principle-band { min-height: 70vh; }
-  .selected-story,
-  .selected-story--reverse { display: flex; flex-direction: column; gap: 2rem; }
-  .selected-story__media,
-  .selected-story--reverse .selected-story__media { width: 100%; aspect-ratio: 4 / 3; }
-  .selected-story__copy,
-  .selected-story--reverse .selected-story__copy { width: 100%; }
   .selected-work-grid { grid-template-columns: 1fr; }
   .work-card:last-child { grid-column: auto; width: auto; }
-  .resource-library__heading { display: block; }
-  .resource-library__heading h2 { margin-top: 1.2rem; }
-  .resource-library__heading > p:last-child { margin-top: 1.5rem; }
-  .resource-card-grid { display: block; }
-  .resource-card,
-  .resource-card--featured,
-  .resource-card--featured + .resource-card,
-  .resource-card:nth-child(4) { margin-top: 2rem; }
-  .resource-card:first-child { margin-top: 0; }
-  .resource-card__media,
-  .resource-card--featured .resource-card__media { aspect-ratio: 4 / 3; }
-  .resource-card__body { min-height: 0; }
-  .resource-library__disclaimer { margin-left: 0; }
-  .story__slide { min-height: 90svh; padding: 5.5rem 1.25rem 7.5rem; }
-  .story__panel { min-height: 23rem; padding: 2.2rem 1.5rem; }
-  .story__controls { right: 1.25rem; bottom: 1.5rem; left: 1.25rem; grid-template-columns: 1fr auto 1fr; gap: 0.8rem; }
-  .story__autoplay { grid-column: 2; }
-  .story__controls > button:last-child { grid-column: 3; justify-self: end; }
   .cinematic-footer { padding-right: 1.5rem; padding-left: 1.5rem; }
   .cinematic-footer__visual { height: 31rem; }
+  /* Anchored to both edges rather than the right, so the line keeps its measure
+     instead of being squeezed into a column by the 30ch cap. */
   .cinematic-footer__visual > p { right: 1.5rem; left: 1.5rem; }
   .cinematic-footer__bottom { grid-template-columns: 1fr; }
   .cinematic-footer__bottom nav { justify-content: flex-start; }
@@ -1606,5 +1053,933 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .mask-rise__inner,
   html[data-motion="ready"] .reveal:not([data-visible="true"]) .mask-rise__inner {
     transform: none;
+  }
+}
+
+
+/* ==========================================================================
+   ESE redesign
+   ========================================================================== */
+
+/* ------------------------------------------------------------- photography
+
+   `photo-frame` is containment only: it establishes the positioning context an
+   absolutely-positioned or `fill` image needs, clips the overflow, and makes the
+   image cover its box.
+
+   It deliberately does **no** colour manipulation. An earlier version of this
+   file put every photograph through `grayscale(1)` and re-tinted it through the
+   site palette, on the reasoning that it would unify twenty-six sources shot on
+   different phones across several years and disguise their resolution. Whatever
+   that bought, the cost was that none of ESE's photographs were shown in their
+   own colour — a decision about somebody else's photography that was not mine to
+   make. The images are the record of the work; they render as they were taken. */
+.photo-frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The soft parallax variant never travels far enough to need the 1.18 default
+   fallback scale, which would upscale a 480px source for no visual gain. */
+.parallax-media--soft img {
+  transform: translate3d(0, var(--parallax-y, 0), 0)
+    scale(var(--scroll-scale, 1.04));
+}
+
+.text-link--light {
+  --line-color: rgba(252, 252, 250, 0.5);
+  color: var(--color-white);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+/* Full-bleed photographic hero.
+ *
+ * The section spans the viewport and the photograph is its ground; the copy sits
+ * on the image, bottom-left, inside the usual container. `isolation` keeps the
+ * negative z-indexes below the content and above the page background. */
+.lede-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: max(43rem, 100svh);
+  overflow: hidden;
+  color: var(--color-white);
+  /* The eyebrow is near-white here, not the clay default and not the peach
+     `--light` variant used on the flat forest grounds. Measured against the
+     rendered photograph, peach reached only 4.22:1 where 4.5:1 is required — the
+     eyebrow is the topmost line of copy and sits over the brightest part of the
+     frame. This is also what the hero did before the redesign. */
+  --label-color: rgba(255, 255, 255, 0.94);
+}
+
+.lede-hero__media {
+  position: absolute;
+  /* Overscanned top and bottom so the parallax travel can never pull the edge
+     of the image into frame. */
+  inset: -5rem 0;
+  z-index: -3;
+}
+
+.lede-hero__media img {
+  animation: hero-settle 1.4s var(--ease-out-expo) forwards;
+}
+
+@keyframes hero-settle {
+  from { opacity: 0.72; filter: saturate(0.75); }
+  to { opacity: 1; filter: saturate(1); }
+}
+
+/* Two layers, both load-bearing for legibility rather than mood.
+ *
+ * The flat wash lifts the whole frame; the gradient adds weight down the left,
+ * where the copy actually sits. This hero carries more than a headline — a lede
+ * at body size and two uppercase links — and small text over a photograph needs
+ * 4.5:1, not the 3:1 a 100px headline can rely on. The values here were set by
+ * sampling the rendered pixels behind each run of text, not by eye. */
+.lede-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: rgba(8, 26, 17, 0.36);
+}
+
+.lede-hero__scrim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(6, 22, 14, 0.54),
+      rgba(6, 22, 14, 0.22) 52%,
+      rgba(6, 22, 14, 0.02) 78%
+    ),
+    /* Reaches to 68% rather than 46%: the eyebrow is the topmost line of the copy
+       block and sat just above where the old foot gradient stopped, landing it on
+       bright water at 3.90:1 against the 4.5:1 it needs as small text. */
+    linear-gradient(
+      0deg,
+      rgba(6, 22, 14, 0.48),
+      rgba(6, 22, 14, 0.22) 46%,
+      transparent 68%
+    ),
+    /* A short band under the header only.
+     *
+     * Lightening the wash to let the photograph through dropped the navigation to
+     * 2.97:1 — it sits at the very top, over the brightest sky in the frame, and
+     * it is small text needing 4.5:1. Darkening the whole scrim again to fix one
+     * strip would undo the point of the change, so the protection is local to the
+     * strip that needs it. */
+    linear-gradient(
+      180deg,
+      rgba(6, 22, 14, 0.62),
+      rgba(6, 22, 14, 0.28) 12%,
+      transparent 22%
+    );
+}
+
+.lede-hero__grid {
+  align-self: flex-end;
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin-inline: auto;
+  padding: calc(var(--header-height) + 2rem) var(--gutter)
+    clamp(5rem, 11vh, 8rem);
+}
+
+/* Larger than the contained version this replaces: the headline now has the
+   full container to run in rather than a half-width column. Still short of
+   `--type-display`, which at 7.25rem breaks this ten-word sentence badly. */
+.lede-hero__copy h1 {
+  max-width: 24ch;
+  margin-top: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 5.4vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.18);
+  text-wrap: balance;
+}
+
+.lede-hero__lede {
+  max-width: 46ch;
+  margin-top: 2rem;
+  /* Not `--color-text-muted`: that is a dark green tuned for light grounds and
+     is unreadable here. */
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--type-body-md);
+  line-height: 1.62;
+}
+
+
+.lede-hero .link-row {
+  margin-top: 2.5rem;
+}
+
+/* --------------------------------------------------------------- ESE intro */
+
+.org-intro__grid {
+  display: grid;
+  align-items: start;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  grid-template-columns: 1fr 0.85fr;
+}
+
+.org-intro__copy h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  text-wrap: balance;
+}
+
+.org-intro__copy p + p,
+.org-intro__copy h2 + p {
+  margin-top: 1.35rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+.org-intro__media figure {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 2px;
+}
+
+.org-intro__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+.mission-panel {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  padding: clamp(2rem, 4vw, 3.25rem);
+  border: 1px solid var(--color-line);
+  border-left: 3px solid var(--color-clay);
+  background: rgba(255, 253, 248, 0.55);
+}
+
+.mission-panel blockquote {
+  margin-top: 1.25rem;
+  max-width: 46ch;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+.mission-panel__supporting {
+  max-width: 52ch;
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------------------------------------------------------------- services */
+
+.service-card-grid {
+  display: grid;
+  gap: clamp(1.5rem, 2.6vw, 2.25rem);
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: 0;
+  list-style: none;
+}
+
+/* Five cards over three columns leaves two on the last row. Letting those two
+   stretch to half-width each keeps the row from reading as an accident. */
+.service-card:nth-child(4),
+.service-card:nth-child(5) {
+  grid-column: span 3 / span 3;
+}
+
+@media (min-width: 60rem) {
+  .service-card:nth-child(4) { grid-column: 1 / 3; }
+  .service-card:nth-child(5) { grid-column: 3 / 4; }
+}
+
+.service-card article {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.service-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.service-card__media .parallax-media {
+  width: 100%;
+  height: 100%;
+}
+
+.service-card__number {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  z-index: 4;
+  color: var(--color-white);
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  opacity: 0.85;
+}
+
+.service-card__body {
+  flex: 1;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+.service-card__body h3 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.service-card__body p {
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.62;
+}
+
+/* ----------------------------------------------------------- who we serve */
+
+/* Every other section heading sets this explicitly. Without it this one inherited
+   the browser's default `h2` size and rendered at 24px against the 63px used
+   everywhere else — family, weight, and leading were already right, so it read as
+   a heading that had been forgotten rather than a deliberate step down. */
+.serve-band__heading h2 {
+  margin-top: 1.25rem;
+  font-size: var(--type-h2);
+}
+
+.serve-band__list {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 0;
+  list-style: none;
+}
+
+.serve-band__list li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 2.4vw, 1.9rem) 0;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.serve-band__list li span {
+  color: var(--color-clay);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+/* ------------------------------------------------------------- who we serve */
+
+.serve-band__body {
+  display: grid;
+  align-items: start;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: 1fr 0.62fr;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.serve-band__media figure {
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
+
+.serve-band__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+
+/* ------------------------------------------------- media columns that fit
+ *
+ * In a two-column section the copy is as tall as the copy needs to be, while a
+ * figure with a fixed `aspect-ratio` is as tall as its ratio makes it. The two
+ * almost never match, and with `align-items: start` the difference showed as
+ * dead space beneath the image — measured at 191px in "What is ESE", 308px in
+ * "Who we are", and 108px in the case study.
+ *
+ * Above 60rem the figure stretches to the row instead and crops with
+ * `object-fit: cover`, so the image always meets the bottom of the copy. The
+ * aspect ratios are kept as the single-column fallback: once the grid stacks,
+ * there is no sibling to match and a stretched figure would have no height at
+ * all.
+ */
+@media (min-width: 60rem) {
+  .org-intro__grid,
+  .network-band__inner,
+  .case-study__inner {
+    align-items: stretch;
+  }
+
+  .org-intro__media,
+  .network-band__media,
+  .case-study__media {
+    /* The Reveal wrapper sits between the grid and the figure, so the height
+       has to be handed down explicitly at each step. */
+    height: 100%;
+  }
+
+  .org-intro__media figure,
+  .network-band__media figure,
+  .case-study__media figure {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
+/* ---------------------------------------------------------------- founder */
+
+/* Laura, inside the network band rather than above it.
+ *
+ * Set apart from the surrounding copy by a hairline and a lighter ground, so it
+ * reads as an attributed statement from a person rather than as more of ESE's
+ * institutional voice — which is exactly what it is. */
+.founder-card {
+  display: grid;
+  align-items: start;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  grid-template-columns: 20rem 1fr;
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
+  padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.founder-card__portrait {
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
+
+.founder-card__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.founder-card__body blockquote {
+  margin-top: 1.25rem;
+}
+
+.founder-card__body blockquote p {
+  max-width: 62ch;
+  color: rgba(238, 240, 234, 0.82);
+  line-height: 1.68;
+}
+
+.founder-card__body blockquote p + p {
+  margin-top: 1.15rem;
+}
+
+.founder-card__attribution {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.founder-card__attribution cite {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-style: normal;
+  line-height: 1.1;
+}
+
+.founder-card__attribution span {
+  color: rgba(238, 240, 234, 0.6);
+  font-size: var(--type-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- case study */
+
+.case-study {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  padding-block: var(--section-space);
+  color: var(--color-white);
+}
+
+.case-study__inner {
+  display: grid;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  grid-template-columns: 0.9fr 1.1fr;
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.case-study__media figure {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.case-study__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+.case-study__copy h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  text-wrap: balance;
+}
+
+/* `:not(.section-label)` because the eyebrow is also a direct-child <p>. Without
+   it this rule out-specifies `.section-label` and renders the eyebrow at body-lg
+   size — 20px against the 11.5px every other eyebrow on the page uses. */
+.case-study__copy > p:not(.section-label):not(.case-study__status) {
+  max-width: 52ch;
+  margin-top: 1.75rem;
+  /* Lightened from the muted ink used on the pale grounds: on forest that value
+     measures under 4.5:1. This clears it. */
+  color: rgba(238, 240, 234, 0.82);
+  font-size: var(--type-body-md);
+  line-height: 1.68;
+}
+
+.case-study__status {
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 2rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid rgba(252, 252, 250, 0.28);
+  border-radius: 999px;
+  font-size: var(--type-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.case-study__status span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #e5aa8d;
+}
+
+/* ------------------------------------------------------------------- tools */
+
+.tools-list {
+  display: grid;
+  gap: 0;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 0;
+  list-style: none;
+}
+
+.tools-list li {
+  padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.tools-list__status {
+  color: var(--color-clay);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.tools-list li h3 {
+  max-width: 34ch;
+  margin-top: 0.85rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+.tools-list li p:not(.tools-list__status) {
+  max-width: 62ch;
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.66;
+  font-size: var(--type-body-md);
+}
+
+/* ----------------------------------------------------------- network band */
+
+.network-band {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  padding-block: var(--section-space);
+  color: var(--color-white);
+}
+
+.network-band__inner {
+  display: grid;
+  /* No `align-items: start` here. This rule sits after the media-columns block
+     above, and at equal specificity source order wins — so declaring `start` here
+     silently cancelled the stretch and left the photograph 165px taller than the
+     copy beside it. The stretch rule owns the alignment. */
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  grid-template-columns: 1.1fr 0.9fr;
+  width: min(100%, calc(var(--container) + var(--gutter) * 2));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.network-band__copy h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+}
+
+/* `:not(.section-label)` because the eyebrow is also a direct-child <p>. Without
+   it this rule out-specifies `.section-label` and renders the eyebrow at body-lg
+   size — 20px against the 11.5px every other eyebrow on the page uses. */
+.network-band__copy > p:not(.section-label) {
+  max-width: 52ch;
+  margin-top: 1.5rem;
+  color: rgba(238, 240, 234, 0.82);
+  font-size: var(--type-body-md);
+  line-height: 1.68;
+}
+
+.network-band__partner {
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  padding-top: clamp(2rem, 3.5vw, 2.75rem);
+  border-top: 1px solid rgba(252, 252, 250, 0.2);
+}
+
+.network-band__partner h3 {
+  max-width: 30ch;
+  margin-top: 1rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+.network-band__partner p {
+  max-width: 52ch;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: rgba(238, 240, 234, 0.82);
+}
+
+.network-band__media figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+}
+
+.network-band__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+/* ------------------------------------------------------------- scholarship */
+
+/* Scholarship and Become a partner: copy left, photograph right.
+   Same stretch behaviour as the other two-column sections, so the image meets
+   the bottom of the copy rather than leaving a gap under itself. */
+.scholarship-band__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.scholarship-band__media figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+}
+
+.scholarship-band__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+/* The second band mirrors the first, so Scholarship and Become a partner do not
+   read as the same layout printed twice. */
+@media (min-width: 60rem) {
+  .scholarship-band__grid--reverse { grid-template-columns: 0.9fr 1.1fr; }
+  .scholarship-band__grid--reverse .scholarship-band__inner { order: 2; }
+  .scholarship-band__grid--reverse .scholarship-band__media { order: 1; }
+}
+
+@media (min-width: 60rem) {
+  .scholarship-band__grid { align-items: stretch; }
+  .scholarship-band__media { height: 100%; }
+  .scholarship-band__media figure { height: 100%; aspect-ratio: auto; }
+}
+
+@media (max-width: 60rem) {
+  .scholarship-band__grid { grid-template-columns: 1fr; }
+}
+
+
+.scholarship-band__inner {
+  /* The grid column sets the measure now. A character cap here fought it — 46ch
+     inside a 620px column left the heading wrapping every three words with empty
+     column beside it. Only the paragraph is capped. */
+  max-width: none;
+}
+
+.scholarship-band__inner p:not(.section-label) {
+  max-width: 42ch;
+}
+
+.scholarship-band__inner h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  text-wrap: balance;
+}
+
+.scholarship-band__inner p:not(.section-label) {
+  margin-top: 1.5rem;
+  margin-bottom: 1.75rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.68;
+}
+
+/* ------------------------------------------------------------ news teaser */
+
+.news-teaser__grid {
+  display: grid;
+  align-items: end;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  grid-template-columns: 1.15fr 0.85fr;
+}
+
+.news-teaser__media figure {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.news-teaser__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
+.news-teaser__list {
+  display: grid;
+  gap: clamp(1.5rem, 2.6vw, 2.25rem);
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 0;
+  list-style: none;
+}
+
+.news-teaser__list li {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.news-teaser__meta {
+  color: var(--color-clay);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.news-teaser__list h3 {
+  margin-top: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: 1.32rem;
+  font-weight: 300;
+  line-height: 1.18;
+}
+
+.news-teaser__list li p:not(.news-teaser__meta) {
+  margin-top: 0.75rem;
+  margin-bottom: 1.15rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------- contact */
+
+/* Contact footer — restored to the composition on `main`.
+ *
+ * A contained panoramic image carrying an overlaid line, then a centred call to
+ * action beneath it. This replaced a full-bleed photographic ground with a
+ * two-column copy/aside split; the earlier arrangement needed a heavy scrim over
+ * the whole footer to keep body text at 4.5:1, which this one does not, because
+ * the only copy sitting on the photograph is one large serif line in its darkest
+ * corner. */
+.cinematic-footer__visual {
+  position: relative;
+  width: min(100%, var(--container));
+  height: clamp(24rem, 56vw, 48rem);
+  margin: 0 auto clamp(6rem, 10vw, 9rem);
+  overflow: hidden;
+}
+
+.cinematic-footer__visual .parallax-media { position: absolute; inset: -5rem 0; }
+
+.cinematic-footer__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 48%, rgba(5, 20, 12, 0.7));
+}
+
+.cinematic-footer__visual > p {
+  position: absolute;
+  z-index: 2;
+  right: clamp(1.5rem, 4vw, 4rem);
+  bottom: clamp(1.5rem, 4vw, 4rem);
+  max-width: 30ch;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.7);
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+  line-height: 1.25;
+}
+
+.cinematic-footer__cta {
+  width: min(100%, 52rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.cinematic-footer__cta h2 {
+  margin-top: 1rem;
+  color: var(--color-paper);
+  font-size: var(--type-h2);
+}
+
+.cinematic-footer__cta > p:not(.section-label) {
+  max-width: 47ch;
+  margin: 2rem auto 0;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cinematic-footer__cta small {
+  display: block;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.65rem;
+}
+
+.cinematic-footer__org {
+  margin-top: 0.35rem;
+  color: rgba(238, 240, 234, 0.6);
+  font-size: 0.82rem;
+}
+
+/* ------------------------------------------------------------------- 404 */
+
+.not-found__links {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.not-found__links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.not-found__links a {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.not-found__links a:hover {
+  color: var(--color-ink);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 60rem) {
+  /* `.lede-hero__grid` is deliberately absent: it stopped being a grid when the
+     hero photograph moved from a figure beside the copy to the section's
+     background, and it has been a single column at every width since. */
+  .org-intro__grid,
+  .case-study__inner,
+  .network-band__inner,
+  .news-teaser__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card-grid,
+  .news-teaser__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .serve-band__body,
+  .founder-card {
+    grid-template-columns: 1fr;
+  }
+
+  /* The portrait would run the full column width at 3:4 and dominate the
+     statement it belongs to. */
+  .founder-card__portrait {
+    width: min(16rem, 55%);
+  }
+
+  .service-card:nth-child(4),
+  .service-card:nth-child(5) {
+    grid-column: auto;
+  }
+
+  /* The copy runs the full width on a narrow screen, so the scrim's left-weighted
+     gradient has nothing left to weight — it becomes an even wash with a stronger
+     foot, which is where the text actually sits. */
+  .lede-hero__scrim::after {
+    background: linear-gradient(
+      0deg,
+      rgba(6, 22, 14, 0.66),
+      rgba(6, 22, 14, 0.3) 58%,
+      rgba(6, 22, 14, 0.12)
+    );
+  }
+
+  .lede-hero__copy h1 {
+    max-width: 18ch;
+  }
+}
+
+@media (max-width: 40rem) {
+  .service-card-grid,
+  .news-teaser__list,
+  .serve-band__list {
+    grid-template-columns: 1fr;
   }
 }
