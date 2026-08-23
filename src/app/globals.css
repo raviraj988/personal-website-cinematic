@@ -40,14 +40,11 @@ html[data-scroll-theme="cream"] { --page-background: #f8f5ec; }
 html[data-scroll-theme="paper"] { --page-background: #fffdf8; }
 html[data-scroll-theme="sage"] { --page-background: #e0e6d8; }
 html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
-/* Warm clay-brown. Kept light enough that muted secondary copy still clears
-   4.5:1 against it — verified, not assumed. */
-html[data-scroll-theme="clay"] { --page-background: #e7d9c0; }
 html[data-scroll-theme="forest"] { --page-background: #0e2719; }
-/* Defined but currently unused; kept as palette options so setting either later
-   works instead of silently falling back to cream. */
-html[data-scroll-theme="umber"] { --page-background: #2c1e14; }
-html[data-scroll-theme="sand"] { --page-background: #ece1cc; }
+/* The second dark ground. Sits 1.72:1 off forest, which is enough for two dark
+   sections to read as two sections rather than one long one — the brown `umber`
+   it replaces got that separation from being a different hue instead. */
+html[data-scroll-theme="pine"] { --page-background: #20503d; }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -105,7 +102,7 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-clay);
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
@@ -151,8 +148,48 @@ p {
   padding: var(--section-space) var(--gutter);
 }
 
+/* Ink follows the ground.
+ *
+ * Every section already declares its tone as `data-scroll-theme`. Deriving the
+ * text colours from that attribute means a section can be recoloured by changing
+ * one word in the markup, instead of hand-inverting four or five rules in here
+ * and discovering the ones that were missed — which is exactly how a heading
+ * ended up white on a near-white ground.
+ *
+ * Scoped to `section`/`footer` on purpose: `ScrollTheme` mirrors the same
+ * attribute onto `<html>` to drive the page background, and an unscoped selector
+ * would repaint the whole document from whichever section is on screen.
+ *
+ * `data-ink="own"` opts a section out. `data-scroll-theme` says what the *page*
+ * background crossfades to behind a section — which is not always what its copy
+ * actually sits on. The hero's theme is cream because that is the tone either
+ * side of it, but its text sits on a full-bleed photograph and has to stay
+ * white. Without the opt-out this rule wins on specificity and turns the
+ * headline dark green on a dark picture. */
+section[data-scroll-theme="forest"]:not([data-ink="own"]),
+section[data-scroll-theme="pine"]:not([data-ink="own"]),
+footer[data-scroll-theme="forest"]:not([data-ink="own"]),
+footer[data-scroll-theme="pine"]:not([data-ink="own"]) {
+  --ink: var(--color-paper);
+  --ink-muted: rgba(238, 240, 234, 0.82);
+  --rule: rgba(255, 255, 255, 0.22);
+  --label-color: var(--color-accent-light);
+  color: var(--ink);
+}
+
+section[data-scroll-theme="cream"]:not([data-ink="own"]),
+section[data-scroll-theme="paper"]:not([data-ink="own"]),
+section[data-scroll-theme="sage"]:not([data-ink="own"]),
+section[data-scroll-theme="moss"]:not([data-ink="own"]) {
+  --ink: var(--color-ink);
+  --ink-muted: var(--color-text-muted);
+  --rule: var(--color-line);
+  --label-color: var(--color-accent);
+  color: var(--ink);
+}
+
 .section-label {
-  color: var(--label-color, var(--color-clay));
+  color: var(--label-color, var(--color-accent));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -160,27 +197,22 @@ p {
   text-transform: uppercase;
 }
 
-/* On the warm clay ground the clay accent is brown on brown — it measured
-   3.59:1 there, against the 4.5:1 a small label needs. Deep forest green
-   separates cleanly and stays inside the palette. The original site carried this
-   rule for its clay sections; it was lost in the redesign when those sections
-   were removed, and the scholarship band inherited the problem. */
-[data-scroll-theme="clay"] .section-label,
-[data-scroll-theme="sand"] .section-label,
-[data-scroll-theme="sage"] .section-label {
-  --label-color: var(--color-forest);
-}
+/* No per-ground label override is needed any more. The accent is green and was
+   chosen against *moss*, the tightest of the four light grounds, where it clears
+   5.65:1 — the rust it replaces measured 4.41:1 there and failed. The old rule
+   existed to rescue that accent on the warm grounds, which are now gone. */
 
-/* Muted copy on clay measured 4.50:1 — technically at the line and below it once
-   an ambient bloom drifts across. This is the same green, one step darker. */
-[data-scroll-theme="clay"] .scholarship-band__inner p:not(.section-label),
-[data-scroll-theme="sage"] .scholarship-band__inner p:not(.section-label),
-[data-scroll-theme="sand"] .tools-list li p {
-  color: #454d45;
+/* Muted copy on the two light greens sits at 4.75–5.03:1 with the default token
+   — over the line, but only just, and an ambient bloom drifting across takes it
+   under. Darkening the token on those two grounds fixes every component at once,
+   rather than patching the two that happened to get noticed. 5.47:1 on moss. */
+html[data-scroll-theme="sage"],
+html[data-scroll-theme="moss"] {
+  --color-text-muted: #4f5850;
 }
 
 .section-label--light {
-  color: #e5aa8d;
+  color: var(--color-accent-light);
 }
 
 .text-link {
@@ -381,7 +413,9 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) {
     opacity var(--motion-reveal) var(--ease-standard) var(--reveal-delay, 0ms),
     transform var(--motion-reveal) var(--ease-out-expo) var(--reveal-delay, 0ms),
     clip-path var(--motion-image) var(--ease-out-expo) var(--reveal-delay, 0ms);
-  clip-path: inset(0);
+  /* Leave measured room for the plate's cast shadow without exposing unrelated
+     overflow from the reveal wrapper. */
+  clip-path: inset(0 -0.5rem -3rem -0.5rem);
 }
 
 .reveal--line img {
@@ -407,7 +441,7 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
   inset: 0 0 auto;
   z-index: 101;
   height: 2px;
-  background: var(--color-clay);
+  background: var(--color-accent);
   transform: scaleX(var(--page-progress, 0));
   transform-origin: left;
   pointer-events: none;
@@ -689,6 +723,75 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   transform-origin: left;
 }
 
+/* Console entry points, occupying the header's third grid track.
+ *
+ * The grid is `brand | nav | trailing`. `.menu-trigger` is `display: none` above
+ * 960px and so is removed from layout entirely rather than holding an empty
+ * track — which is what lets this pair take that slot without adding a column.
+ * Below 960px the reverse applies and this hides instead, or brand + auth +
+ * trigger would be three items in a two-track grid and wrap to a second row. */
+.header-auth {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.5vw, 1.4rem);
+}
+
+.header-auth__link {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.header-auth__link:hover { text-decoration: underline; text-underline-offset: 0.35em; }
+
+.header-auth__button {
+  padding: 0.55rem 1.05rem;
+  border: 1px solid currentColor;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color var(--motion-ui) var(--ease-standard),
+    color var(--motion-ui) var(--ease-standard);
+}
+
+/* Two hover states, because the header has two grounds. Over the transparent
+   header on the photographic hero the button is white-on-nothing, so it fills
+   with paper; on the solid cream bar that would be invisible, so it fills with
+   forest instead. */
+.header-auth__button:hover {
+  color: var(--color-forest-deep);
+  background: var(--color-paper);
+}
+
+.cinematic-header--solid .header-auth__button:hover {
+  color: var(--color-paper);
+  background: var(--color-forest);
+}
+
+.fullscreen-menu__auth {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.fullscreen-menu__auth a {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fullscreen-menu__auth a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+
 .menu-trigger {
   justify-self: end;
   display: none;
@@ -799,10 +902,10 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   transform: none;
 }
 
-.fullscreen-menu nav a:hover { color: #dfad94; }
+.fullscreen-menu nav a:hover { color: var(--color-accent-light); }
 .fullscreen-menu nav a span {
   min-width: 2rem;
-  color: #dfad94;
+  color: var(--color-accent-light);
   font-family: var(--font-sans);
   font-size: 0.68rem;
   letter-spacing: 0.08em;
@@ -928,7 +1031,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   padding-block: 1.6rem;
   border-bottom: 1px solid rgba(28, 48, 37, 0.24);
 }
-.approach-editorial li > span { color: var(--color-clay); font-size: 0.72rem; letter-spacing: 0.08em; }
+.approach-editorial li > span { color: var(--color-accent); font-size: 0.72rem; letter-spacing: 0.08em; }
 .approach-editorial li h3 { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.2; }
 .approach-editorial li p { max-width: 45ch; margin-top: 0.55rem; color: var(--color-text-muted); font-size: 0.92rem; }
 
@@ -949,7 +1052,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #dfe5dd; }
 .work-card__media .parallax-media { width: 100%; height: 100%; }
 .work-card__body { display: flex; flex: 1; flex-direction: column; padding: clamp(1.35rem, 2.4vw, 2rem); }
-.work-card__meta { color: var(--color-clay); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; }
+.work-card__meta { color: var(--color-accent); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; }
 .work-card h3 { margin-top: 0.9rem; font-size: var(--type-h3); line-height: 1.12; }
 .work-card__body > p:not(.work-card__meta) { margin-top: 1.15rem; color: var(--color-text-muted); }
 .work-card .text-link { margin-top: auto; padding-top: 1.5rem; font-size: 0.75rem; }
@@ -965,7 +1068,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .cinematic-footer__name { font-family: var(--font-serif); font-size: 1.5rem; }
 .cinematic-footer__bottom > div:first-child > p:last-child { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.65); }
 .cinematic-footer__bottom nav { display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem 2rem; text-transform: uppercase; letter-spacing: 0.06em; }
-.cinematic-footer__bottom nav a:hover { color: #dfad94; }
+.cinematic-footer__bottom nav a:hover { color: var(--color-accent-light); }
 .cinematic-footer__legal { justify-self: end; text-align: right; color: rgba(255, 255, 255, 0.55); }
 .cinematic-footer__legal a { display: inline-block; margin-top: 0.75rem; color: white; }
 
@@ -973,7 +1076,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   :root { --header-height: 4.5rem; --section-space: clamp(5rem, 16vw, 7rem); }
   .cinematic-header { grid-template-columns: 1fr auto; }
   .cinematic-header__brand small,
-  .cinematic-header__desktop { display: none; }
+  .cinematic-header__desktop,
+  .header-auth { display: none; }
   .menu-trigger { display: flex; }
   .fullscreen-menu__inner { grid-template-columns: 1fr; align-items: start; }
   .fullscreen-menu__inner > p:first-child { margin-top: 2rem; }
@@ -1049,6 +1153,28 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
     --label-track: 0.1em;
     opacity: 1;
   }
+  /* The index resolves whole: no stagger, no wipe, and the rules simply exist. */
+  .serve-index li,
+  html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .serve-index__rule { transform: scaleX(1) !important; transition: none !important; }
+
+  /* People cards settle with no stagger, lift, or drawn seam. */
+  .person-card,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .person-card__media::after { transform: scaleX(1) !important; transition: none !important; }
+  .work-card .photo-frame img,
+  .service-card .photo-frame img,
+  .person-card .photo-frame img,
+  .newsletter-card .photo-frame img { transition: none !important; }
+
   .mask-rise { overflow: visible; clip-path: none; }
   .mask-rise__inner,
   html[data-motion="ready"] .reveal:not([data-visible="true"]) .mask-rise__inner {
@@ -1092,6 +1218,89 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .parallax-media--soft img {
   transform: translate3d(0, var(--parallax-y, 0), 0)
     scale(var(--scroll-scale, 1.04));
+}
+
+/* The edge.
+ *
+ * A photograph is separated from the page by **elevation**, not by a drawn line.
+ *
+ * What was here before: a 1px inset hairline over every image plus a radial
+ * corner vignette, and for standalone figures a paper mat painted on as an
+ * outward box-shadow spread. The reasoning was sound — a 480px source has a soft
+ * outer edge and dissolves into open cream — but the result was not. The hairline
+ * read as a grey rectangle drawn *on* the picture, the vignette dirtied all four
+ * corners like a filter, and a plate ended up carrying five separate framing
+ * layers at once.
+ *
+ * A shadow solves the same problem without touching the photograph: it gives the
+ * boundary depth rather than a competing line, and it needs no pseudo-elements,
+ * no mat, and none of the containing-block gymnastics the mat required.
+ *
+ * The radius is 3px and deliberately almost subliminal. It is enough to stop the
+ * corners looking mechanically sharp against a soft photograph; any more and
+ * these read as app tiles rather than prints. */
+.photo-frame {
+  border-radius: var(--frame-radius);
+  box-shadow: var(--frame-shadow);
+}
+
+/* A standalone figure, as opposed to the media block at the head of a card.
+ *
+ * Now purely a matter of how far off the page it sits. It stays a separate class
+ * because the distinction is real — a figure in its own column should carry more
+ * presence than a card header — and because nine call sites already use it. */
+.photo-frame--plate {
+  box-shadow: var(--frame-shadow-plate);
+}
+
+/* On the dark grounds a shadow is invisible: there is nothing darker than forest
+   for it to fall on. The separation has to come from light instead — a faint warm
+   ring, well under the strength of the hairline this replaces, plus a deep
+   ambient shadow that still does quiet work under the lower edge. */
+section[data-scroll-theme="forest"] .photo-frame,
+section[data-scroll-theme="pine"] .photo-frame,
+footer[data-scroll-theme="forest"] .photo-frame,
+footer[data-scroll-theme="pine"] .photo-frame {
+  box-shadow:
+    0 0 0 1px rgba(255, 253, 248, 0.09),
+    0 1rem 2.25rem -0.85rem rgba(0, 0, 0, 0.5);
+}
+
+section[data-scroll-theme="forest"] .photo-frame--plate,
+section[data-scroll-theme="pine"] .photo-frame--plate,
+footer[data-scroll-theme="forest"] .photo-frame--plate,
+footer[data-scroll-theme="pine"] .photo-frame--plate {
+  box-shadow:
+    0 0 0 1px rgba(255, 253, 248, 0.11),
+    0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.6);
+}
+
+
+/* A card's photograph comes forward on hover.
+ *
+ * This replaces two rules that targeted `.photo-frame::before` and `::after` —
+ * the falloff and hairline layers — which stopped existing when the frame moved
+ * from a drawn edge to elevation. They had been quietly doing nothing since,
+ * which is why the cards lost their hover response entirely.
+ *
+ * A slow scale is the equivalent gesture with the new treatment: the picture
+ * pushes against its own frame instead of the frame drawing itself tighter.
+ * `--ease-out-expo` over 900ms because a fast scale on a photograph reads as a
+ * jump; a slow one reads as depth. */
+.work-card .photo-frame img,
+.service-card .photo-frame img,
+.person-card .photo-frame img,
+.newsletter-card .photo-frame img {
+  transition: transform 900ms var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .work-card:hover .photo-frame img,
+  .service-card:hover .photo-frame img,
+  .person-card:hover .photo-frame img,
+  .newsletter-card:hover .photo-frame img {
+    transform: scale(1.045);
+  }
 }
 
 .text-link--light {
@@ -1244,14 +1453,17 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .org-intro__copy p + p,
 .org-intro__copy h2 + p {
   margin-top: 1.35rem;
-  color: var(--color-text-muted);
+  color: var(--ink-muted);
   font-size: var(--type-body-md);
   line-height: 1.7;
 }
 
+/* 16:9, the photograph's own ratio. The 4:3 here suited the squarer sources
+   this section used before and would crop away both the ridgeline and the far
+   shore — which is the entire composition. */
 .org-intro__media figure {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: 2px;
 }
 
@@ -1260,29 +1472,102 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   inset: 0;
 }
 
-.mission-panel {
-  margin-top: clamp(3.5rem, 7vw, 6rem);
-  padding: clamp(2rem, 4vw, 3.25rem);
-  border: 1px solid var(--color-line);
-  border-left: 3px solid var(--color-clay);
-  background: rgba(255, 253, 248, 0.55);
+/* ----------------------------------------------------------- mission band */
+
+/* The mission over a full screen of photograph, inside a thin green frame.
+   
+   The frame is the section's own padding: the forest ground shows as a border
+   around the picture rather than the picture bleeding to the viewport edge. */
+.principle-band {
+  display: grid;
+  min-height: 100svh;
+  /* The green margin around the photograph, matching the contact footer: a full
+     gutter rather than the ~14px hairline of inset this had, which read as a
+     rendering artefact rather than a mount. */
+  padding: var(--gutter);
+  background: var(--color-forest-deep);
 }
 
-.mission-panel blockquote {
-  margin-top: 1.25rem;
-  max-width: 46ch;
-  font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.28;
+.principle-band__frame {
+  /* Capped and centred on the same container as `.cinematic-footer__visual`, so
+     on a wide screen the two images share an edge and the green field around
+     them reads as one deliberate margin rather than two different ones. */
+  width: min(100%, var(--container));
+  margin-inline: auto;
+  position: relative;
+  /* Not boilerplate. The layers below stack explicitly, and without a stacking
+     context here they resolve against an ancestor — which is how the photograph
+     previously painted *behind* the forest background and the section rendered
+     as a flat green panel showing nothing. */
+  isolation: isolate;
+  display: grid;
+  /* Bottom-left, not centred. Centred copy would need darkening through the
+     middle of the frame, which is the part of this photograph worth seeing —
+     and a parallax drift behind centred text reads as a glitch. */
+  place-content: end start;
+  overflow: hidden;
+  padding: var(--section-space) clamp(1.5rem, 4vw, 3.25rem) clamp(2.5rem, 6vh, 4.5rem);
+  color: var(--color-white);
+}
+
+/* Inset vertically so the parallax drift has somewhere to travel without
+   exposing an edge. `overflow: hidden` on the frame clips the overhang. */
+.principle-band__frame .parallax-media {
+  position: absolute;
+  inset: -3.5rem 0;
+  z-index: 0;
+}
+
+/* Two stacked gradients. The vertical one carries the contrast; the horizontal
+   one weights the left, which is the side the copy now sits on.
+   
+   Heavy at the foot is not decoration — the eyebrow is var(--color-accent-light) at small size on
+   a photograph, and that tint needs a genuinely dark ground to clear 4.5:1. */
+.principle-band__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 30, 17, 0.08) 0%,
+      rgba(6, 26, 15, 0.3) 40%,
+      rgba(5, 21, 13, 0.76) 72%,
+      rgba(4, 18, 11, 0.92) 100%
+    ),
+    linear-gradient(90deg, rgba(5, 22, 13, 0.5), transparent 58%);
+}
+
+.principle-band__content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 54rem);
+}
+
+.principle-band__rule {
+  padding-left: clamp(0.9rem, 1.8vw, 1.4rem);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Smaller than the page's h2 scale. The mission is a 200-character sentence
+   sharing the frame with a photograph — at display size it swamps the picture
+   and runs to eight lines. */
+.principle-band h2 {
+  margin-top: 1rem;
+  color: var(--color-paper);
+  font-size: clamp(1.3rem, 2.05vw, 1.95rem);
+  line-height: 1.26;
   letter-spacing: -0.01em;
 }
 
-.mission-panel__supporting {
-  max-width: 52ch;
-  margin-top: 1.5rem;
-  color: var(--color-text-muted);
+.principle-band .scroll-words__word { color: var(--color-paper); }
+
+.principle-band__rule > p:last-child {
+  max-width: 54ch;
+  margin-top: 1.15rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.58;
 }
 
 /* ---------------------------------------------------------------- services */
@@ -1381,36 +1666,97 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   font-size: var(--type-h2);
 }
 
-.serve-band__list {
-  display: grid;
-  gap: 0;
-  grid-template-columns: repeat(2, 1fr);
-  margin-top: clamp(2.5rem, 5vw, 4rem);
+/* The audience index.
+ *
+ * Six institutions, set as a table of contents rather than a bulleted list —
+ * the same numbered-index language the page uses for its own sections, which is
+ * what ties this to "01 — What is ESE" running down the left of everything else.
+ *
+ * Three things move, staggered off `--i` from a single reveal:
+ *   the number and name rise and fade,
+ *   the rule beneath each row wipes in from the left,
+ *   and on hover the row steps right and the number takes the accent.
+ *
+ * The wipe is the reason this is markup rather than a `border-bottom`: a border
+ * cannot be animated from one end, and a row of rules drawing themselves in
+ * sequence is what makes six static nouns feel like a list being read out. */
+.serve-index ol {
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.serve-band__list li {
-  display: flex;
+.serve-index li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: baseline;
-  gap: 1.25rem;
-  padding: clamp(1.25rem, 2.4vw, 1.9rem) 0;
-  border-top: 1px solid var(--color-line);
-  font-family: var(--font-serif);
-  font-size: clamp(1.2rem, 2vw, 1.65rem);
-  font-weight: 300;
-  line-height: 1.2;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  padding: clamp(0.85rem, 1.8vw, 1.25rem) 0;
+  transition: transform var(--motion-ui) var(--ease-out-expo);
 }
 
-.serve-band__list li span {
-  color: var(--color-clay);
+/* Rest state for the stagger. `.reveal` handles the group; these are the rows
+   inside it, which need their own delay off `--i`. */
+html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
+  opacity: 0;
+  transform: translateY(0.9rem);
+}
+
+.serve-index[data-visible="true"] li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 520ms var(--ease-standard) calc(var(--i) * 70ms),
+    transform 620ms var(--ease-out-expo) calc(var(--i) * 70ms);
+}
+
+.serve-index__num {
+  color: var(--color-text-muted);
   font-family: var(--font-sans);
   font-size: var(--type-meta);
   font-weight: 500;
-  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+  transition: color var(--motion-ui) var(--ease-standard);
 }
 
-/* ------------------------------------------------------------- who we serve */
+.serve-index__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+/* The rule, as an element so it can be drawn from one end. */
+.serve-index__rule {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--rule, var(--color-line));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.serve-index[data-visible="true"] .serve-index__rule {
+  transform: scaleX(1);
+  transition: transform 760ms var(--ease-out-expo) calc(var(--i) * 70ms + 90ms);
+}
+
+/* Hover is a pointer affordance on a non-interactive list, so it stays quiet:
+   a step to the right and the number taking the accent. No colour change on the
+   name itself — six names lighting up as the cursor crosses them is noise. */
+@media (hover: hover) {
+  .serve-index li:hover {
+    transform: translateX(0.4rem);
+  }
+  .serve-index li:hover .serve-index__num {
+    color: var(--color-accent);
+  }
+}
 
 .serve-band__body {
   display: grid;
@@ -1420,9 +1766,12 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   margin-top: clamp(2.5rem, 5vw, 4rem);
 }
 
+/* 4:3, matching the conference photograph's own ratio (1600x1200), so `cover`
+   crops essentially nothing. The 3:4 that was here suited the portrait-format
+   pines this replaced and would now throw away most of the room. */
 .serve-band__media figure {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
 }
 
 .serve-band__media .parallax-media {
@@ -1555,9 +1904,24 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   padding-inline: var(--gutter);
 }
 
+.case-study__media {
+  min-width: 0;
+}
+
+/* 16:9, the photograph's own ratio (1280x720). At the 4:3 that was here — set
+   for a squarer source — `cover` cropped roughly a quarter off each side, which
+   cut the person sampling at the water's edge out of the frame entirely. */
 .case-study__media figure {
   position: relative;
-  aspect-ratio: 4 / 3;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 60rem) {
+  .case-study__media figure {
+    height: 100%;
+    aspect-ratio: auto;
+  }
 }
 
 .case-study__media .parallax-media {
@@ -1603,7 +1967,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #e5aa8d;
+  background: var(--color-accent-light);
 }
 
 /* ------------------------------------------------------------------- tools */
@@ -1622,7 +1986,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .tools-list__status {
-  color: var(--color-clay);
+  color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -1653,7 +2017,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   isolation: isolate;
   overflow-x: clip;
   padding-block: var(--section-space);
-  color: var(--color-white);
 }
 
 .network-band__inner {
@@ -1681,7 +2044,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .network-band__copy > p:not(.section-label) {
   max-width: 52ch;
   margin-top: 1.5rem;
-  color: rgba(238, 240, 234, 0.82);
+  color: var(--ink-muted);
   font-size: var(--type-body-md);
   line-height: 1.68;
 }
@@ -1689,7 +2052,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .network-band__partner {
   margin-top: clamp(2.5rem, 4vw, 3.5rem);
   padding-top: clamp(2rem, 3.5vw, 2.75rem);
-  border-top: 1px solid rgba(252, 252, 250, 0.2);
+  border-top: 1px solid var(--rule);
 }
 
 .network-band__partner h3 {
@@ -1705,7 +2068,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   max-width: 52ch;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
-  color: rgba(238, 240, 234, 0.82);
+  color: var(--ink-muted);
 }
 
 .network-band__media figure {
@@ -1819,7 +2182,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .news-teaser__meta {
-  color: var(--color-clay);
+  color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -1991,8 +2354,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 
 @media (max-width: 40rem) {
   .service-card-grid,
-  .news-teaser__list,
-  .serve-band__list {
+  .news-teaser__list {
     grid-template-columns: 1fr;
   }
 }

@@ -23,9 +23,30 @@ import { newsTeaser } from "@/lib/data/ese-content";
  * the empty case for anyone who goes looking.
  */
 export async function NewsTeaser() {
+  /**
+   * The only place in the app that swallows a database error, and it is
+   * deliberate.
+   *
+   * Everywhere else a query failing against credentials that *are* present is a
+   * fault and throws — see the note in `lib/blog/queries.ts`. That is right for
+   * `/blog` and `/news`, where the posts are the page: a silent empty index
+   * would hide a real outage.
+   *
+   * This is a teaser on the marketing landing page. Letting it throw takes the
+   * entire ESE site down — hero, services, mission, contact, none of which touch
+   * the database — because an optional three-item list could not load. That
+   * trade is wrong in the other direction, so this one degrades to nothing and
+   * logs instead. The console line is what keeps it from being silent.
+   */
   const [posts, issues] = await Promise.all([
-    getPublishedPosts(NEWS_TEASER_LIMIT, "news"),
-    getPublishedNewsletters(NEWS_TEASER_LIMIT),
+    getPublishedPosts(NEWS_TEASER_LIMIT, "news").catch((error) => {
+      console.error("[news-teaser] could not load news posts:", error);
+      return [];
+    }),
+    getPublishedNewsletters(NEWS_TEASER_LIMIT).catch((error) => {
+      console.error("[news-teaser] could not load newsletters:", error);
+      return [];
+    }),
   ]);
 
   const entries = [
@@ -57,7 +78,7 @@ export async function NewsTeaser() {
     <section
       className="news-teaser section-shell"
       aria-labelledby="news-teaser-title"
-      data-scroll-theme="paper"
+      data-scroll-theme="moss"
     >
       <AmbientLayer blooms={1} marks />
 
@@ -71,7 +92,7 @@ export async function NewsTeaser() {
         </Reveal>
 
         <Reveal className="news-teaser__media" delay={140}>
-          <figure className="photo-frame">
+          <figure className="photo-frame photo-frame--plate">
             <ParallaxImage
               src={newsTeaser.image.src}
               alt={newsTeaser.image.alt}

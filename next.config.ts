@@ -18,6 +18,27 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  /**
+   * Dev-only. Next blocks `/_next/*` requests whose origin is not the one the
+   * server was started on, which happens the moment you open the dev server from
+   * a phone on the same network.
+   *
+   * These are matched as **hostname patterns, not CIDR ranges** — an earlier
+   * version of this list held `192.168.0.0/16` and friends, which look like they
+   * cover a private network and in fact match nothing at all, because the value
+   * is compared against the request's hostname string. The wildcards below are
+   * literal `*` globs over the last octet.
+   *
+   * No effect on a production build: Next only reads this in dev.
+   */
+  allowedDevOrigins: [
+    "localhost",
+    "127.0.0.1",
+    "192.168.1.*",
+    "192.168.0.*",
+    "10.0.0.*",
+    "172.20.*.*",
+  ],
   images: {
     formats: ["image/avif", "image/webp"],
     /**

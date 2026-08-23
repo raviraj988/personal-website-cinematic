@@ -127,7 +127,14 @@ export const hero = {
  */
 export const people = {
   eyebrow: "The people",
-  heading: "Who you would be working with",
+  /**
+   * Not "Who you would be working with", which was the heading here and read as
+   * a careers page — that phrasing addresses a candidate, and this section
+   * addresses a client. The replacement is the source document's own claim about
+   * the network ("decades' worth of technical expertise"), which describes the
+   * people without sounding like it is recruiting them.
+   */
+  heading: "Decades of technical expertise",
   /** The document's own sentence about the network, used as this group's lede. */
   lede: "Each person brings their specialized experience to a project to meet the needs of your community or Tribe.",
   cta: { label: "Read full biographies", href: "/people" },
@@ -154,6 +161,15 @@ export const people = {
       slug: "laura-mckelvey",
       name: "Laura McKelvey",
       role: "Founder",
+      /**
+       * Her own sentence, verbatim, from the practice copy supplied for this
+       * site — not a biography composed on her behalf. It stays in first person
+       * for that reason: turning it into third person would make it a summary
+       * somebody wrote about her, which is exactly the thing there is no source
+       * for.
+       */
+      summary:
+        "I work with communities, tribal organizations, nonprofits, and public agencies on environmental questions that affect daily life — air and water, land use, permitting, and the public processes that shape decisions.",
       bio: [] as string[],
       portrait: image("portrait-laura", "Portrait of Laura McKelvey outdoors."),
     },
@@ -162,6 +178,12 @@ export const people = {
       name: "Joshua McKelvie",
       /** TODO(ese): replace with his actual title. */
       role: "",
+      /**
+       * TODO(ese): nothing was supplied about Joshua — the source document's only
+       * trace of him is "(Josh fill out)" beside the EJ GIS tool. The card renders
+       * a stated gap rather than a sentence invented to fill the space.
+       */
+      summary: "",
       bio: [] as string[],
       /** No portrait supplied; the card falls back to a monogram. */
       portrait: null,
@@ -182,9 +204,11 @@ export const ese = {
       "At Environment Sovereignty & Equity (ESE) we're here to support Native Nations and other marginalized communities through expertise and experience. We believe that the communities facing environmental harm are the most critical lever in addressing the harms that impact their homes.",
       "At ESE, we've assembled a network of partners and experts with decades' worth of technical expertise to help communities across the country find resources to fix local environmental issues. We are the bridge between underserved communities and the appropriate government agencies, non-profits, and other resources to work together and solve real problems.",
     ],
-    image: image(
-      "working-session",
-      "A working session in progress, with participants seated around a conference table reviewing material together.",
+    image: wideImage(
+      "ese/community-hopi-navajo-restoration.webp",
+      "A still alpine lake below granite ridges, with pines along the near shore in late light.",
+      1672,
+      941,
     ),
   },
 
@@ -200,6 +224,20 @@ export const ese = {
       "To empower Indigenous and Justice communities by providing culturally-informed, technically sound, and sovereignty-respecting environmental consultations that support self-determination, resilience, and sustainability.",
     supporting:
       "To support communities in navigating environmental issues, including environmental consulting, collaborative problem-solving, resilience, and sustainability.",
+    /**
+     * Fills the whole screen behind the mission, under a forest scrim.
+     *
+     * Decorative — `alt=""` — because the mission text beside it carries the
+     * meaning and the scrim reduces the frame to green texture. That scrim is
+     * also why 1672px is enough for a full-viewport background here, where the
+     * hero would want 2560px: it removes most of the detail resolution buys.
+     */
+    image: wideImage(
+      "mountain-valley-river-sunset.webp",
+      "",
+      1280,
+      720,
+    ),
   },
 
   whoWeAre: {
@@ -234,8 +272,8 @@ export const ese = {
       "Each person brings their specialized experience to a project to meet the needs of your community or Tribe.",
     ],
     image: image(
-      "conference-session",
-      "A conference session with attendees seated at round tables facing two projection screens.",
+      "working-session",
+      "A small working group around a conference table, reviewing material together.",
     ),
   },
 
@@ -243,9 +281,18 @@ export const ese = {
     eyebrow: "Who we serve",
     /** The document's own six audiences, compressed. It adds no category. */
     heading: "Native Nations, agencies, communities, and the organizations that serve them",
+    /**
+     * A National Tribal conference floor — the room this list describes, rather
+     * than a metaphor for it. Governments, consortia, enterprises and community
+     * organisations are all in an audience like this one.
+     *
+     * Moved here from "Who we are" because the two sections wanted opposite
+     * things from the same picture: a hall full of delegates is a constituency,
+     * not a team. `working-session` went the other way for the same reason.
+     */
     image: image(
-      "hero-pines",
-      "Tall pines silhouetted against a bright sun in a clear sky.",
+      "conference-session",
+      "A conference hall with attendees seated at round tables facing two projection screens.",
     ),
     audiences: [
       "Native Nations governments",
@@ -267,14 +314,15 @@ export const ese = {
     heading: "Access shouldn't depend on what a community can afford",
     body: "ESE's profits go back to supporting communities who might not be able to afford in-depth consultation and technical assistance. Please ask us about our ESE Scholarship Program to learn how we can support your community.",
     /**
-     * A residential street with the refinery stacks on its horizon — the kind of
-     * community the scholarship exists for, rather than a metaphor about roots.
+     * A restored wetland: what support of this kind is ultimately for. The
+     * street scene that was here moved to Sustainability, where the exposure it
+     * shows is the literal subject of the card.
      */
     image: wideImage(
-      "environmental-justice-neighborhood.jpg",
-      "A residential street of homes and gardens beside a river, with industrial stacks on the far horizon.",
-      1200,
-      800,
+      "ese/community-tribal-field-training.webp",
+      "People walking a shoreline path at golden hour, with restored plantings beside them and a city skyline across the water.",
+      1800,
+      921,
     ),
     cta: { label: "Ask about the scholarship program", href: "#contact" },
   },
@@ -285,10 +333,18 @@ export const ese = {
      *  three-quarters of the sentence directly beneath it. */
     heading: "For environmental professionals and facilitators",
     body: "If you are an environmental professional or facilitator and have worked in place-based community problem-solving and would like to work with us, contact us.",
-    /** An opening horizon, for a section that is an invitation. */
-    image: image(
-      "contact-horizon",
-      "Low sun breaking through cloud over open water.",
+    /**
+     * A community planning session: a large map on the table, notebooks, a
+     * laptop, one person pointing something out to the rest. The card asks for
+     * professionals "who have worked in place-based community problem-solving",
+     * and this is that work in progress — a horizon, which was here, was an
+     * invitation to nothing in particular.
+     */
+    image: wideImage(
+      "ese-community-led-planning.webp",
+      "Seven people around a table studying a large printed map together, with notebooks and a laptop open beside it.",
+      1672,
+      941,
     ),
     cta: { label: "Get in touch", href: "#contact" },
   },
@@ -371,16 +427,25 @@ export const ese = {
         description:
           "We can help you develop strategic plans, conduct vulnerability assessments, energy audits, and climate adaptation and mitigation plans.",
         /**
-         * A community of homes on a wooded hillside directly above a river —
-         * which is what a vulnerability assessment or an adaptation plan is
-         * actually about. The restored wetland this replaces was scenery: handsome,
-         * but it showed an outcome with no one exposed to it.
+         * A real ESE photograph, and the hillside community that was here has
+         * moved to the mission band — the same frame in both places reads as an
+         * error. A cypress standing in water is the closest thing in the archive
+         * to what adaptation planning is about: something rooted in the condition
+         * it has to survive.
+         */
+        /**
+         * Houses on a riverbank with a refinery on the far shore — homes between
+         * a floodplain and heavy industry. That is the *subject* of a
+         * vulnerability assessment, which is the first thing this card lists.
+         *
+         * It replaces a restored wetland, which showed a good outcome with
+         * nobody exposed to it; adaptation planning starts from exposure.
          */
         image: wideImage(
-          "riverside-hillside-neighborhood.jpg",
-          "Homes on a wooded hillside overlooking a broad river in warm evening light.",
-          1672,
-          941,
+          "environmental-justice-neighborhood.jpg",
+          "A residential street of houses and mature trees beside a river, with refinery stacks on the far bank.",
+          1200,
+          800,
         ),
       },
       {
@@ -445,11 +510,18 @@ export const ese = {
      * wastewater systems should be illustrated with. This is clean water running
      * over rock, at 2000px wide.
      */
+    /**
+     * A field team sampling a stream — bottles, a sample case, notes on a
+     * clipboard, someone drawing water at the edge. The card is about degrading
+     * PFAS in water systems, and this is the monitoring that bookends that work.
+     * It replaces a picture of moving water, which showed the medium but not the
+     * method.
+     */
     image: wideImage(
-      "flowing-stream.jpg",
-      "Clear water running fast over a rocky streambed.",
-      2000,
-      666,
+      "ese-community-water-monitoring.webp",
+      "A field team sampling a stream: one person drawing water at the edge, another recording readings, sample bottles and a case on the bank.",
+      1280,
+      720,
     ),
   },
 

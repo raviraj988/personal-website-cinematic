@@ -43,6 +43,7 @@ export default async function ConsoleLayout({
             {viewer.profile.role === "owner" ? (
               <Link href="/admin/people">People</Link>
             ) : null}
+            <Link href="/admin/account">Account</Link>
             <Link href={BLOG_PATH}>View blog</Link>
             <Link href={NEWS_PATH}>View news</Link>
           </nav>

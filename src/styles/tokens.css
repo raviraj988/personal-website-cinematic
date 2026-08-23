@@ -5,17 +5,54 @@
   --color-forest: #173d2a;
   --color-forest-deep: #0e2719;
   --color-moss: #718265;
-  /* Deepened from #b85f3d, which measured 4.36:1 on paper and failed AA for the
-     small labels it is used on. Set against the *sage* tone, not paper — that is
-     the tightest ground the accent sits on. Clears 4.67:1 there, 5.85:1 on
-     paper, and reads browner than the original. */
-  --color-clay: #9a4f2d;
-  /* Warm browns. `umber` is the dark brown ground; `bark` its lighter partner. */
-  --color-umber: #2c1e14;
-  --color-bark: #6b4a32;
+  /* The small-label accent. Green, not the rust this used to be: the palette is
+     now greens and neutrals with no browns in it.
+     Measured against *moss*, the tightest ground it sits on — 5.65:1 there,
+     8.26:1 on paper. The old rust measured 4.41:1 on moss and failed outright. */
+  --color-accent: #265e3f;
+  /* Its counterpart on the dark grounds, where a dark accent would vanish.
+     7.68:1 on forest, 5.30:1 on pine. Replaces a peach (#e5aa8d). */
+  --color-accent-light: #a9cdb3;
+  /* A muted green for secondary UI text that needs to sit off the ink.
+     Replaces `bark`, which was brown. */
+  --color-stone: #4a5a4e;
   --color-line: #d9d4c8;
   --color-text-muted: #596159;
   --color-white: #fcfcfa;
+
+  /* ------------------------------------------------------------ photographs
+   *
+   * The archive is 640x480 phone snapshots (see the note on `.photo-frame` in
+   * globals.css). A small, soft photograph dropped flush onto the page reads as
+   * a deficiency; the same photograph given a defined edge and a mount reads as
+   * a plate in a book. These are the parts of that treatment.
+   *
+   * Photographs are defined by **light, not by a line**.
+   *
+   * An earlier version drew a 1px inset hairline over every image and darkened
+   * the corners with a radial vignette, on the reasoning that a crisp boundary
+   * stopped a 480px source dissolving into the cream page. It did — but the line
+   * read as a grey box drawn *on* the photograph rather than around it, and the
+   * vignette muddied every corner like a filter. Both are gone.
+   *
+   * Elevation does the same job better: a shadow separates the image from the
+   * page by depth instead of competing with the picture, and it costs the
+   * photograph nothing. Nothing here manipulates the image itself.
+   *
+   * Mixed from forest-deep, never neutral grey — grey against #f8f5ec cream goes
+   * muddy, a green-derived shadow stays inside the palette.
+   *
+   * Two layers, and both are load-bearing: the tight one is contact, the wide
+   * one is ambient. A single mid-sized shadow reads as a drop shadow; the pair
+   * reads as a photograph resting on paper. */
+  --frame-radius: 3px;
+  --frame-shadow:
+    0 1px 2px rgba(14, 39, 25, 0.07),
+    0 0.75rem 1.75rem -0.75rem rgba(14, 39, 25, 0.26);
+  /* Standalone figures sit slightly further off the page than card media. */
+  --frame-shadow-plate:
+    0 1px 2px rgba(14, 39, 25, 0.08),
+    0 1.25rem 2.5rem -0.85rem rgba(14, 39, 25, 0.32);
 
   --font-serif: var(--font-newsreader), Georgia, serif;
   --font-sans: var(--font-inter), Arial, sans-serif;

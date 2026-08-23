@@ -29,7 +29,7 @@ export function PostCard({
   return (
     <article className="work-card post-card">
       {post.cover_image_url ? (
-        <div className="work-card__media">
+        <div className="work-card__media photo-frame">
           <Image
             src={post.cover_image_url}
             alt={post.cover_image_alt ?? ""}

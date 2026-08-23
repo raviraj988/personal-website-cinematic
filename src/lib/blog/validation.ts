@@ -28,6 +28,8 @@ export const FIELD_LIMITS = {
   seoTitle: { min: 0, max: 60 },
   seoDescription: { min: 0, max: 160 },
   coverImageAlt: { min: 1, max: 320 },
+  /** Mirrors `posts_focus_keyword_length` from 0003. */
+  focusKeyword: { min: 0, max: 120 },
 } as const;
 
 /** Mirrors `posts_slug_format`. */
@@ -47,6 +49,7 @@ export type PostFormValues = {
   excerpt: string;
   content: string;
   category: string;
+  focusKeyword: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
   seoTitle: string | null;
@@ -141,6 +144,13 @@ export function validatePost(values: PostFormValues): FieldErrors {
   if (values.coverImageUrl && !values.coverImageAlt) {
     errors.coverImageAlt =
       "A cover image needs alt text. Describe what the image shows for someone who cannot see it.";
+  }
+
+  if (
+    values.focusKeyword &&
+    values.focusKeyword.length > FIELD_LIMITS.focusKeyword.max
+  ) {
+    errors.focusKeyword = `Focus keyword must be ${FIELD_LIMITS.focusKeyword.max} characters or fewer (currently ${values.focusKeyword.length}).`;
   }
 
   if (

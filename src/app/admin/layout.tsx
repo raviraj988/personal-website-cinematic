@@ -14,6 +14,21 @@ import "@/styles/admin.css";
  * is the one part of the site where a cached snapshot in a search result would be
  * a genuine disclosure rather than an annoyance.
  */
+/**
+ * Never prerender anything under /admin.
+ *
+ * Without this the layout's `supabaseConfigured()` check below runs at **build**
+ * time. A build made before the environment variables are available renders the
+ * "not connected" panel, Next stores that as the static output, and the console
+ * then serves it to everyone for as long as the entry lives — after the variables
+ * are set, with no error anywhere to explain it. Verified: the route table listed
+ * `/admin`, `/admin/account`, and `/admin/people` as static (`○`) before this.
+ *
+ * There is no upside to prerendering these in any case. Every page here is
+ * per-viewer, authorization-gated, and `noindex`.
+ */
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: { default: "Blog admin", template: "%s | Blog admin" },
   robots: {

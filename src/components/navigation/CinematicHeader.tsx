@@ -83,6 +83,23 @@ export function CinematicHeader({ solid = false }: { solid?: boolean }) {
           ))}
         </nav>
 
+        {/*
+          Console entry points.
+
+          These reach the ESE admin console, not a member area — the public site
+          has no accounts. "Sign up" creates credentials and grants nothing until
+          an owner approves the account, which is why it is labelled by what it
+          leads to rather than as a call to join anything.
+        */}
+        <div className="header-auth">
+          <a className="header-auth__link" href="/admin/login">
+            Log in
+          </a>
+          <a className="header-auth__button" href="/admin/signup">
+            Sign up
+          </a>
+        </div>
+
         <button
           ref={triggerRef}
           className="menu-trigger"
@@ -124,6 +141,15 @@ export function CinematicHeader({ solid = false }: { solid?: boolean }) {
               </a>
             ))}
           </nav>
+          <div className="fullscreen-menu__auth">
+            <a href="/admin/login" onClick={closeMenu} tabIndex={open ? 0 : -1}>
+              Log in
+            </a>
+            <a href="/admin/signup" onClick={closeMenu} tabIndex={open ? 0 : -1}>
+              Sign up
+            </a>
+          </div>
+
           <p className="fullscreen-menu__foot">
             Listening carefully. Making complexity clearer. Supporting practical action.
           </p>

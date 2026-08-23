@@ -114,16 +114,22 @@
   background: var(--color-line);
 }
 
+/* The cover carries `.photo-frame--plate`, which supplies the mount, the
+   hairline and the cast shadow. Position, containment and the mat ground all
+   come from there; what is left here is the ratio and the space above it. */
 .post__cover {
-  position: relative;
   aspect-ratio: 16 / 9;
   margin-top: clamp(3rem, 6vw, 4.5rem);
-  overflow: hidden;
-  background: #dfe5dd;
 }
 
+/* The placeholder ground moves onto the image from the figure, where it was
+   overriding the mat: blog.css is imported after globals.css, so `.post__cover`
+   and `.photo-frame--plate` tie on specificity and this file won — the whole
+   plate went grey-green until the cover loaded. On the `fill` image it covers
+   the same area and leaves the mount in paper. */
 .post__cover img {
   object-fit: cover;
+  background: #dfe5dd;
 }
 
 .post__body-shell {
@@ -184,7 +190,7 @@
 }
 
 .post-body a {
-  color: var(--color-clay);
+  color: var(--color-accent);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -236,7 +242,7 @@
 
 .post-body blockquote {
   padding-left: clamp(1.25rem, 3vw, 2rem);
-  border-left: 2px solid var(--color-clay);
+  border-left: 2px solid var(--color-accent);
   color: var(--color-text-muted);
   font-size: 1.1em;
   font-style: italic;
@@ -253,10 +259,15 @@
   background: var(--color-line);
 }
 
+/* Prose images take the same elevation as every other photograph. These arrive
+   from the editor as bare `<img>` with nothing to wrap them, which is why the
+   old mat had to be drawn with stacked inset shadows — an elaboration the
+   shadow treatment simply does not need. */
 .post-body img {
   width: 100%;
   height: auto;
-  background: #dfe5dd;
+  border-radius: var(--frame-radius);
+  box-shadow: var(--frame-shadow-plate);
 }
 
 .post-body figcaption,

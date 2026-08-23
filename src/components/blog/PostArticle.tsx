@@ -37,7 +37,7 @@ export function PostArticle({ post }: { post: PostRow }) {
       </header>
 
       {post.cover_image_url ? (
-        <figure className="post__cover">
+        <figure className="post__cover photo-frame photo-frame--plate">
           <Image
             src={post.cover_image_url}
             // The database refuses a cover without alt text, so this string is

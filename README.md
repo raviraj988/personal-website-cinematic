@@ -86,6 +86,7 @@ drafts; publishing is a human action in the console.
      `blog-images` bucket
    - `supabase/migrations/0002_news_and_newsletters.sql` — `posts.category` and the
      `newsletters` table
+   - `supabase/migrations/0003_focus_keyword.sql` — `posts.focus_keyword`
 3. **Create the owner.** Auth → Users → Add user (tick *Auto Confirm User*),
    then insert a `profiles` row with `role = 'owner'` for that UUID. The exact
    SQL is at the bottom of `0001`. The external tool attributes every draft to the
@@ -95,10 +96,81 @@ drafts; publishing is a human action in the console.
 5. **Prove it works:** `npm run verify:contract -- --base-url http://localhost:3000`
    (see below).
 
+### Accounts, sign-in, and password reset
+
+Four ways in, one gate. **Authentication and authorization are separate**: any of
+these creates credentials, none of them creates access. A new account has no
+`profiles` row, lands on `/admin/no-access`, and can read nothing until an owner
+grants it access from `/admin/people`.
+
+| Route | What it does |
+|---|---|
+| `/admin/login` | Email + password, or Google |
+| `/admin/signup` | Creates an account. Grants nothing |
+| `/admin/forgot-password` | Sends a reset link |
+| `/admin/reset-password` | Where a verified reset link lands |
+| `/admin/account` | Change password, see role and sign-in method |
+
+#### Two dashboard steps this depends on
+
+**1. Custom SMTP — password reset does not work without it.**
+
+Supabase's built-in mailer allows **2 emails per hour, project-wide**, and on
+current projects only delivers to members of your Supabase organisation. A reset
+for anybody else is accepted, reports success, and reaches nobody, with no error
+in any log. Configure Authentication → Emails → SMTP Settings before relying on
+the flow.
+
+**2. The recovery email template must pass `token_hash` as a query parameter.**
+
+The default template links to Supabase's `/auth/v1/verify`, which redirects with
+the tokens in a URL **fragment**. A fragment is never sent to the server, so the
+callback receives nothing and reports a broken link for an email that was fine.
+Set the recovery template to:
+
+```
+{{ .SiteURL }}/admin/auth/callback?token_hash={{ .TokenHash }}&type=recovery
+```
+
+**For Google:** enable the provider under Authentication → Providers, add the
+client ID and secret, and register `<origin>/admin/auth/callback` as a redirect
+URL. A Google account with no `profiles` row is treated exactly like an email
+account with none.
+
+#### How the password rules are enforced
+
+- Changing a password **requires the current one**, verified server-side.
+  `updateUser({ password })` does not ask, so without that check a stolen session
+  cookie is a full account takeover. The check runs on a throwaway client with
+  `persistSession: false` so it cannot rotate the live session's cookies.
+- A reset link legitimately has no current password. That path is authorised by a
+  short-lived **httpOnly** cookie set by the callback *after* verifying the token,
+  and deleted on use. Without it, "I am recovering" would be a claim any client
+  could make — which is a reset bypass for anyone holding a session cookie.
+- Length over composition, 10 characters minimum, and a 72-**byte** ceiling
+  because bcrypt silently truncates there.
+
+### SEO in the editor
+
+The output was already correct — canonical, `BlogPosting` JSON-LD, OG, Twitter,
+sitemap, and cache flushes including the old slug on a rename. What the editor
+adds is guidance while writing:
+
+- a **search preview** that truncates where Google truncates, so an over-long
+  title is visible rather than described
+- a **live checklist**: title and description length, slug, cover and alt text,
+  body length, subheadings, links, and where an optional focus keyword appears
+- `posts.focus_keyword` (migration `0003`, additive and nullable)
+
+All of it is advisory and none of it blocks publishing. The rules that must hold
+are in `validation.ts` and in CHECK constraints.
+
 ### Checks
 
 ```bash
 npm run test:validation   # field rules vs. the CHECK constraints. No database.
+npm run test:password     # password rules. No database.
+npm run test:seo          # SEO checks and scoring. No database.
 npm run test:covers       # magic-byte sniffing and EXIF stripping. No database.
 npm run verify:contract   # the wire contract and RLS, against the real database.
 ```
@@ -161,13 +233,13 @@ alongside them instead.
 
 ### Known gaps
 
-- **No password-change screen.** Rotate passwords from the Supabase dashboard
-  under Authentication → Users. Building one needs a current-password re-check,
-  or a stolen session cookie is enough to take over an account.
-- **No email is sent, anywhere.** Accounts are created already-confirmed, so
-  nothing depends on the built-in mailer — which allows 2 emails per hour
-  project-wide and, on current projects, only delivers to members of your
-  Supabase org. Configure custom SMTP before adding any flow that emails a user.
+- **Password reset needs custom SMTP**, and the recovery email template needs
+  editing. Both are covered under "Accounts, sign-in, and password reset" above.
+  Until SMTP is configured the flow reports success and delivers nothing.
+- **Sign-up is open.** Anyone can create an account; nobody gets access without an
+  owner granting it. If you would rather strangers could not create Auth accounts
+  at all, remove `/admin/signup` and keep the owner-invite path in
+  `/admin/people`.
 - **Set the environment variables before building.** `/blog`, `/news`, and
   `/sitemap.xml` are prerendered, so a build made without credentials bakes in an
   empty blog. They carry a one-hour revalidate, so it self-heals within the hour,

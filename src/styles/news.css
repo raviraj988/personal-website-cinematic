@@ -47,7 +47,7 @@
 }
 
 .newsletter-card__meta {
-  color: var(--color-clay);
+  color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -76,7 +76,7 @@
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(1.75rem, 3.5vw, 2.75rem);
   border: 1px solid var(--color-line);
-  border-left: 3px solid var(--color-clay);
+  border-left: 3px solid var(--color-accent);
   background: rgba(255, 253, 248, 0.6);
 }
 

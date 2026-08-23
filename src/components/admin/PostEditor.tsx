@@ -12,6 +12,9 @@ import {
 } from "@/app/admin/actions";
 import { FIELD_LIMITS, slugify } from "@/lib/blog/validation";
 import { readingTimeLabel } from "@/lib/blog/reading-time";
+import { SeoPanel } from "./SeoPanel";
+import { BLOG_PATH } from "@/lib/blog/config";
+import { NEWS_PATH } from "@/lib/news/config";
 import type { PostCategory, PostRow } from "@/lib/supabase/database.types";
 
 const INITIAL: PostFormState = { ok: false };
@@ -48,6 +51,7 @@ export function PostEditor(props: PostEditorProps) {
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
   const [category, setCategory] = useState<PostCategory>(post?.category ?? "blog");
   const [content, setContent] = useState(post?.content ?? "");
+  const [focusKeyword, setFocusKeyword] = useState(post?.focus_keyword ?? "");
   const [seoTitle, setSeoTitle] = useState(post?.seo_title ?? "");
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? "");
   const [cover, setCover] = useState({
@@ -77,6 +81,13 @@ export function PostEditor(props: PostEditorProps) {
     setTitle(next);
     if (!slugTouched) setSlug(slugify(next));
   }
+
+  /**
+   * Where this post will live. Driven by `category`, so the slug hint and the
+   * search preview both follow the "Publish to"choice rather than always claiming
+   * /blog — which they did before news items existed.
+   */
+  const basePath = category === "news" ? NEWS_PATH : BLOG_PATH;
 
   return (
     <form className="admin-form" action={formAction} noValidate>
@@ -132,7 +143,7 @@ export function PostEditor(props: PostEditorProps) {
         />
         <div className="admin-field__foot">
           <p className="admin-hint">
-            /blog/<strong>{slug || "…"}</strong>
+            {basePath}/<strong>{slug || "…"}</strong>
             {mode === "edit"
               ? " — changing this changes the post's public address."
               : ""}
@@ -297,6 +308,28 @@ export function PostEditor(props: PostEditorProps) {
         </p>
 
         <div className="admin-field">
+          <label htmlFor="focusKeyword">Focus keyword</label>
+          <input
+            id="focusKeyword"
+            name="focusKeyword"
+            value={focusKeyword}
+            maxLength={FIELD_LIMITS.focusKeyword.max}
+            onChange={(event) => setFocusKeyword(event.target.value)}
+          />
+          <div className="admin-field__foot">
+            <p className="admin-hint">
+              Optional. The phrase this post should be found by — the checklist
+              reports where it does and does not appear.
+            </p>
+          </div>
+          {errors.focusKeyword ? (
+            <p className="admin-field__error" role="alert">
+              {errors.focusKeyword}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="admin-field">
           <label htmlFor="seoTitle">SEO title</label>
           <input
             id="seoTitle"
@@ -343,6 +376,21 @@ export function PostEditor(props: PostEditorProps) {
           ) : null}
         </div>
       </fieldset>
+
+      <SeoPanel
+        basePath={basePath}
+        input={{
+          title,
+          slug,
+          excerpt,
+          content,
+          seoTitle,
+          seoDescription,
+          focusKeyword,
+          coverImageUrl: cover.url || null,
+          coverImageAlt: cover.alt || null,
+        }}
+      />
 
       <div className="admin-actions admin-actions--sticky">
         <SaveButton mode={mode} />

@@ -47,6 +47,7 @@ function readPostForm(formData: FormData): PostFormValues {
     // external drafting tool, or an older cached client bundle — still lands on
     // the blog rather than failing validation.
     category: String(formData.get("category") ?? "blog"),
+    focusKeyword: emptyToNull(String(formData.get("focusKeyword") ?? "")),
     coverImageUrl: emptyToNull(String(formData.get("coverImageUrl") ?? "")),
     coverImageAlt: emptyToNull(String(formData.get("coverImageAlt") ?? "")),
     seoTitle: emptyToNull(String(formData.get("seoTitle") ?? "")),
@@ -137,6 +138,7 @@ export async function createPostAction(
       excerpt: values.excerpt.trim(),
       content: values.content,
       category: values.category as PostCategory,
+      focus_keyword: values.focusKeyword,
       cover_image_url: values.coverImageUrl,
       cover_image_alt: values.coverImageAlt,
       seo_title: values.seoTitle,
@@ -187,6 +189,7 @@ export async function updatePostAction(
       excerpt: values.excerpt.trim(),
       content: values.content,
       category: values.category as PostCategory,
+      focus_keyword: values.focusKeyword,
       cover_image_url: values.coverImageUrl,
       cover_image_alt: values.coverImageAlt,
       seo_title: values.seoTitle,

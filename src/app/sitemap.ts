@@ -27,7 +27,20 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, issues] = await Promise.all([
     getSitemapPosts(),
-    getPublishedNewsletters(),
+    /**
+     * Degrades, matching `getSitemapPosts`, which swallows its own error for the
+     * reason given there: a sitemap that throws takes the whole route down, and
+     * a sitemap missing some entries is a smaller failure than a 500 at
+     * /sitemap.xml.
+     *
+     * This route is prerendered, so without the guard the *build* fails outright
+     * whenever the database is reachable but not yet migrated — which is exactly
+     * the state a project is in between adding credentials and running the SQL.
+     */
+    getPublishedNewsletters().catch((error) => {
+      console.error("[sitemap] could not load newsletter issues:", error);
+      return [];
+    }),
   ]);
 
   const blogPosts = posts.filter((post) => post.category === "blog");

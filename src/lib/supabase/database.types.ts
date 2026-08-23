@@ -27,6 +27,8 @@ export type PostRow = {
   status: PostStatus;
   source: PostSource;
   category: PostCategory;
+  /** Added in 0003. Drives the editor's SEO checklist; never queried. */
+  focus_keyword: string | null;
   published_at: string | null;
   seo_title: string | null;
   seo_description: string | null;
@@ -36,13 +38,21 @@ export type PostRow = {
 
 export type PostInsert = Omit<
   PostRow,
-  "id" | "created_at" | "updated_at" | "status" | "source" | "category"
+  | "id"
+  | "created_at"
+  | "updated_at"
+  | "status"
+  | "source"
+  | "category"
+  | "focus_keyword"
 > & {
   id?: string;
   status?: PostStatus;
   source?: PostSource;
   /** Defaulted to 'blog' in Postgres, so the drafting tool can keep omitting it. */
   category?: PostCategory;
+  /** Nullable with no default — the drafting tool never sets it. */
+  focus_keyword?: string | null;
 };
 
 export type PostUpdate = Partial<Omit<PostRow, "id" | "created_at">>;

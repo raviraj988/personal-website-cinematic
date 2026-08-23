@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AmbientLayer } from "@/components/motion/AmbientLayer";
@@ -46,7 +47,15 @@ export function EseLanding() {
 
           No `AmbientLayer`: its blooms and botanical marks are drawn to lift a
           flat colour field, and over a photograph they read as smudges. */}
-      <section id="top" className="lede-hero" aria-labelledby="hero-title" data-scroll-theme="cream">
+      <section
+        id="top"
+        className="lede-hero"
+        aria-labelledby="hero-title"
+        data-scroll-theme="cream"
+        /* The copy sits on a full-bleed photograph, not on the cream page tone,
+           so this section sets its own light ink. See the note in globals.css. */
+        data-ink="own"
+      >
         <ParallaxImage
           className="lede-hero__media"
           src={hero.image.src}
@@ -75,11 +84,11 @@ export function EseLanding() {
       </section>
 
       {/* ------------------------------------------------------- what is ESE */}
-      <section id="about" className="org-intro section-shell" aria-labelledby="about-title" data-scroll-theme="paper">
-        <AmbientLayer blooms={1} marks />
+      <section id="about" className="org-intro section-shell" aria-labelledby="about-title" data-scroll-theme="forest">
+        <AmbientLayer blooms={1} marks vignette tone="dark" />
         <div className="org-intro__grid">
           <Reveal className="org-intro__copy">
-            <p className="section-label">01 — {ese.intro.eyebrow}</p>
+            <p className="section-label section-label--light">01 — {ese.intro.eyebrow}</p>
             <ScrollWords as="h2" id="about-title" text={ese.intro.heading} />
             {ese.intro.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -89,7 +98,7 @@ export function EseLanding() {
           {/* A real photograph of a real ESE session. People are visible, so it
               cannot come from the generated pool — see `wideImage`. */}
           <Reveal className="org-intro__media" delay={140}>
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.intro.image.src}
                 alt={ese.intro.image.alt}
@@ -100,20 +109,14 @@ export function EseLanding() {
             </figure>
           </Reveal>
         </div>
-
-        <Reveal className="mission-panel" delay={120}>
-          <p className="section-label">{ese.mission.eyebrow}</p>
-          <blockquote>{ese.mission.statement}</blockquote>
-          <p className="mission-panel__supporting">{ese.mission.supporting}</p>
-        </Reveal>
       </section>
 
       {/* ------------------------------------------------- who we are */}
-      <section id="who-we-are" className="network-band" aria-labelledby="network-title" data-scroll-theme="umber">
-        <AmbientLayer blooms={1} vignette tone="dark" />
+      <section id="who-we-are" className="network-band" aria-labelledby="network-title" data-scroll-theme="forest">
+        <AmbientLayer blooms={1} marks />
         <div className="network-band__inner">
           <Reveal className="network-band__copy">
-            <p className="section-label section-label--light">02 — {ese.whoWeAre.eyebrow}</p>
+            <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
             {ese.whoWeAre.body.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -122,7 +125,7 @@ export function EseLanding() {
 
           {/* Another real photograph — an ESE session, people visible. */}
           <Reveal className="network-band__media" delay={140}>
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.whoWeAre.image.src}
                 alt={ese.whoWeAre.image.alt}
@@ -133,52 +136,83 @@ export function EseLanding() {
             </figure>
           </Reveal>
         </div>
+      </section>
 
-        {/*
-          The people.
+      {/* --------------------------------------------------------- mission */}
+      {/*
+        The mission, given a whole viewport.
 
-          Two cards rather than one founder block: ESE is a network, and the
-          document says so. Biographies are deliberately absent — see the note on
-          `people` in lib/data/ese-content.ts — so each card carries name, role,
-          and a link to the fuller page rather than invented copy.
-        */}
-        <Reveal className="people-group" delay={80}>
-          <div className="people-group__head">
-            <p className="section-label section-label--light">{people.eyebrow}</p>
-            <h3 className="people-group__title">{people.heading}</h3>
-            <p className="people-group__lede">{people.lede}</p>
-          </div>
+        A full screen of photograph with the mission set into the foot of it —
+        `main`'s landscape interlude, carrying the mission instead of a caption.
+        The mission used to sit in a bordered panel at the foot of "What is ESE",
+        where it read as a footnote to the section above rather than as the thing
+        ESE is for.
 
-          <div className="people-group__grid">
-            {people.members.map((person) => (
-              <PersonCard key={person.slug} person={person} />
-            ))}
-          </div>
-
-          <Link className="button button--light" href={people.cta.href}>
-            {people.cta.label} <Arrow />
-          </Link>
-        </Reveal>
+        The photograph drifts on scroll like the rest of the page's imagery. The
+        copy is anchored to one corner rather than centred, which is what makes
+        that readable — a background moving behind centred text reads as a
+        rendering fault, behind cornered text it reads as depth.
+      */}
+      <section
+        className="principle-band"
+        aria-labelledby="mission-title"
+        data-scroll-theme="forest"
+      >
+        {/* The photograph sits inside a frame so the forest ground shows as a
+            thin border around it, rather than bleeding to the viewport edge. */}
+        <div className="principle-band__frame">
+          <ParallaxImage
+            src={ese.mission.image.src}
+            alt=""
+            sizes="100vw"
+            zoom="out"
+            intensity="soft"
+          />
+          <div className="principle-band__scrim" />
+          <Reveal className="principle-band__content">
+            {/* The rule and the copy sit in the foot of the frame, so the top two
+                thirds of the photograph stay clear. */}
+            <div className="principle-band__rule">
+              <p className="section-label section-label--light">{ese.mission.eyebrow}</p>
+              <ScrollWords as="h2" id="mission-title" text={ese.mission.statement} />
+              <p>{ese.mission.supporting}</p>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* --------------------------------------------------- who we serve */}
-      <section id="who-we-serve" className="serve-band section-shell" aria-labelledby="serve-title" data-scroll-theme="sage">
+      <section id="who-we-serve" className="serve-band section-shell" aria-labelledby="serve-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} />
         <Reveal className="serve-band__heading" variant="rule">
           <p className="section-label">03 — {ese.whoWeServe.eyebrow}</p>
           <ScrollWords as="h2" id="serve-title" text={ese.whoWeServe.heading} />
         </Reveal>
         <div className="serve-band__body">
-          <ul className="serve-band__list">
-            {ese.whoWeServe.audiences.map((audience, index) => (
-              <Reveal as="li" key={audience} delay={index * 60}>
-                <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                {audience}
-              </Reveal>
-            ))}
-          </ul>
+          {/*
+            One `Reveal` around the whole list rather than one per row.
+
+            Six rows meant six IntersectionObservers to produce a stagger that is
+            really a single event, and the delays drifted because each row fired
+            on its own threshold. The wrapper fires once and the rows stagger off
+            `--i` in CSS, which also lets the rule under each row wipe in — a
+            per-row transition the old markup had nowhere to hang.
+          */}
+          <Reveal className="serve-index">
+            <ol>
+              {ese.whoWeServe.audiences.map((audience, index) => (
+                <li key={audience} style={{ "--i": index } as CSSProperties}>
+                  <span className="serve-index__num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="serve-index__name">{audience}</span>
+                  <span className="serve-index__rule" aria-hidden="true" />
+                </li>
+              ))}
+            </ol>
+          </Reveal>
           <Reveal className="serve-band__media" delay={120}>
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.whoWeServe.image.src}
                 alt={ese.whoWeServe.image.alt}
@@ -191,7 +225,7 @@ export function EseLanding() {
       </section>
 
       {/* -------------------------------------------------------- services */}
-      <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="moss">
+      <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="cream">
         <AmbientLayer blooms={2} marks />
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">04 — {ese.services.eyebrow}</p>
@@ -239,7 +273,7 @@ export function EseLanding() {
         <AmbientLayer blooms={1} vignette tone="dark" />
         <div className="case-study__inner">
           <Reveal className="case-study__media" variant="fade">
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.caseStudy.image.src}
                 alt={ese.caseStudy.image.alt}
@@ -263,7 +297,7 @@ export function EseLanding() {
       </section>
 
       {/* ----------------------------------------------------- scholarship */}
-      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="clay">
+      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid">
           <Reveal className="scholarship-band__inner">
@@ -276,7 +310,7 @@ export function EseLanding() {
           </Reveal>
 
           <Reveal className="scholarship-band__media" delay={140}>
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.scholarship.image.src}
                 alt={ese.scholarship.image.alt}
@@ -297,7 +331,7 @@ export function EseLanding() {
         1227px tall — so the photograph beside it had to stretch to match and
         cropped down to a band of ceiling tiles.
       */}
-      <section className="scholarship-band section-shell" aria-labelledby="partner-title" data-scroll-theme="sage">
+      <section className="scholarship-band section-shell" aria-labelledby="partner-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid scholarship-band__grid--reverse">
           <Reveal className="scholarship-band__inner">
@@ -310,7 +344,7 @@ export function EseLanding() {
           </Reveal>
 
           <Reveal className="scholarship-band__media" delay={140}>
-            <figure className="photo-frame">
+            <figure className="photo-frame photo-frame--plate">
               <ParallaxImage
                 src={ese.becomePartner.image.src}
                 alt={ese.becomePartner.image.alt}
@@ -326,11 +360,47 @@ export function EseLanding() {
       {/* ------------------------------------------------------------ news */}
       <NewsTeaser />
 
+      {/* ---------------------------------------------------------- people */}
+      {/*
+        The people, as their own section rather than a coda to "Who we are".
+
+        Each card is the Service Area card — media, description, a link pinned to
+        the foot — so the two card types on the page read as one component.
+        Descriptions come from `people` in lib/data/ese-content.ts and stay empty
+        rather than invented where nothing was supplied.
+      */}
+      <section
+        id="people"
+        className="people-band section-shell"
+        aria-labelledby="people-title"
+        data-scroll-theme="cream"
+      >
+        <AmbientLayer blooms={1} marks />
+
+        <Reveal className="people-group people-group--standalone">
+          <div className="people-group__head">
+            <p className="section-label">09 — {people.eyebrow}</p>
+            <ScrollWords as="h2" id="people-title" text={people.heading} />
+            <p className="people-group__lede">{people.lede}</p>
+          </div>
+
+          <div className="people-group__grid">
+            {people.members.map((person, index) => (
+              <PersonCard key={person.slug} person={person} index={index} />
+            ))}
+          </div>
+
+          <Link className="button" href={people.cta.href}>
+            {people.cta.label} <Arrow />
+          </Link>
+        </Reveal>
+      </section>
+
       {/* ----------------------------------------------------------- tools */}
-      <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="sand">
+      <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} marks />
         <Reveal className="section-heading-row" variant="rule">
-          <p className="section-label">09 — {ese.tools.eyebrow}</p>
+          <p className="section-label">10 — {ese.tools.eyebrow}</p>
           <ScrollWords as="h2" id="tools-title" text={ese.tools.heading} />
         </Reveal>
 
@@ -374,7 +444,7 @@ export function EseLanding() {
         </div>
 
         <div className="cinematic-footer__cta">
-          <p className="section-label section-label--light">10 — {contact.eyebrow}</p>
+          <p className="section-label section-label--light">11 — {contact.eyebrow}</p>
           <h2>{contact.heading}</h2>
           <p>{contact.copy}</p>
           <a className="footer-button" href={`mailto:${contact.email}`}>

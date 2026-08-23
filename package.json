@@ -10,7 +10,12 @@
     "typecheck": "tsc --noEmit",
     "test:covers": "node --import ./scripts/register-ts.mjs scripts/test-cover-uploads.mjs",
     "test:validation": "node --import ./scripts/register-ts.mjs scripts/test-validation.mjs",
-    "verify:contract": "node --import ./scripts/register-ts.mjs scripts/verify-contract.mjs"
+    "verify:contract": "node --import ./scripts/register-ts.mjs scripts/verify-contract.mjs",
+    "test:password": "node --import ./scripts/register-ts.mjs scripts/test-password.mjs",
+    "test:seo": "node --import ./scripts/register-ts.mjs scripts/test-seo.mjs",
+    "sql:bundle": "node scripts/bundle-sql.mjs",
+    "check:schema": "node scripts/check-schema.mjs",
+    "db:migrate": "node scripts/apply-migrations.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

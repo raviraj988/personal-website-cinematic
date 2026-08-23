@@ -165,12 +165,12 @@
 
 .admin-chip--live { color: var(--color-forest); }
 .admin-chip--draft { color: var(--color-text-muted); }
-.admin-chip--scheduled { color: var(--color-bark); }
+.admin-chip--scheduled { color: var(--color-stone); }
 /* The one chip with a filled ground: an unreviewed machine-written draft is the
    thing on this screen most worth noticing. */
 .admin-chip--ai {
-  border-color: var(--color-clay);
-  background: var(--color-clay);
+  border-color: var(--color-accent);
+  background: var(--color-accent);
   color: var(--color-white);
 }
 /* Was `--color-moss`, which measured 4.06:1 on the paper ground and fails AA for
@@ -228,12 +228,12 @@
 }
 
 .admin-button--danger {
-  border-color: var(--color-clay);
-  color: var(--color-clay);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .admin-button--danger:hover {
-  background: var(--color-clay);
+  background: var(--color-accent);
   color: var(--color-white);
 }
 
@@ -368,7 +368,7 @@
 }
 
 .admin-required {
-  color: var(--color-clay);
+  color: var(--color-accent);
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: none;
@@ -418,7 +418,7 @@
 }
 
 .admin-field__error {
-  color: var(--color-clay);
+  color: var(--color-accent);
   font-size: 0.82rem;
   font-weight: 500;
 }
@@ -446,8 +446,8 @@
   white-space: nowrap;
 }
 
-.admin-count--close { color: var(--color-bark); }
-.admin-count--over { color: var(--color-clay); font-weight: 600; }
+.admin-count--close { color: var(--color-stone); }
+.admin-count--over { color: var(--color-accent); font-weight: 600; }
 
 .admin-fieldset {
   display: grid;
@@ -502,11 +502,11 @@
 
 .admin-notice a {
   border-bottom: 1px solid currentColor;
-  color: var(--color-clay);
+  color: var(--color-accent);
 }
 
 .admin-notice--error {
-  border-left-color: var(--color-clay);
+  border-left-color: var(--color-accent);
   color: var(--color-ink);
 }
 
@@ -614,7 +614,7 @@
   justify-items: start;
   margin-top: clamp(3.5rem, 7vw, 5rem);
   padding: clamp(1.5rem, 3vw, 2rem);
-  border: 1px solid var(--color-clay);
+  border: 1px solid var(--color-accent);
 }
 
 .admin-danger h2 {
@@ -798,4 +798,176 @@
   .admin-tabs__meta { margin-left: 0; flex-basis: 100%; }
   .admin-people__form input,
   .admin-people__form select { width: 100%; }
+}
+
+/* ==========================================================================
+   Auth screens, account, and the SEO panel
+   ========================================================================== */
+
+/* "or" rule between the password form and the Google button. */
+.admin-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.75rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: var(--track-label, 0.1em);
+  text-transform: uppercase;
+}
+
+.admin-divider::before,
+.admin-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-line);
+}
+
+/* Google's button. White ground and a neutral border are what their brand
+   guidelines ask for; the mark itself must stay four-colour. */
+.admin-button--google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color var(--motion-ui) var(--ease-standard);
+}
+
+.admin-button--google:hover { background: #f4f3f1; }
+.admin-button--google:disabled { opacity: 0.6; cursor: default; }
+
+.admin-gate__foot {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.admin-gate__foot a {
+  color: var(--color-forest);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.admin-account__meta {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+/* ------------------------------------------------------------- SEO panel */
+
+.seo-panel {
+  margin-top: 2.5rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+
+.seo-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.seo-score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.seo-score strong { font-size: 1.05rem; }
+
+/* Colour is a reinforcement, never the only signal — every check also carries a
+   word in its detail line and a visually-hidden status in its label. */
+.seo-score--good { background: #e3ede2; color: #1c4229; }
+.seo-score--fair { background: #f6ecd9; color: #6b4a15; }
+.seo-score--poor { background: #f6e0da; color: #7a2f1c; }
+
+.serp-preview {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.serp-preview__url {
+  color: #4d5156;
+  font-size: 0.78rem;
+}
+
+/* Approximating a search result, so the type is theirs rather than the site's. */
+.serp-preview__title {
+  margin-top: 0.35rem;
+  overflow: hidden;
+  color: #1a0dab;
+  font-family: var(--font-sans);
+  font-size: 1.12rem;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serp-preview__description {
+  display: -webkit-box;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  color: #4d5156;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.seo-checks {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.seo-check {
+  display: grid;
+  align-items: start;
+  gap: 0.75rem;
+  grid-template-columns: 0.85rem 1fr;
+}
+
+.seo-check__mark {
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: 0.32rem;
+  border-radius: 50%;
+}
+
+.seo-check--pass .seo-check__mark { background: #3f7a4e; }
+.seo-check--warn .seo-check__mark { background: #c08a2e; }
+.seo-check--fail .seo-check__mark { background: #b1452c; }
+.seo-check--skip .seo-check__mark { background: var(--color-line); }
+
+.seo-check__label {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.seo-check__detail {
+  margin-top: 0.15rem;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
 }

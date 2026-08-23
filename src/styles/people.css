@@ -7,13 +7,84 @@
    change the service card, change this to match.
    ========================================================================== */
 
+/* The card.
+ *
+ * `position: relative` and `isolation` are for the seam rule, which is absolutely
+ * positioned against the card and has to sit above the portrait.
+ *
+ * The lift on hover is the same 900ms `ease-out-expo` as the portrait scale
+ * inside it, so the two read as one movement rather than two things happening at
+ * once at different speeds. That coordination is most of what separates this
+ * from a card that merely has effects on it. */
 .person-card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   height: 100%;
   border: 1px solid var(--card-border, var(--color-line));
   background: var(--card-ground, var(--color-paper));
   color: var(--card-ink, var(--color-ink));
+  transition:
+    transform 900ms var(--ease-out-expo),
+    box-shadow 900ms var(--ease-out-expo),
+    border-color var(--motion-ui) ease;
+}
+
+/* Staggered arrival. The group reveals once; the cards follow off `--i`, the
+   same mechanism the audience index uses. */
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
+  opacity: 0;
+  transform: translateY(1.1rem);
+}
+
+[data-visible="true"] .person-card {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 640ms var(--ease-standard) calc(var(--i) * 110ms),
+    transform 760ms var(--ease-out-expo) calc(var(--i) * 110ms);
+}
+
+@media (hover: hover) {
+  .person-card:hover {
+    transform: translateY(-0.35rem);
+    border-color: rgba(28, 48, 37, 0.3);
+    box-shadow: var(--frame-shadow-plate);
+  }
+}
+
+/* The seam: a rule on the boundary between portrait and body, drawn from the
+   left on hover. 2px and in the accent, so it reads as a deliberate mark rather
+   than a border that happened to change colour.
+ *
+ * A pseudo-element on the media block rather than an element in the card, so it
+ * is anchored to the boundary by construction. The first attempt positioned a
+ * sibling `<span>` with `calc(100% - <body height>)`, which needed a number
+ * nothing was measuring — the media block's own bottom edge is the boundary, so
+ * it should be drawn there.
+ *
+ * The media block is the containing block and already clips overflow, and
+ * `.photo-frame` no longer defines pseudo-elements, so `::after` is free. */
+.person-card__media::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 620ms var(--ease-out-expo);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .person-card:hover .person-card__media::after {
+    transform: scaleX(1);
+  }
 }
 
 .person-card__media {
@@ -33,6 +104,13 @@
   object-position: center;
 }
 
+/* `ParallaxImage` renders its own absolutely-positioned wrapper, which needs to
+   fill the media block for the drift to be clipped by it rather than escaping. */
+.person-card__media .parallax-media {
+  position: absolute;
+  inset: 0;
+}
+
 /* Only one portrait exists. Initials in the display face keep every card the
    same shape and read as a treatment rather than a missing asset. */
 .person-card__media--monogram {
@@ -48,8 +126,12 @@
   color: var(--monogram-ink, var(--color-moss));
 }
 
+/* Column, matching `.service-card__body`, so the CTA can be pinned to the foot
+   and the links line up across cards regardless of description length. */
 .person-card__body {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   padding: clamp(1.5rem, 2.4vw, 2rem);
 }
 
@@ -57,17 +139,40 @@
 .person-card__body h3 {
   font-family: var(--font-serif);
   font-size: var(--type-h3);
-  font-weight: 300;
+  /* 300 is the display weight used for large headings, where the thin stroke
+     reads as elegance. At card size it reads as faint, so this steps up. */
+  font-weight: 400;
   line-height: 1.12;
+  letter-spacing: -0.012em;
 }
 
 .person-card__role {
-  margin-top: 0.75rem;
-  color: var(--card-meta, var(--color-clay));
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  color: var(--card-meta, var(--color-accent));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
+}
+
+/* A short tick before the role. At rest the card is otherwise all type; this
+   gives it one mark, and it lengthens on hover so the resting state is not the
+   only state that has one. */
+.person-card__role::before {
+  content: "";
+  width: 1.1rem;
+  height: 1px;
+  background: currentColor;
+  transition: width 620ms var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .person-card:hover .person-card__role::before {
+    width: 2.2rem;
+  }
 }
 
 .person-card__body p:not(.person-card__role) {
@@ -77,28 +182,47 @@
   line-height: 1.65;
 }
 
+/* A stated gap, not filler. Italic and muted so it reads as "not written yet"
+   rather than as the description itself. */
 .person-card__pending {
   font-style: italic;
+  opacity: 0.75;
+}
+
+.person-card__cta {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* The description and the pending line both need clearance from the button
+   beneath them; `margin-top: auto` on the CTA collapses that otherwise. */
+.person-card__summary,
+.person-card__pending {
+  margin-bottom: 1.5rem;
 }
 
 /* ------------------------------------------- the group on the landing page */
 
-/* The cards keep the paper body the service cards use, even though this section
-   sits on the dark umber ground — exactly as the service cards sit on moss.
-   The earlier version tinted them to 6% white so they blended into the section,
-   which made the card look like a dim panel rather than a card, and pushed the
-   text it contains down to the edge of legibility.
-
-   Only the monogram tile is toned, because it is a stand-in for a photograph and
-   should read as part of the media block rather than as body copy. */
+/* The people block is now its own section on cream, not a coda hanging off the
+   foot of "Who we are". So it drops the container, gutters, top margin and
+   divider it needed as a nested block — `.section-shell` on the section provides
+   all four — and keeps only what is specific to the group. */
 .people-group {
   --monogram-ground: rgba(28, 48, 37, 0.07);
   --monogram-ink: var(--color-moss);
+}
 
+/* Retained for the nested use, if this block is ever dropped inside another
+   section again. */
+.people-group:not(.people-group--standalone) {
   width: min(100%, calc(var(--container) + var(--gutter) * 2));
   margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
   padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  border-top: 1px solid var(--rule, var(--color-line));
+}
+
+.people-group--standalone .people-group__grid {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 .people-group__title {
@@ -108,11 +232,22 @@
   line-height: 1.15;
 }
 
+/* As a section of its own the heading is an h2 on the page's own scale, matching
+   Services and Who we serve rather than the h3 it was as a nested block. */
+.people-group--standalone .people-group__head h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
 .people-group__lede {
   max-width: 52ch;
   margin-top: 1rem;
-  /* Sits on the umber ground itself, not on a card, so it stays light. */
-  color: rgba(238, 240, 234, 0.86);
+  /* Sits on the section ground itself, not on a card, so it follows the
+     ground's ink rather than the light-ground muted token. */
+  color: var(--ink-muted, var(--color-text-muted));
   font-size: var(--type-body-md);
   line-height: 1.65;
 }

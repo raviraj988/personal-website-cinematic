@@ -109,7 +109,7 @@ export default async function ServicePage({ params }: PageProps) {
             <p className="service-page__lede">{service.description}</p>
           </header>
 
-          <figure className="service-page__media photo-frame">
+          <figure className="service-page__media photo-frame photo-frame--plate">
             <ParallaxImage
               src={service.image.src}
               alt={service.image.alt}
