@@ -459,8 +459,12 @@ export function registerTools(
           seoTitle: str("Optional SEO title override."),
           seoDescription: str("Optional meta description override."),
           focusKeyword: str("Optional focus keyword, checked for placement."),
-          coverImageUrl: str("Optional cover URL, from generate_cover_image."),
-          coverImageAlt: str("Alt text — required whenever a cover URL is set."),
+          coverImageUrl: str(
+            "Optional cover URL, exactly as returned by upload_cover_image (preferred) or generate_cover_image. Pass the same value you will give create_draft, so the checks run against the cover the post will actually have.",
+          ),
+          coverImageAlt: str(
+            "Alt text, exactly as returned by whichever cover tool you called. Required whenever a cover URL is set. Do not rewrite it between tools.",
+          ),
         },
         required: ["title", "slug", "excerpt", "content"],
       },
@@ -500,7 +504,7 @@ export function registerTools(
     },
   );
 
-  /* ------------------------------------------------- 7. generate_cover_image */
+  /* --------------------------------------------------- 7. upload_cover_image */
 
   define(
     "upload_cover_image",
