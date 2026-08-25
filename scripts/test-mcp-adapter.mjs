@@ -68,10 +68,36 @@ ok(
   "No store method is publish-shaped",
   badMethods.length ? badMethods.join(", ") : "checked: " + storeMethods.join(", "),
 );
+/**
+ * Kept as an explicit list rather than derived from the object.
+ *
+ * Deriving it would make the assertion vacuous — the store would always have
+ * exactly the methods the store has. The point is that widening `BlogStore` is a
+ * deliberate act that has to be written down here too, so a method appearing
+ * without anyone noticing fails a test. The publish-shape check above is the
+ * security control; this is the tripwire that makes someone look at it.
+ *
+ * Grew from six to eleven in 0005: the five `*CoverTicket*` / `*CoverResult*`
+ * methods back the out-of-band upload route. None of them touch `posts`.
+ */
+const DOCUMENTED_METHODS = [
+  "resolveAuthorId",
+  "listPosts",
+  "slugExists",
+  "linkableContent",
+  "createDraft",
+  "uploadCover",
+  "createCoverTicket",
+  "readCoverTicket",
+  "claimCoverTicket",
+  "recordCoverResult",
+  "recordCoverFailure",
+];
+const undocumented = storeMethods.filter((m) => !DOCUMENTED_METHODS.includes(m));
 ok(
-  storeMethods.length === 6,
-  "The store has exactly the six documented methods",
-  String(storeMethods.length),
+  undocumented.length === 0 && storeMethods.length === DOCUMENTED_METHODS.length,
+  "The store has exactly the documented methods",
+  undocumented.length ? `undocumented: ${undocumented.join(", ")}` : `${storeMethods.length}`,
 );
 for (const expected of [
   "resolveAuthorId",

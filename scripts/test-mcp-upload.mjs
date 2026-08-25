@@ -562,13 +562,117 @@ section("The same handler, with no localFiles — the HTTP transport");
     "and the refusal explains the transport boundary");
 }
 
+
+/* ------------------------------------------- the out-of-band ticket flow */
+
+section("Ticket flow — the bridge for clients that cannot carry bytes");
+
+{
+  const store = fakeStore();
+  const png = await testImage(1600, 900, "png");
+
+  const issued = await store.createCoverTicket({
+    site: "ese", slug: SLUG, title: TITLE,
+    imageAlt: "A culvert under a gravel road.",
+    userId: "00000000-0000-4000-8000-000000000001",
+    ttlSeconds: 900,
+  });
+  ok(Boolean(issued.ticket), "A ticket is issued", issued.ticket);
+  ok(Boolean(issued.expiresAt), "with an expiry");
+
+  const pending = await store.readCoverTicket(issued.ticket);
+  ok(pending?.result === null, "Before any upload there is no result");
+  ok(pending?.consumed === false, "and it is unconsumed");
+
+  // The upload endpoint's sequence: claim, then run the same pipeline.
+  const claim = await store.claimCoverTicket(issued.ticket);
+  ok(claim?.slug === SLUG, "Claiming returns the slug fixed at issue time", claim?.slug);
+  ok(claim?.imageAlt === "A culvert under a gravel road.",
+    "and the alt recorded at issue time — not supplied by the uploader");
+
+  ok((await store.claimCoverTicket(issued.ticket)) === null,
+    "A second claim is refused — single use");
+
+  const out = await uploadClientCover(
+    { title: claim.title, slug: claim.slug, imageBytes: png, imageAlt: claim.imageAlt },
+    deps({ store }),
+  );
+  ok(out.ok === true, "The bytes mode uploads without any base64", out.ok ? "" : out.error);
+  ok(out.ok && out.via === "bytes", "and records via: bytes");
+
+  await store.recordCoverResult(issued.ticket, {
+    url: out.url, path: out.path, alt: out.alt,
+    width: out.width, height: out.height, contentType: out.contentType,
+  });
+
+  const done = await store.readCoverTicket(issued.ticket);
+  ok(done?.result?.url === out.url, "The result reads back on the ticket", done?.result?.url);
+  ok(done?.result?.alt === "A culvert under a gravel road.", "with the alt intact");
+  ok(done?.result?.width === 1200 && done?.result?.height === 630, "at 1200x630");
+}
+
+section("Ticket flow — refusals");
+
+{
+  const store = fakeStore();
+
+  ok((await store.readCoverTicket("nope")) === null, "An unknown ticket reads as null");
+  ok((await store.claimCoverTicket("nope")) === null, "and cannot be claimed");
+
+  const expired = await store.createCoverTicket({
+    site: "ese", slug: SLUG, title: TITLE, imageAlt: null,
+    userId: "00000000-0000-4000-8000-000000000001",
+    ttlSeconds: -1,
+  });
+  ok((await store.claimCoverTicket(expired.ticket)) === null, "An expired ticket cannot be claimed");
+  ok((await store.readCoverTicket(expired.ticket))?.expired === true, "and reads as expired");
+
+  // A rejected image releases the claim, so the person can try another file
+  // without going back to the model for a new ticket.
+  const retry = await store.createCoverTicket({
+    site: "ese", slug: SLUG, title: TITLE, imageAlt: null,
+    userId: "00000000-0000-4000-8000-000000000001",
+    ttlSeconds: 900,
+  });
+  await store.claimCoverTicket(retry.ticket);
+  await store.recordCoverFailure(retry.ticket, "SVG files are not accepted.");
+  const after = await store.readCoverTicket(retry.ticket);
+  ok(after?.failure === "SVG files are not accepted.", "A failure is recorded", after?.failure);
+  ok(after?.consumed === false, "and the claim is released so the ticket can be retried");
+  ok((await store.claimCoverTicket(retry.ticket)) !== null, "so a second upload may be attempted");
+
+  // But a ticket that produced a result stays spent.
+  const spent = await store.createCoverTicket({
+    site: "ese", slug: SLUG, title: TITLE, imageAlt: null,
+    userId: "00000000-0000-4000-8000-000000000001",
+    ttlSeconds: 900,
+  });
+  await store.claimCoverTicket(spent.ticket);
+  await store.recordCoverResult(spent.ticket, {
+    url: "https://x.test/a.webp", path: "covers/a.webp", alt: "a",
+    width: 1200, height: 630, contentType: "image/webp",
+  });
+  await store.recordCoverFailure(spent.ticket, "should not release");
+  ok((await store.readCoverTicket(spent.ticket))?.consumed === true,
+    "A ticket that produced a result is never released again");
+}
+
 /* ------------------------------------------- the tool surface itself */
+
 
 section("Tool surface");
 
 ok(TOOL_NAMES.includes("upload_cover_image"), "upload_cover_image is in TOOL_NAMES");
 ok(TOOL_NAMES.includes("generate_cover_image"), "generate_cover_image was NOT removed");
-ok(TOOL_NAMES.length === 9, "There are now nine tools", String(TOOL_NAMES.length));
+// Derived, not a literal — the same lesson the handshake and e2e suites
+// learned: a hardcoded count makes every new tool fail an assertion about
+// itself rather than about anything real.
+ok(
+  TOOL_NAMES.length === Object.keys(TOOL_SCOPE).length,
+  "Every tool has a scope and the counts agree",
+  `${TOOL_NAMES.length} tools`,
+);
+ok(TOOL_NAMES.includes("create_cover_upload"), "create_cover_upload is in TOOL_NAMES");
 ok(TOOL_SCOPE.upload_cover_image === "blog:draft", "It requires the write scope",
   TOOL_SCOPE.upload_cover_image);
 ok(!toolsForScopes(["blog:read"]).has("upload_cover_image"),

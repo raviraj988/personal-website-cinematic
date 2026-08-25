@@ -1,5 +1,5 @@
 /**
- * The eight tools.
+ * The ten tools.
  *
  * ## Raw JSON Schema, not zod — via the low-level Server API
  *
@@ -42,7 +42,7 @@ import {
   type Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { errorResult, textResult } from "./lib";
+import { errorResult, textResult, readEnv } from "./lib";
 import { resolveSite, siteKeys, type RegisteredSite } from "./site";
 import { renderWritingGuide } from "./writing-guide";
 import { buildSeoReport, renderSeoReport, type ReportCorpus } from "./seo-report";
@@ -61,7 +61,7 @@ import {
   hasErrors,
   isPostCategory,
 } from "../src/lib/blog/validation";
-import { ADMIN_PATH, absoluteUrl, postUrl } from "../src/lib/blog/config";
+import { ADMIN_PATH, SITE_ORIGIN, absoluteUrl, postUrl } from "../src/lib/blog/config";
 import { newsUrl } from "../src/lib/news/config";
 import type { PostCategory } from "../src/lib/supabase/database.types";
 
@@ -133,6 +133,36 @@ function resolveCategory(value: unknown): PostCategory {
     throw new Error(`category must be one of: ${POST_CATEGORIES.join(", ")}.`);
   }
   return value;
+}
+
+/**
+ * How long an upload ticket lives.
+ *
+ * Fifteen minutes: long enough for a human to find the file and drop it in a
+ * browser, short enough that a ticket leaked into a transcript is dead well
+ * before anyone could use it.
+ */
+export const COVER_TICKET_TTL_SECONDS = 15 * 60;
+
+/**
+ * The origin to build an upload URL against.
+ *
+ * Read from the environment rather than from a request, for the reason
+ * `src/lib/mcp-auth/origin.ts` sets out at length: a Host header is
+ * attacker-controlled, and a URL built from one would send a client's image
+ * wherever the caller chose. `SITE_ORIGIN` is the fallback but is still the
+ * `example.com` placeholder, so an unset variable is reported rather than
+ * guessed.
+ */
+function publicOrigin(): string {
+  const configured = readEnv("MCP_OAUTH_ORIGIN");
+  if (configured && !configured.includes("example.com")) {
+    return configured.replace(/\/+$/, "");
+  }
+  if (!SITE_ORIGIN.includes("example.com")) return SITE_ORIGIN.replace(/\/+$/, "");
+  throw new Error(
+    "Cannot build an upload URL: set MCP_OAUTH_ORIGIN to this deployment's absolute origin, or set site.canonicalBase to the real domain.",
+  );
 }
 
 /* ----------------------------------------------------------- registration */
@@ -504,6 +534,84 @@ export function registerTools(
     },
   );
 
+  /* ------------------------------------------------- 6b. create_cover_upload */
+
+  define(
+    "create_cover_upload",
+    {
+      description:
+        "START HERE for a cover when you are a REMOTE client (ChatGPT). Returns a one-time uploadUrl. Send your generated image file to that URL as raw bytes over plain HTTP — a normal file upload, no base64 — then call upload_cover_image with the returned ticket. This exists because MCP has no file-input type, and a model cannot type megabytes of base64: a 1.5 MB cover is roughly 600,000 output tokens. The uploadUrl also opens in a browser as a drop page, so a human can complete the handoff if your runtime cannot make the request.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          ...SITE_PROPERTY,
+          title: str("The post headline. Used to derive alt text if you supply none."),
+          slug: str("The post slug. Fixes the storage path at issue time."),
+          imageAlt: str(
+            `Optional alt text describing what your image will show. Kept when 1-${FIELD_LIMITS.coverImageAlt.max} characters. Recorded now, because the upload itself carries no arguments.`,
+          ),
+        },
+        required: ["site", "title", "slug"],
+      },
+    },
+    async (args: Record<string, unknown>) => {
+      try {
+        const site = resolveSite(args?.site);
+        const title = requiredString(args?.title, "title");
+        const slugArg = requiredString(args?.slug, "slug");
+
+        const shape = checkSlugShape(slugArg);
+        if (!shape.ok) {
+          return errorResult(
+            `${shape.error}${shape.suggestion ? ` Try "${shape.suggestion}".` : ""}`,
+          );
+        }
+
+        const alt = optionalString(args?.imageAlt, "imageAlt", FIELD_LIMITS.coverImageAlt.max);
+
+        // Attributed the same way a draft is: to the oldest owner. The ticket has
+        // a foreign key to profiles, so there is no anonymous ticket.
+        const userId = await deps.store.resolveAuthorId();
+
+        const { ticket, expiresAt } = await deps.store.createCoverTicket({
+          site: site.key,
+          slug: shape.slug,
+          title,
+          imageAlt: alt,
+          userId,
+          ttlSeconds: COVER_TICKET_TTL_SECONDS,
+        });
+
+        const uploadUrl = `${publicOrigin()}/api/cover-upload/${ticket}`;
+
+        return textResult(
+          [
+            `site: ${site.key}`,
+            `ticket: ${ticket}`,
+            `uploadUrl: ${uploadUrl}`,
+            `expiresAt: ${expiresAt}`,
+            `maxBytes: ${UPLOAD_MAX_BYTES}`,
+            `accepts: image/png, image/jpeg, image/webp`,
+            "",
+            "Next: send the image file to uploadUrl as the raw request body.",
+            "",
+            `  curl -X POST --data-binary @cover.png "${uploadUrl}"`,
+            "",
+            "Then call upload_cover_image with { site, title, slug, ticket } to get",
+            "the hosted url and alt. One upload per ticket.",
+            "",
+            "If you cannot make an HTTP request yourself, give uploadUrl to the human —",
+            "it opens as a drag-and-drop page in a browser.",
+          ].join("\n"),
+        );
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Could not create an upload ticket.",
+        );
+      }
+    },
+  );
+
   /* --------------------------------------------------- 7. upload_cover_image */
 
   define(
@@ -517,8 +625,11 @@ export function registerTools(
           ...SITE_PROPERTY,
           title: str("The post headline. Used to derive alt text if you supply none."),
           slug: str("The post slug. Determines the storage path."),
+          ticket: str(
+            "A ticket from create_cover_upload, once the image has been uploaded to the URL it returned. THE ONLY MODE THAT WORKS FROM A REMOTE CLIENT WHOSE MODEL WOULD OTHERWISE HAVE TO TYPE THE IMAGE. Returns the hosted result.",
+          ),
           imageBase64: str(
-            `The image file as base64 — the mode every client can use. A "data:image/png;base64,..." prefix is accepted. Max ${(UPLOAD_MAX_BYTES / 1024 / 1024).toFixed(0)} MB decoded.`,
+            `The image file as base64. Works only when your runtime can substitute file bytes into a tool argument — a model cannot type megabytes. A "data:image/png;base64,..." prefix is accepted. Max ${(UPLOAD_MAX_BYTES / 1024 / 1024).toFixed(0)} MB decoded.`,
           ),
           imagePath: str(
             "Absolute path to the generated file. LOCAL CLIENTS ONLY — refused over HTTP, where it would disclose the server's filesystem. Use imageBase64 if unsure.",
@@ -543,6 +654,50 @@ export function registerTools(
         if (!shape.ok) {
           return errorResult(
             `${shape.error}${shape.suggestion ? ` Try "${shape.suggestion}".` : ""}`,
+          );
+        }
+
+        // The ticket mode reads back a result the upload endpoint already
+        // produced. It does not re-run the pipeline: the bytes were validated,
+        // normalised, and stored when they arrived over plain HTTP, which is the
+        // whole point of the out-of-band route.
+        const ticket = typeof args?.ticket === "string" ? args.ticket.trim() : "";
+        if (ticket) {
+          const state = await deps.store.readCoverTicket(ticket);
+          if (!state) {
+            return errorResult(
+              "That ticket is not recognised. Call create_cover_upload to get a new one.",
+            );
+          }
+          if (state.result) {
+            return textResult(
+              [
+                `site: ${site.key}`,
+                `source: client-generated`,
+                `url: ${state.result.url}`,
+                `alt: ${state.result.alt}`,
+                `width: ${state.result.width}`,
+                `height: ${state.result.height}`,
+                `contentType: ${state.result.contentType}`,
+                `path: ${state.result.path}`,
+                `via: ticket`,
+                "",
+                "This is YOUR image, hosted. Pass url and alt to check_seo and create_draft unchanged.",
+              ].join("\n"),
+            );
+          }
+          if (state.failure) {
+            return errorResult(
+              `The upload was rejected: ${state.failure}\n\nThe ticket is still valid — upload a different PNG, JPEG, or WebP to the same URL, or call generate_cover_image instead.`,
+            );
+          }
+          if (state.expired) {
+            return errorResult(
+              "That ticket expired before anything was uploaded. Call create_cover_upload for a fresh one.",
+            );
+          }
+          return errorResult(
+            "Nothing has been uploaded to that ticket yet. Send the image to the uploadUrl create_cover_upload returned, then call this again with the same ticket.",
           );
         }
 
@@ -893,6 +1048,7 @@ export const TOOL_NAMES = [
   "get_link_targets",
   "suggest_internal_links",
   "check_seo",
+  "create_cover_upload",
   "upload_cover_image",
   "generate_cover_image",
   "create_draft",

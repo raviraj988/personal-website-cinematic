@@ -31,6 +31,7 @@ import type {
   ImageRequest,
   ImageResult,
   LinkablePost,
+  CoverTicketResult,
   LocalFileReader,
   LocalFileResult,
   PostListItem,
@@ -246,6 +247,12 @@ export function refusingFileReader(): RecordingFileReader {
 }
 
 export type FakeStore = BlogStore & {
+  /** Issued tickets, for asserting lifecycle without reaching a database. */
+  tickets: Map<string, {
+    site: string; slug: string; title: string; imageAlt: string | null;
+    expiresAt: number; consumedAt: number | null;
+    result: CoverTicketResult | null; failure: string | null;
+  }>;
   drafts: (DraftInput & { id: string })[];
   uploads: { slug: string; bytes: number; contentType: CoverMime; path: string }[];
   uploadShouldFail: boolean;
@@ -263,9 +270,25 @@ export function fakeStore(seed: { posts?: PostListItem[]; linkable?: LinkablePos
   const drafts: (DraftInput & { id: string })[] = [];
   const uploads: FakeStore["uploads"] = [];
 
+  /**
+   * Tickets, keyed by the plaintext value.
+   *
+   * The real adapter keys by SHA-256 and this does not, deliberately: hashing here
+   * would test the fake's crypto rather than the caller's behaviour, and a test
+   * that wants to assert "the plaintext is never stored" should assert that
+   * against the adapter, which is what `test-mcp-adapter.mjs` is for.
+   */
+  const tickets = new Map<string, {
+    site: string; slug: string; title: string; imageAlt: string | null;
+    expiresAt: number; consumedAt: number | null;
+    result: CoverTicketResult | null; failure: string | null;
+  }>();
+  let ticketSeq = 0;
+
   const store: FakeStore = {
     drafts,
     uploads,
+    tickets,
     uploadShouldFail: false,
 
     async resolveAuthorId() {
@@ -309,6 +332,60 @@ export function fakeStore(seed: { posts?: PostListItem[]; linkable?: LinkablePos
         path,
       });
       return { url: `https://fake.storage.test/${path}`, path };
+    },
+
+    async createCoverTicket(input) {
+      ticketSeq += 1;
+      const ticket = `faketicket${ticketSeq}`;
+      tickets.set(ticket, {
+        site: input.site,
+        slug: input.slug,
+        title: input.title,
+        imageAlt: input.imageAlt,
+        expiresAt: Date.now() + input.ttlSeconds * 1000,
+        consumedAt: null,
+        result: null,
+        failure: null,
+      });
+      return { ticket, expiresAt: new Date(Date.now() + input.ttlSeconds * 1000).toISOString() };
+    },
+
+    async readCoverTicket(ticket) {
+      const row = tickets.get(ticket);
+      if (!row) return null;
+      return {
+        site: row.site,
+        slug: row.slug,
+        title: row.title,
+        imageAlt: row.imageAlt,
+        consumed: row.consumedAt !== null,
+        expired: row.expiresAt < Date.now(),
+        result: row.result,
+        failure: row.failure,
+      };
+    },
+
+    async claimCoverTicket(ticket) {
+      const row = tickets.get(ticket);
+      // The three refusals the real adapter collapses into one conditional
+      // update. Kept indistinguishable to the caller for the same reason.
+      if (!row) return null;
+      if (row.consumedAt !== null) return null;
+      if (row.expiresAt < Date.now()) return null;
+      row.consumedAt = Date.now();
+      return { site: row.site, slug: row.slug, title: row.title, imageAlt: row.imageAlt };
+    },
+
+    async recordCoverResult(ticket, result) {
+      const row = tickets.get(ticket);
+      if (row) { row.result = result; row.failure = null; }
+    },
+
+    async recordCoverFailure(ticket, reason) {
+      const row = tickets.get(ticket);
+      // Mirrors the adapter: a failure releases the claim so the ticket can be
+      // retried, but only while no result has been recorded.
+      if (row && !row.result) { row.failure = reason; row.consumedAt = null; }
     },
   };
 

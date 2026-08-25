@@ -395,14 +395,26 @@ try {
     survivors?.length ? survivors.map((s) => `${s.slug}:${s.status}`).join(", ") : "0 rows",
   );
 
+  /**
+   * Scoped to this suite's own prefix, not the whole table.
+   *
+   * This asserted that `posts` contained no published row anywhere, which was
+   * true only while the blog was empty. It is a real site now with published
+   * articles, so the unscoped form fails on a healthy database and says nothing
+   * about this server — it cannot publish, which is what actually needs proving.
+   *
+   * The claim worth keeping is narrower and still exact: nothing this suite
+   * created is published.
+   */
   const { data: anyPublished } = await service
     .from("posts")
     .select("id, slug")
-    .eq("status", "published");
+    .eq("status", "published")
+    .like("slug", `${PREFIX}%`);
   ok(
     (anyPublished?.length ?? 0) === 0,
-    "No published post exists in the table at all",
-    `${anyPublished?.length ?? 0} published rows`,
+    "Nothing this suite created was ever published",
+    `${anyPublished?.length ?? 0} published rows under ${PREFIX}`,
   );
 
   const { data: leftoverObjects } = await service.storage

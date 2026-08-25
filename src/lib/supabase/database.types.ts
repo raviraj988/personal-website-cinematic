@@ -178,6 +178,44 @@ export type OAuthTokenInsert = Omit<
   created_at?: string;
 };
 
+/* ------------------------------------------------- 0005: cover upload tickets */
+
+/**
+ * A single-use ticket for uploading a client-generated cover out of band.
+ *
+ * Added in 0005_cover_uploads.sql; see that migration's header for why the bytes
+ * cannot travel through an MCP tool argument. `ticket_hash` is SHA-256 hex, never
+ * the ticket itself.
+ */
+export type CoverUploadRow = {
+  ticket_hash: string;
+  site: string;
+  slug: string;
+  title: string;
+  image_alt: string | null;
+  user_id: string;
+  expires_at: string;
+  consumed_at: string | null;
+  result_url: string | null;
+  result_path: string | null;
+  result_alt: string | null;
+  result_width: number | null;
+  result_height: number | null;
+  result_content_type: string | null;
+  failure: string | null;
+  created_at: string;
+};
+
+export type CoverUploadInsert = Omit<
+  CoverUploadRow,
+  | "consumed_at" | "result_url" | "result_path" | "result_alt"
+  | "result_width" | "result_height" | "result_content_type"
+  | "failure" | "created_at"
+> & {
+  consumed_at?: string | null;
+  created_at?: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -223,12 +261,19 @@ export type Database = {
         Update: Partial<Omit<OAuthTokenRow, "token_hash" | "created_at">>;
         Relationships: [];
       };
+      cover_uploads: {
+        Row: CoverUploadRow;
+        Insert: CoverUploadInsert;
+        Update: Partial<Omit<CoverUploadRow, "ticket_hash" | "created_at">>;
+        Relationships: [];
+      };
     };
     Views: Record<never, never>;
     Functions: {
       is_admin: { Args: Record<never, never>; Returns: boolean };
       is_owner: { Args: Record<never, never>; Returns: boolean };
       purge_expired_oauth_artifacts: { Args: Record<never, never>; Returns: undefined };
+      purge_expired_cover_uploads: { Args: Record<never, never>; Returns: undefined };
     };
     Enums: Record<never, never>;
     CompositeTypes: Record<never, never>;

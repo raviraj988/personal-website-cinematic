@@ -74,8 +74,21 @@
   padding: clamp(4rem, 9vw, 7rem) var(--gutter) 0;
 }
 
+/* Centred, not left-pinned.
+ *
+ * `.post` is a 75rem container with `margin-inline: auto`, and `.post__cover`
+ * fills it. The header and the body shell are narrower — 48rem and 40rem — so
+ * without `margin-inline: auto` they sat against the container's left edge while
+ * the cover ran the full 1200px beside them. On a wide screen that left roughly
+ * 560px of dead space down the right of every article and read as a broken page
+ * rather than as an editorial choice.
+ *
+ * The measure itself is deliberate and stays: long-form prose is unreadable at
+ * 1200px. The cover is the one element that breaks out wider, which is the point
+ * of it being a cover. */
 .post__header {
   max-width: 48rem;
+  margin-inline: auto;
 }
 
 .post__title {
@@ -136,6 +149,10 @@
   /* ~68 characters at the body size below — the measure long-form prose reads
      most comfortably at. */
   max-width: 40rem;
+  /* Centred for the reason set out on `.post__header`: left-pinning a 40rem
+     column inside a 75rem container is what stranded every article against the
+     left edge. */
+  margin-inline: auto;
   margin-top: clamp(3.5rem, 7vw, 5.5rem);
 }
 

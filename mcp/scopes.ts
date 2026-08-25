@@ -50,6 +50,7 @@ export const TOOL_SCOPE: Readonly<Record<string, McpScope>> = {
   check_seo: MCP_SCOPES.read,
   // Both cover tools write to the public storage bucket, so both need the write
   // scope even though neither inserts a row.
+  create_cover_upload: MCP_SCOPES.draft,
   upload_cover_image: MCP_SCOPES.draft,
   generate_cover_image: MCP_SCOPES.draft,
   create_draft: MCP_SCOPES.draft,

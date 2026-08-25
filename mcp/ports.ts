@@ -98,6 +98,68 @@ export interface BlogStore {
     slug: string,
     meta: { ext: "jpg" | "png" | "webp"; contentType: CoverMime },
   ): Promise<{ url: string; path: string }>;
+
+  /* ------------------------------------------------- out-of-band cover tickets */
+
+  /**
+   * Mint a single-use upload ticket. Returns the plaintext ticket; only its hash
+   * is stored.
+   *
+   * The site, slug, and title are fixed here rather than at upload time, so the
+   * storage key is derived from data an authenticated tool call supplied. Whoever
+   * later presents the ticket can decide *whether* an object lands, never where.
+   */
+  createCoverTicket(input: CoverTicketInput): Promise<CoverTicket>;
+
+  /** Read a ticket's state without consuming it. Used to read a result back. */
+  readCoverTicket(ticket: string): Promise<CoverTicketState | null>;
+
+  /**
+   * Atomically claim a ticket for one upload.
+   *
+   * A conditional update against `consumed_at is null`, so two concurrent uploads
+   * cannot both proceed. Returns null when the ticket is unknown, expired, or
+   * already used — the caller must not distinguish those for the uploader.
+   */
+  claimCoverTicket(ticket: string): Promise<CoverTicketClaim | null>;
+
+  recordCoverResult(ticket: string, result: CoverTicketResult): Promise<void>;
+
+  recordCoverFailure(ticket: string, reason: string): Promise<void>;
+}
+
+export type CoverTicketInput = {
+  site: string;
+  slug: string;
+  title: string;
+  imageAlt: string | null;
+  userId: string;
+  ttlSeconds: number;
+};
+
+export type CoverTicket = { ticket: string; expiresAt: string };
+
+export type CoverTicketClaim = {
+  site: string;
+  slug: string;
+  title: string;
+  imageAlt: string | null;
+};
+
+export type CoverTicketResult = {
+  url: string;
+  path: string;
+  alt: string;
+  width: number;
+  height: number;
+  contentType: string;
+};
+
+export type CoverTicketState = CoverTicketClaim & {
+  consumed: boolean;
+  expired: boolean;
+  result: CoverTicketResult | null;
+  failure: string | null;
 }
 
 /* --------------------------------------------------------------- image ports */

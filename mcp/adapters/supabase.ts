@@ -32,6 +32,8 @@
  * dependency-free, so the row and insert shapes here are the app's own types
  * rather than a second description of the same table.
  */
+import { createHash, randomBytes } from "node:crypto";
+
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type {
@@ -41,6 +43,11 @@ import type {
 } from "../../src/lib/supabase/database.types";
 import type {
   BlogStore,
+  CoverTicket,
+  CoverTicketClaim,
+  CoverTicketInput,
+  CoverTicketResult,
+  CoverTicketState,
   DraftInput,
   LinkablePost,
   PostListItem,
@@ -290,6 +297,142 @@ async function uploadCover(
   return { url: data.publicUrl, path };
 }
 
+/* ------------------------------------------------- out-of-band cover tickets */
+
+/**
+ * The ticket is 256 bits of `randomBytes`, base64url so it is safe in a path
+ * segment, and only its SHA-256 lands in the table. Same reasoning as the OAuth
+ * tokens: a dump of this table yields nothing that can be presented.
+ */
+function mintTicket(): { ticket: string; hash: string } {
+  const ticket = randomBytes(32).toString("base64url");
+  return { ticket, hash: createHash("sha256").update(ticket).digest("hex") };
+}
+
+function hashTicket(ticket: string): string {
+  return createHash("sha256").update(ticket).digest("hex");
+}
+
+async function createCoverTicket(input: CoverTicketInput): Promise<CoverTicket> {
+  const { ticket, hash } = mintTicket();
+  const expiresAt = new Date(Date.now() + input.ttlSeconds * 1000).toISOString();
+
+  const { error } = await serviceClient().from("cover_uploads").insert({
+    ticket_hash: hash,
+    site: input.site,
+    slug: input.slug,
+    title: input.title,
+    image_alt: input.imageAlt,
+    user_id: input.userId,
+    expires_at: expiresAt,
+  });
+
+  if (error) throw new Error(`Could not create an upload ticket: ${describe(error)}`);
+  return { ticket, expiresAt };
+}
+
+function toResult(row: {
+  result_url: string | null;
+  result_path: string | null;
+  result_alt: string | null;
+  result_width: number | null;
+  result_height: number | null;
+  result_content_type: string | null;
+}): CoverTicketResult | null {
+  if (!row.result_url || !row.result_path || !row.result_alt) return null;
+  return {
+    url: row.result_url,
+    path: row.result_path,
+    alt: row.result_alt,
+    width: row.result_width ?? 0,
+    height: row.result_height ?? 0,
+    contentType: row.result_content_type ?? "image/webp",
+  };
+}
+
+async function readCoverTicket(ticket: string): Promise<CoverTicketState | null> {
+  const { data, error } = await serviceClient()
+    .from("cover_uploads")
+    .select("*")
+    .eq("ticket_hash", hashTicket(ticket))
+    .maybeSingle();
+
+  if (error) throw new Error(`Could not read the upload ticket: ${describe(error)}`);
+  if (!data) return null;
+
+  return {
+    site: data.site,
+    slug: data.slug,
+    title: data.title,
+    imageAlt: data.image_alt,
+    consumed: Boolean(data.consumed_at),
+    expired: new Date(data.expires_at).getTime() < Date.now(),
+    result: toResult(data),
+    failure: data.failure,
+  };
+}
+
+/**
+ * Claim a ticket for exactly one upload.
+ *
+ * The claim is the conditional update — `.is("consumed_at", null)` — not a read
+ * followed by a write. Doing it in two steps would leave a window where two
+ * concurrent uploads both see an unconsumed ticket and both proceed, and the
+ * second would overwrite the first's recorded result.
+ *
+ * Expiry is filtered in the same statement for the same reason.
+ */
+async function claimCoverTicket(ticket: string): Promise<CoverTicketClaim | null> {
+  const { data, error } = await serviceClient()
+    .from("cover_uploads")
+    .update({ consumed_at: new Date().toISOString() })
+    .eq("ticket_hash", hashTicket(ticket))
+    .is("consumed_at", null)
+    .gt("expires_at", new Date().toISOString())
+    .select("site, slug, title, image_alt")
+    .maybeSingle();
+
+  if (error) throw new Error(`Could not claim the upload ticket: ${describe(error)}`);
+  if (!data) return null;
+
+  return { site: data.site, slug: data.slug, title: data.title, imageAlt: data.image_alt };
+}
+
+async function recordCoverResult(ticket: string, result: CoverTicketResult): Promise<void> {
+  const { error } = await serviceClient()
+    .from("cover_uploads")
+    .update({
+      result_url: result.url,
+      result_path: result.path,
+      result_alt: result.alt,
+      result_width: result.width,
+      result_height: result.height,
+      result_content_type: result.contentType,
+      failure: null,
+    })
+    .eq("ticket_hash", hashTicket(ticket));
+
+  if (error) throw new Error(`Could not record the upload result: ${describe(error)}`);
+}
+
+/**
+ * Records why an upload failed, and releases the claim.
+ *
+ * `consumed_at` goes back to null so the ticket can be retried — a rejected image
+ * is the uploader picking the wrong file, and burning the ticket would make them
+ * go back to the model for a new one. Replay protection is unaffected: a ticket
+ * that produced a *result* stays consumed.
+ */
+async function recordCoverFailure(ticket: string, reason: string): Promise<void> {
+  const { error } = await serviceClient()
+    .from("cover_uploads")
+    .update({ failure: reason.slice(0, 500), consumed_at: null })
+    .eq("ticket_hash", hashTicket(ticket))
+    .is("result_url", null);
+
+  if (error) throw new Error(`Could not record the upload failure: ${describe(error)}`);
+}
+
 /**
  * The store, as one object.
  *
@@ -304,6 +447,11 @@ export const supabaseStore: BlogStore = {
   linkableContent,
   createDraft,
   uploadCover,
+  createCoverTicket,
+  readCoverTicket,
+  claimCoverTicket,
+  recordCoverResult,
+  recordCoverFailure,
 };
 
 /** Test-only: forget the memoised client and author between fixtures. */

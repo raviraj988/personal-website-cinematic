@@ -85,3 +85,140 @@
   font-size: 0.8rem;
   overflow-wrap: anywhere;
 }
+
+/* ---------------------------------------------------------------- cover drop
+ *
+ * The out-of-band upload page. Lives here rather than in admin.css because it is
+ * reached without a session — the ticket is the credential — so it cannot rely on
+ * the admin layout being what wrapped it.
+ */
+
+.drop {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 2rem 1.25rem;
+}
+
+.drop__panel {
+  width: 100%;
+  max-width: 34rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.drop__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.drop__panel h1 { margin: 0; }
+
+.drop__lede {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* The target itself. A dashed border because it is a place to put something,
+ * which is worth saying in the shape rather than only in the label. */
+.drop__zone {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  place-items: center;
+  padding: 2.25rem 1.25rem;
+  border: 1.5px dashed var(--color-line);
+  border-radius: 6px;
+  text-align: center;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.drop__zone.is-over {
+  border-color: var(--color-ink);
+  background: rgba(28, 48, 37, 0.035);
+}
+
+.drop__zone.is-busy { opacity: 0.65; }
+
+/* Visually hidden, not display:none — the label must still reach it, and a
+ * display:none input cannot receive focus from its label. */
+.drop__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.drop__label {
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-line);
+}
+
+.drop__input:focus-visible + .drop__label {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.drop__types,
+.drop__alt,
+.drop__hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.drop__facts {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.drop__error {
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.7rem 0.85rem;
+  border-left: 2px solid #b1452c;
+  background: rgba(177, 69, 44, 0.06);
+  font-size: 0.86rem;
+}
+
+.drop__error-hint { color: var(--color-text-muted); font-size: 0.82rem; }
+
+.drop__done { display: grid; gap: 0.7rem; }
+
+.drop__ok {
+  margin: 0;
+  font-weight: 600;
+  color: #3f7a4e;
+}
+
+.drop__preview {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop__zone { transition: none; }
+}

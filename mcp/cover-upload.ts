@@ -52,7 +52,15 @@ export type ClientCoverRequest = {
   title: string;
   /** Already validated by `checkSlugShape` — this module does not re-derive it. */
   slug: string;
-  /** Base64 image bytes. The only mode every MCP client can use. */
+  /**
+   * Raw bytes, already in hand.
+   *
+   * Used by the out-of-band upload endpoint, where the image arrived over plain
+   * HTTP and never passed through a tool argument at all. Highest priority
+   * because there is nothing to decode or fetch — the bytes are simply here.
+   */
+  imageBytes?: Uint8Array;
+  /** Base64 image bytes. The in-band mode every MCP client can express. */
   imageBase64?: string;
   /** An absolute local path. Refused unless `deps.files` is present. */
   imagePath?: string;
@@ -72,8 +80,8 @@ export type ClientCoverOutcome =
       height: number;
       format: "webp";
       contentType: "image/webp";
-      /** Which of the three input modes supplied the bytes. */
-      via: "base64" | "path" | "url";
+      /** Which input mode supplied the bytes. */
+      via: "bytes" | "base64" | "path" | "url";
       /** Set when the caller's alt text was used rather than a derived one. */
       altFromCaller: boolean;
     }
@@ -127,7 +135,7 @@ export function resolveAlt(
 /* ------------------------------------------------------------------- bytes */
 
 type BytesOutcome =
-  | { ok: true; bytes: Uint8Array; via: "base64" | "path" | "url" }
+  | { ok: true; bytes: Uint8Array; via: "bytes" | "base64" | "path" | "url" }
   | { ok: false; error: string };
 
 /**
@@ -180,6 +188,7 @@ async function resolveBytes(
   deps: UploadDeps,
 ): Promise<BytesOutcome> {
   const modes = [
+    request.imageBytes && request.imageBytes.byteLength > 0 ? "bytes" : null,
     request.imageBase64?.trim() ? "base64" : null,
     request.imagePath?.trim() ? "path" : null,
     request.imageUrl?.trim() ? "url" : null,
@@ -193,6 +202,16 @@ async function resolveBytes(
         "the generated file), imagePath (an absolute path, local clients only), " +
         "or imageUrl (an https URL).",
     };
+  }
+
+  if (request.imageBytes && request.imageBytes.byteLength > 0) {
+    if (request.imageBytes.byteLength > UPLOAD_MAX_BYTES) {
+      return {
+        ok: false,
+        error: `The image is ${(request.imageBytes.byteLength / 1024 / 1024).toFixed(1)} MB, over the ${(UPLOAD_MAX_BYTES / 1024 / 1024).toFixed(0)} MB limit.`,
+      };
+    }
+    return { ok: true, bytes: request.imageBytes, via: "bytes" };
   }
 
   if (request.imageBase64?.trim()) {
