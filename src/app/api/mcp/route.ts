@@ -222,6 +222,12 @@ async function handle(request: Request): Promise<Response> {
     // `getDeps()` resolves the Supabase adapter and the image provider, and throws
     // a message naming the missing variable when one is absent. Inside the try for
     // that reason.
+    // No `localFiles`, deliberately and permanently. Supplying one would let
+    // `upload_cover_image` accept an `imagePath` from a remote caller and return
+    // that file's bytes through a public storage bucket — `.env.local` included.
+    // `mcp/server.ts` passes one because on stdio the client could already read
+    // the file itself; that reasoning does not transfer here. See the header of
+    // `mcp/local-files.ts`. Clients on this transport send `imageBase64`.
     registerTools(server, getDeps(), { allowedTools: toolsForScopes(auth.scopes) });
   } catch (error) {
     return internalError(error, await requestIdOf(request.clone()), true);

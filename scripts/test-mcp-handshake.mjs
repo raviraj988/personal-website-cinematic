@@ -3,7 +3,7 @@
  *
  * Two things are checked here that nothing else can check:
  *
- *   1. **Exactly the eight tools are advertised**, with usable schemas. A tool
+ *   1. **Exactly the tools in `TOOL_NAMES` are advertised**, with usable schemas. A tool
  *      that fails to register is invisible to every other suite, because they all
  *      import the modules directly rather than going through the protocol.
  *
@@ -140,10 +140,17 @@ try {
   const advertised = (list.result?.tools ?? []).map((tool) => tool.name).sort();
   const expected = [...TOOL_NAMES].sort();
 
-  ok(advertised.length === 8, `Eight tools advertised`, `${advertised.length}: ${advertised.join(", ")}`);
+  // Derived from TOOL_NAMES rather than a literal. A hardcoded count means every
+  // tool added has to remember to come back and edit this line, and the failure it
+  // produces points at the assertion instead of at anything real.
+  ok(
+    advertised.length === expected.length,
+    `All ${expected.length} tools advertised`,
+    `${advertised.length}: ${advertised.join(", ")}`,
+  );
   ok(
     advertised.join(",") === expected.join(","),
-    "Exactly the expected eight",
+    "Exactly the expected set",
     advertised.join(", "),
   );
 

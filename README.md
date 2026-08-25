@@ -200,7 +200,7 @@ against the working directory, and an MCP client picks that directory, not you.
 Needs the same Supabase variables as the site. `OPENAI_API_KEY` is optional —
 see `.env.local.example`; without it covers fall back to a branded card.
 
-#### The eight tools
+#### The nine tools
 
 | Tool | What it does |
 |---|---|
@@ -210,7 +210,8 @@ see `.env.local.example`; without it covers fall back to a branded card.
 | `get_link_targets` | Every real route, plus the paths that look real and 404 |
 | `suggest_internal_links` | 2–4 targets, each with the phrase already in the draft that motivates it |
 | `check_seo` | The editor's own checks plus the ones it cannot run. Writes nothing |
-| `generate_cover_image` | A 1200×630 WebP cover, uploaded to `blog-images/covers/` |
+| `upload_cover_image` | **Preferred.** Hosts a cover the *client* generated. Normalises to 1200×630 WebP, uploads to `blog-images/covers/`. Needs no `OPENAI_API_KEY` |
+| `generate_cover_image` | Fallback for clients that cannot draw. A 1200×630 WebP cover, uploaded to `blog-images/covers/` |
 | `create_draft` | Inserts the draft, returns the id and `/admin/posts/<id>` |
 
 The workflow: `get_writing_guide` → `list_posts` → `check_slug` →
@@ -219,19 +220,27 @@ The workflow: `get_writing_guide` → `list_posts` → `check_slug` →
 
 #### Cover images
 
-Three sources, in strict priority:
+**Four sources, in strict priority. The first is the one a capable client should
+use.**
 
-1. **A supplied `imageUrl`** — imported. HTTPS only, no redirects followed, DNS
+1. **A cover the client generated itself** — `upload_cover_image`. ChatGPT and
+   Claude both draw, and a cover made with the finished article in front of the
+   model beats one this server prompts for from a title alone. The client sends
+   the file (base64, or a local path on stdio), and the server validates,
+   normalises, and hosts it. **This needs no `OPENAI_API_KEY`** — which is the
+   point: a deployment with no image key can still attach real artwork.
+2. **A supplied `imageUrl`** — imported. HTTPS only, no redirects followed, DNS
    resolved and the resulting addresses checked before the fetch (loopback,
    RFC1918, link-local, CGNAT and multicast all refused — an unguarded fetch of a
    model-chosen URL is an SSRF primitive, and `169.254.169.254` is the standard
    target). Type comes from magic bytes, never from the URL or `Content-Type`.
-2. **Generated artwork** — the default. The prompt forbids text, logos,
+3. **Generated artwork** — `generate_cover_image`, now the fallback for clients
+   that cannot draw. The prompt forbids text, logos,
    watermarks, implied statistics, real people, sci-fi, stock clichés, and any
    depiction of identifiable Indigenous people, regalia, ceremony, or sacred
    sites. That last one follows the rule `ese-content.ts` already sets for the
    site's photography, for the same reason.
-3. **An ESE-branded title card** — the last resort *only*. Every generation
+4. **An ESE-branded title card** — the last resort *only*. Every generation
    failure (no key, timeout, provider error, empty result, undecodable bytes)
    lands here rather than erroring. A run of drafts coming back
    `composed-brand-cover` means generation is broken, not that the fallback is
@@ -285,6 +294,76 @@ Four rules that are facts about the renderer rather than style:
 The site is `noindex` and `site.canonicalBase` is still `https://example.com`, so
 `check_seo` warns on every run and these are pre-launch drafts rather than posts
 competing for rankings today.
+
+#### Cover images the client draws, and the ChatGPT flow
+
+`upload_cover_image` exists so the *client* can make the picture. The server's job
+becomes receive, validate, host, associate — and nothing model-specific lives in
+`mcp/`. There is no ChatGPT API call anywhere in this server.
+
+The flow, end to end:
+
+1. You ask ChatGPT for an ESE blog post.
+2. It calls `get_writing_guide`, then `list_posts` so it does not repeat a topic.
+3. It writes the article and picks a title and slug, checking the slug with
+   `check_slug`.
+4. **It generates a cover with its own image generator**, producing a file.
+5. It calls `upload_cover_image` with `site`, `title`, `slug`, and that file as
+   `imageBase64` (plus an optional `imageAlt`).
+6. The server sniffs the magic bytes, decodes, crops to 1200×630, strips metadata,
+   re-encodes as WebP, and uploads to `blog-images/covers/<slug>-<suffix>.webp`.
+7. It returns `url`, `alt`, `width`, `height`, `contentType`, and
+   `source: client-generated`.
+8. ChatGPT passes that exact `url` and `alt` into `check_seo`, fixes anything
+   blocking, then into `create_draft`.
+9. The draft appears in `/admin/posts` with ChatGPT's artwork as its cover, for a
+   human to publish.
+
+##### The three input modes, and why `imagePath` is not always available
+
+MCP has **no file-input type for tool arguments** — `inputSchema` is plain JSON
+Schema, and the SDK's `BlobResourceContents` is resource *content*, whose `blob`
+is itself base64. So there is no framework file mechanism to use, and `imageBase64`
+is the mode every client has. Two conveniences sit alongside it:
+
+| Mode | Available on | Notes |
+|---|---|---|
+| `imageBase64` | everywhere | The portable one. A `data:` prefix is accepted |
+| `imagePath` | **stdio only** | An absolute path, for a client that just wrote the file to disk |
+| `imageUrl` | everywhere | Fetched through the same SSRF-guarded importer as `generate_cover_image` |
+
+`imagePath` is refused over HTTP, and that is deliberate rather than incidental.
+On stdio the client spawned this process and runs as the same user, so it can
+already read anything the server could — accepting a path saves it an encode. Over
+HTTP the caller is remote, and returning the bytes of a path they chose, through a
+public storage bucket, is arbitrary file disclosure; `.env.local` is two
+directories up from `mcp/`. So the capability travels as a *dependency the HTTP
+transport never constructs* (`RegisterOptions.localFiles`) rather than as a flag
+someone has to remember to turn off. `mcp/server.ts` passes `nodeFileReader`;
+`src/app/api/mcp/route.ts` passes nothing.
+
+##### Validation
+
+Reuses the existing pipeline rather than adding a second one. `normaliseCover`
+does the work: magic-byte sniffing (never the filename or a client-supplied
+content type), SVG refused by name because these objects are served publicly and
+an SVG can carry script, a 100-megapixel decode ceiling against compression bombs,
+`.rotate()` before the resize so EXIF orientation is baked in while the flag still
+exists, and a full re-encode — which is what strips EXIF including GPS, and drops
+anything appended after the image data. 5 MB in, and the object key is *derived*
+from the validated slug plus a random suffix by `coverObjectPath`, never taken
+from input, so a client cannot choose a bucket or traverse a path.
+
+##### If it fails
+
+Never blocks the article. `upload_cover_image` reports the failure and names the
+fallback; the client retries with `generate_cover_image`, and if that fails too it
+calls `create_draft` with no cover, which is valid — `cover_image_url` is nullable.
+
+The guide is explicit that the client must then **say which happened**, and the
+tool responses make that checkable: `source` is `client-generated` only when the
+client's own file was hosted, and `fellBackToBrandCover` is `true` whenever only a
+title card was produced. Never report custom artwork that was not attached.
 
 #### The remote endpoint, for ChatGPT
 
@@ -390,6 +469,7 @@ npm run test:covers          # magic-byte sniffing and EXIF stripping
 npm run test:mcp-validation  # slugs, path guards, the site registry, module purity
 npm run test:mcp-seo         # every added SEO check, and the blocking/recommended split
 npm run test:mcp-cover       # the full cover source-priority matrix
+npm run test:mcp-upload      # the client-generated cover path, and its transport gate
 npm run test:mcp-handshake   # spawns the server, checks the 8 tools and stdout purity
 npm run test:mcp-scopes      # the scope-to-tool map, and that registration honours it
 npm run test:mcp-oauth       # PKCE, scope parsing, redirects, origin, the return-to guard

@@ -16,7 +16,7 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { createClient } from "@supabase/supabase-js";
 
-import { registerTools } from "../mcp/tools.ts";
+import { registerTools, TOOL_NAMES } from "../mcp/tools.ts";
 import { supabaseStore } from "../mcp/adapters/supabase.ts";
 import { httpsImageFetcher } from "../mcp/image-import.ts";
 import { workingProvider } from "../mcp/testing/fakes.ts";
@@ -144,7 +144,13 @@ try {
   section("1. The tool surface");
 
   const list = await tools.list();
-  ok(list.length === 8, "Eight tools registered", String(list.length));
+  // Derived from TOOL_NAMES, not a literal: a hardcoded count turns "a tool was
+  // added" into a failing assertion that points at itself.
+  ok(
+    list.length === TOOL_NAMES.length,
+    `All ${TOOL_NAMES.length} tools registered`,
+    String(list.length),
+  );
 
   /* ------------------------------------------------------ 2. the guide first */
 

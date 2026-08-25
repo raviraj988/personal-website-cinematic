@@ -31,6 +31,8 @@ import type {
   ImageRequest,
   ImageResult,
   LinkablePost,
+  LocalFileReader,
+  LocalFileResult,
   PostListItem,
 } from "../ports";
 import type { CoverMime } from "../../src/lib/blog/image";
@@ -198,6 +200,50 @@ export function forbiddenFetcher(): RecordingFetcher {
 }
 
 /* ------------------------------------------------------------------- stores */
+
+/* ------------------------------------------------------------- file reader */
+
+export type RecordingFileReader = LocalFileReader & {
+  readonly calls: string[];
+};
+
+/**
+ * A file reader over an in-memory map.
+ *
+ * Keyed by path so a test can assert the exact path the tool asked for — the
+ * thing worth checking is that `imagePath` is passed through untouched and not
+ * quietly resolved, joined, or normalised somewhere along the way.
+ */
+export function fakeFileReader(files: Record<string, Uint8Array>): RecordingFileReader {
+  const calls: string[] = [];
+  return {
+    calls,
+    async read(path: string): Promise<LocalFileResult> {
+      calls.push(path);
+      const found = files[path];
+      if (!found) return { ok: false, reason: `No file at ${path}.` };
+      return { ok: true, bytes: found };
+    },
+  };
+}
+
+/**
+ * A reader that refuses everything, standing in for the HTTP transport.
+ *
+ * Distinct from passing no reader at all: `undefined` means the tool must refuse
+ * before it ever asks, and this means the tool asked and was told no. The first
+ * is the security property, so a test wants both.
+ */
+export function refusingFileReader(): RecordingFileReader {
+  const calls: string[] = [];
+  return {
+    calls,
+    async read(path: string): Promise<LocalFileResult> {
+      calls.push(path);
+      return { ok: false, reason: "Permission denied." };
+    },
+  };
+}
 
 export type FakeStore = BlogStore & {
   drafts: (DraftInput & { id: string })[];

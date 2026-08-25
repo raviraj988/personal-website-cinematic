@@ -10,7 +10,14 @@
  * of `mcp/lib.ts`. Constructing a Supabase client at import time would turn a
  * missing environment variable into an unreportable module-evaluation throw.
  */
-import type { BlogStore, CoverDeps, ImageFetcher, ImageProvider } from "./ports";
+import type {
+  BlogStore,
+  CoverDeps,
+  ImageFetcher,
+  ImageProvider,
+  LocalFileReader,
+  UploadDeps,
+} from "./ports";
 import { supabaseStore } from "./adapters/supabase";
 import { createOpenAiImageProvider, imageModel, imageQuality } from "./image-generate";
 import { httpsImageFetcher } from "./image-import";
@@ -43,6 +50,22 @@ export function coverDeps(deps: ServerDeps): CoverDeps {
   return {
     provider: deps.provider,
     fetcher: deps.fetcher,
+    store: { uploadCover: deps.store.uploadCover },
+  };
+}
+
+/**
+ * The narrower slice again for the client-upload path.
+ *
+ * No `provider`: this path never generates, so it is handed nothing that could.
+ * `files` is threaded in from the caller rather than resolved here, because
+ * whether reading a named file is acceptable depends on the transport and this
+ * module is shared by both — see `RegisterOptions.localFiles` in `tools.ts`.
+ */
+export function uploadDeps(deps: ServerDeps, files?: LocalFileReader): UploadDeps {
+  return {
+    fetcher: deps.fetcher,
+    files,
     store: { uploadCover: deps.store.uploadCover },
   };
 }

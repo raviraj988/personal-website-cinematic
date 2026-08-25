@@ -18,6 +18,7 @@
     "test:mcp-oauth": "node --import ./scripts/register-ts.mjs scripts/test-mcp-oauth.mjs",
     "test:mcp-seo": "node --import ./scripts/register-ts.mjs scripts/test-mcp-seo.mjs",
     "test:mcp-cover": "node --import ./scripts/register-ts.mjs scripts/test-mcp-cover.mjs",
+    "test:mcp-upload": "node --import ./scripts/register-ts.mjs scripts/test-mcp-upload.mjs",
     "test:mcp-handshake": "node --import ./scripts/register-ts.mjs scripts/test-mcp-handshake.mjs",
     "test:mcp-adapter": "node --import ./scripts/register-ts.mjs scripts/test-mcp-adapter.mjs",
     "test:mcp-e2e": "node --import ./scripts/register-ts.mjs scripts/test-mcp-e2e.mjs",

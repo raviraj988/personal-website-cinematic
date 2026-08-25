@@ -52,6 +52,22 @@ ${site.role}.
 Call this tool first, before drafting. Then call \`list_posts\` — writing a topic
 that already exists wastes the draft and splits whatever ranking it might earn.
 
+## The order to work in
+
+1. \`get_writing_guide\` — this document.
+2. \`list_posts\` — so you do not draft a topic that already exists.
+3. Write the article. Choose the title and slug.
+4. \`check_slug\` — format and availability.
+5. **Generate a cover image with your own image tool.** See "Covers" below.
+6. \`upload_cover_image\` — hand over that file, get back a hosted URL and alt text.
+7. \`suggest_internal_links\` — real routes only; a plausible-looking path 404s.
+8. \`check_seo\` — pass the exact \`url\` and \`alt\` from step 6.
+9. Fix everything the report marks **blocking**. Recommended findings are yours to judge.
+10. \`create_draft\` — with that same \`url\` and \`alt\`, unchanged.
+
+Steps 5 and 6 are the default, not an extra. Skip to \`generate_cover_image\` only
+if you cannot produce an image yourself.
+
 ## What ${site.shortName} does
 
 Five service areas, each with its own page to link to:
@@ -142,12 +158,70 @@ to read them back.
 
 ## Covers
 
-Call \`generate_cover_image\` **before** \`create_draft\`, then pass the returned
-URL and alt text through unchanged. Do not write your own alt text for generated
-artwork and do not describe what you asked for — the tool describes what was
-actually produced.
+**If you can generate images, do.** When creating a blog draft, generate a
+contextually appropriate cover image using your own native image-generation
+capability by default. Then call \`upload_cover_image\` with that generated file
+and pass the returned URL and alt text unchanged into \`check_seo\` and
+\`create_draft\`. Use \`generate_cover_image\` only when you cannot generate an
+image or when no image file is available.
 
-A draft with no cover is valid. If the image step fails, continue.
+You have read the article. This server has not. A cover you draw with the piece in
+front of you will fit it better than one this server prompts for from a title.
+
+Order of preference:
+
+1. \`upload_cover_image\` with artwork you generated — the default.
+2. \`generate_cover_image\` — server-side artwork, for clients that cannot draw.
+3. The ESE-branded title card, which \`generate_cover_image\` falls back to on its
+   own. This is a *last resort*, not a normal outcome.
+
+Send the file as \`imageBase64\`. Local clients may pass \`imagePath\` instead;
+over HTTP that is refused, so base64 is the portable choice.
+
+### What the cover must not contain
+
+These are rules, not preferences, and they hold whichever route produced the
+image:
+
+- **Do not invent or depict a specific Tribe or Nation as an ESE client.** ESE
+  serves Native Nations; illustrating that work with a fabricated client
+  misrepresents both the communities and ESE's actual record, on the website of
+  the organisation serving them.
+- **No Tribal flags, seals, Nation-specific symbols, regalia, or stereotypical
+  Indigenous imagery** unless explicitly and legitimately supplied by the user. A
+  generated river claims nothing; a generated person in regalia makes several
+  claims, all of them false.
+- **Do not visually imply specific project outcomes that are not documented.** No
+  before/after pairings, no charts, no dashboards, no maps carrying data.
+- **No fabricated statistics, awards, projects, or named partnerships** — in the
+  image or its alt text.
+- **No embedded text.** The article title already appears on the page beside the
+  image, so lettering in the artwork is duplication at best and a mismatch once a
+  headline is edited.
+- Prefer respectful, community-led environmental imagery drawn from the article's
+  actual context: land, water, and weather at human scale; working infrastructure;
+  documentary interiors; traces of fieldwork without people.
+
+### Alt text
+
+Describe what the image *shows*, not what you asked for. If you pass
+\`imageAlt\`, it is kept when it fits the length limit; omit it and a plain
+factual line is derived from the title. Either way, do not name a Tribe, Nation,
+person, affiliation, or outcome in it.
+
+Pass the returned alt through unchanged afterwards. Do not rewrite it between
+\`upload_cover_image\` and \`create_draft\`.
+
+### When the image step fails
+
+A draft with no cover is valid — \`cover_image_url\` is nullable. So an image
+failure must never stop you writing the article. In order: retry with
+\`generate_cover_image\`, and if that fails too, call \`create_draft\` with no
+cover.
+
+Then **say which happened.** Never tell a human you attached custom artwork when
+only the branded title card was used — check the \`source\` field the cover tool
+returned and report it as it is.
 
 ## Publication
 

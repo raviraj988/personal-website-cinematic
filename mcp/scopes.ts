@@ -48,6 +48,9 @@ export const TOOL_SCOPE: Readonly<Record<string, McpScope>> = {
   get_link_targets: MCP_SCOPES.read,
   suggest_internal_links: MCP_SCOPES.read,
   check_seo: MCP_SCOPES.read,
+  // Both cover tools write to the public storage bucket, so both need the write
+  // scope even though neither inserts a row.
+  upload_cover_image: MCP_SCOPES.draft,
   generate_cover_image: MCP_SCOPES.draft,
   create_draft: MCP_SCOPES.draft,
 };

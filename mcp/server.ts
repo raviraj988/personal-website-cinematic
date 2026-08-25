@@ -27,6 +27,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { getDeps } from "./deps";
+import { nodeFileReader } from "./local-files";
 import { registerTools, TOOL_NAMES } from "./tools";
 import { note } from "./lib";
 import { siteKeys } from "./site";
@@ -39,7 +40,16 @@ async function main(): Promise<void> {
 
   // Inside `main`, not at module scope: a configuration failure here has to be
   // reportable, and a throw during module evaluation is not.
-  registerTools(server, getDeps());
+  //
+  // `localFiles` is supplied here and only here. It lets `upload_cover_image`
+  // take an `imagePath`, so a client that has just written a generated image to
+  // disk can name it instead of base64-encoding it. That is safe on this
+  // transport specifically: the client started this process and runs as the same
+  // user, so it can already read anything this could. The HTTP transport in
+  // `src/app/api/mcp/route.ts` passes nothing, because there the caller is remote
+  // and the same feature would be arbitrary file disclosure. See the header of
+  // `mcp/local-files.ts`.
+  registerTools(server, getDeps(), { localFiles: nodeFileReader });
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

@@ -150,6 +150,52 @@ export interface ImageFetcher {
   ): Promise<{ ok: true; bytes: Uint8Array } | { ok: false; reason: string }>;
 }
 
+/**
+ * Reading a file the client named, from the filesystem this process can see.
+ *
+ * ## This port is a capability, not a setting
+ *
+ * It exists so `upload_cover_image` can accept a path instead of forcing every
+ * client to base64-encode an image it already has on disk. On stdio that is
+ * safe and obvious: the client *spawned* this process, shares its user, and could
+ * read the same file itself.
+ *
+ * Over HTTP it is arbitrary file disclosure. An authenticated remote caller
+ * naming `/etc/passwd`, or `.env.local`, would have the bytes returned to it
+ * through a public storage bucket. So the capability is modelled as a dependency
+ * that is simply **absent** on that transport rather than as a boolean somebody
+ * has to remember to set — see `RegisterOptions.localFiles` in `tools.ts`. A
+ * missing capability cannot be left switched on by accident.
+ *
+ * Behind an interface for the usual reason: the path branch needs a
+ * "that file was unreadable" case, and producing one for real would mean a test
+ * depending on the filesystem.
+ */
+export type LocalFileResult =
+  | { ok: true; bytes: Uint8Array }
+  | { ok: false; reason: string };
+
+export interface LocalFileReader {
+  /** Must not throw. An unreadable path is a value, like every other image failure. */
+  read(path: string): Promise<LocalFileResult>;
+}
+
+/**
+ * What the client-supplied cover path needs.
+ *
+ * No `provider`: this pipeline never generates. That is the whole distinction
+ * between it and `resolveCover` — the caller supplied artwork, so silently
+ * substituting a title card would be the tool overruling them. Fallback is the
+ * client's decision, made by calling `generate_cover_image` instead, and the
+ * writing guide says so.
+ */
+export type UploadDeps = {
+  fetcher: ImageFetcher;
+  /** Absent means local paths are refused. See `LocalFileReader`. */
+  files?: LocalFileReader;
+  store: Pick<BlogStore, "uploadCover">;
+};
+
 export type CoverDeps = {
   provider: ImageProvider;
   fetcher: ImageFetcher;

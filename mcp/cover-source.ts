@@ -1,9 +1,20 @@
 /**
- * Where a cover comes from, in priority order.
+ * Where a cover comes from when the *server* is producing it, in priority order.
  *
  *   1. `imageUrl`, if one was supplied — import it.
  *   2. Generated artwork — the default when nothing was supplied.
  *   3. The ESE-branded typographic card — the last resort only.
+ *
+ * ## This is now the fallback, not the main road
+ *
+ * `mcp/cover-upload.ts` is the preferred path: the client draws the cover with the
+ * article in front of it and hands over the file. This module exists for clients
+ * that cannot draw, and for the case where that upload failed. So the full order
+ * across both modules is:
+ *
+ *   1. `upload_cover_image` — client-generated artwork.
+ *   2. this file's steps 1–2 — imported or server-generated artwork.
+ *   3. this file's step 3 — the branded card.
  *
  * The third must never be the *normal* result of omitting `imageUrl`. A run of
  * drafts coming back `composed-brand-cover` means generation is broken, and the

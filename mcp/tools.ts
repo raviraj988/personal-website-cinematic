@@ -49,7 +49,9 @@ import { buildSeoReport, renderSeoReport, type ReportCorpus } from "./seo-report
 import { suggestInternalLinks, type LinkCorpus } from "./internal-links";
 import { checkSlugShape } from "./paths";
 import { resolveCover } from "./cover-source";
-import { coverDeps, type ServerDeps } from "./deps";
+import { uploadClientCover, UPLOAD_MAX_BYTES } from "./cover-upload";
+import { coverDeps, uploadDeps, type ServerDeps } from "./deps";
+import type { LocalFileReader } from "./ports";
 import {
   FIELD_LIMITS,
   POST_CATEGORIES,
@@ -153,6 +155,20 @@ export type RegisterOptions = {
    * existed, which also avoids confirming the surface it cannot reach.
    */
   allowedTools?: ReadonlySet<string>;
+
+  /**
+   * Lets `upload_cover_image` accept `imagePath`.
+   *
+   * Absent by default, and absent is the safe value: without it the tool refuses
+   * a path and asks for base64 instead. Only `mcp/server.ts` supplies one,
+   * because only on stdio is "read the file this client named" something the
+   * client could already do for itself. Over HTTP it would be arbitrary file
+   * disclosure to a remote caller — see the header of `mcp/local-files.ts`.
+   *
+   * Shaped as a capability rather than a boolean so the dangerous configuration
+   * is the one you have to write out, not the one you get by forgetting.
+   */
+  localFiles?: LocalFileReader;
 };
 
 export function registerTools(
@@ -487,10 +503,104 @@ export function registerTools(
   /* ------------------------------------------------- 7. generate_cover_image */
 
   define(
+    "upload_cover_image",
+    {
+      description:
+        "PREFERRED cover route. Host an image YOU generated with your own image tool. Draw a cover for the article, send the file here, and pass the returned url and alt unchanged to check_seo and create_draft. Accepts PNG, JPEG, or WebP; normalises to 1200x630 WebP and strips metadata. Needs no OPENAI_API_KEY on the server. If you cannot generate images, use generate_cover_image instead. Read the cover rules in get_writing_guide first — no embedded text, and never depict a specific Tribe or Nation.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          ...SITE_PROPERTY,
+          title: str("The post headline. Used to derive alt text if you supply none."),
+          slug: str("The post slug. Determines the storage path."),
+          imageBase64: str(
+            `The image file as base64 — the mode every client can use. A "data:image/png;base64,..." prefix is accepted. Max ${(UPLOAD_MAX_BYTES / 1024 / 1024).toFixed(0)} MB decoded.`,
+          ),
+          imagePath: str(
+            "Absolute path to the generated file. LOCAL CLIENTS ONLY — refused over HTTP, where it would disclose the server's filesystem. Use imageBase64 if unsure.",
+          ),
+          imageUrl: str(
+            "An https URL to fetch instead. Must be publicly reachable; private and loopback addresses are refused.",
+          ),
+          imageAlt: str(
+            `Optional alt text describing what the image actually shows. Kept when 1-${FIELD_LIMITS.coverImageAlt.max} characters. Omit it and a plain factual line is derived from the title. Do not name a Tribe, Nation, person, or outcome.`,
+          ),
+        },
+        required: ["site", "title", "slug"],
+      },
+    },
+    async (args: Record<string, unknown>) => {
+      try {
+        const site = resolveSite(args?.site);
+        const title = requiredString(args?.title, "title");
+        const slugArg = requiredString(args?.slug, "slug");
+
+        const shape = checkSlugShape(slugArg);
+        if (!shape.ok) {
+          return errorResult(
+            `${shape.error}${shape.suggestion ? ` Try "${shape.suggestion}".` : ""}`,
+          );
+        }
+
+        const outcome = await uploadClientCover(
+          {
+            title,
+            slug: shape.slug,
+            imageBase64: typeof args?.imageBase64 === "string" ? args.imageBase64 : undefined,
+            imagePath: typeof args?.imagePath === "string" ? args.imagePath : undefined,
+            imageUrl: typeof args?.imageUrl === "string" ? args.imageUrl : undefined,
+            imageAlt: typeof args?.imageAlt === "string" ? args.imageAlt : undefined,
+          },
+          uploadDeps(deps, options.localFiles),
+        );
+
+        if (!outcome.ok) {
+          // Names the fallback explicitly. A client told only "that failed" tends
+          // to proceed coverless when generated artwork was still available.
+          return errorResult(
+            `${outcome.error}\n\nNothing was uploaded. Either send a valid PNG, JPEG, or WebP, or call generate_cover_image to fall back to server-side artwork. A draft with no cover is also valid — call create_draft without coverImageUrl.`,
+          );
+        }
+
+        return textResult(
+          [
+            `site: ${site.key}`,
+            `source: ${outcome.source}`,
+            `url: ${outcome.url}`,
+            `alt: ${outcome.alt}`,
+            `width: ${outcome.width}`,
+            `height: ${outcome.height}`,
+            `contentType: ${outcome.contentType}`,
+            `path: ${outcome.path}`,
+            `via: ${outcome.via}`,
+            // Said plainly, because a client that supplied alt text and had it
+            // rejected on length would otherwise report its own wording to a
+            // human as what shipped.
+            `altFromCaller: ${outcome.altFromCaller}`,
+            outcome.altFromCaller
+              ? ""
+              : "note: your imageAlt was absent or too long, so the alt above was derived from the title.",
+            "",
+            "This is YOUR image, hosted. Pass url and alt to check_seo and create_draft unchanged.",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        );
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Could not upload the cover.",
+        );
+      }
+    },
+  );
+
+  /* -------------------------------------------- 7b. generate_cover_image */
+
+  define(
     "generate_cover_image",
     {
       description:
-        "Produce a 1200x630 WebP cover and upload it. Order: an imageUrl you supply, else generated artwork, else an ESE-branded title card. Call this BEFORE create_draft and pass the returned url and alt through unchanged. Never blocks a draft — a coverless post is valid.",
+        "FALLBACK cover route, for clients that cannot generate images themselves. Prefer upload_cover_image with your own artwork. Order here: an imageUrl you supply, else server-generated artwork (needs OPENAI_API_KEY), else an ESE-branded title card. Call BEFORE create_draft and pass the returned url and alt through unchanged. Never blocks a draft — a coverless post is valid. Check the returned source: composed-brand-cover means NO artwork was produced, only a title card.",
       inputSchema: {
         type: "object",
         properties: {
@@ -583,8 +693,12 @@ export function registerTools(
           seoTitle: str(`Optional title override, max ${FIELD_LIMITS.seoTitle.max}.`),
           seoDescription: str(`Optional meta description, max ${FIELD_LIMITS.seoDescription.max}.`),
           focusKeyword: str(`Optional focus keyword, max ${FIELD_LIMITS.focusKeyword.max}.`),
-          coverImageUrl: str("Cover URL from generate_cover_image."),
-          coverImageAlt: str("Alt text. REQUIRED whenever coverImageUrl is set."),
+          coverImageUrl: str(
+            "Cover URL, exactly as returned by upload_cover_image (preferred) or generate_cover_image. This tool never makes an image; it only stores the URL you pass.",
+          ),
+          coverImageAlt: str(
+            "Alt text, exactly as returned by whichever cover tool you called. REQUIRED whenever coverImageUrl is set. Do not rewrite it.",
+          ),
           category: str(`${POST_CATEGORIES.join(" or ")}. Defaults to blog.`),
           relatedKeywords: {
             type: "array",
@@ -775,6 +889,7 @@ export const TOOL_NAMES = [
   "get_link_targets",
   "suggest_internal_links",
   "check_seo",
+  "upload_cover_image",
   "generate_cover_image",
   "create_draft",
 ] as const;
