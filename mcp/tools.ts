@@ -137,7 +137,29 @@ function resolveCategory(value: unknown): PostCategory {
 
 type Handler = (args: Record<string, unknown>) => Promise<CallToolResult>;
 
-export function registerTools(server: Server, deps: ServerDeps): void {
+export type RegisterOptions = {
+  /**
+   * Restrict registration to these tool names.
+   *
+   * Omitted on stdio, where every tool is registered — a client able to spawn
+   * this process is already past every boundary an allowlist could add. The
+   * remote HTTP transport passes the set derived from the bearer token's scopes
+   * (see `mcp/scopes.ts`).
+   *
+   * The filtering happens at registration, not in the call handler, and that is
+   * the point: an out-of-scope tool is absent from `tools/list` *and* absent from
+   * the handler map, so there is no code path that could invoke it. A caller
+   * naming one gets the same "unknown tool" answer as for a tool that never
+   * existed, which also avoids confirming the surface it cannot reach.
+   */
+  allowedTools?: ReadonlySet<string>;
+};
+
+export function registerTools(
+  server: Server,
+  deps: ServerDeps,
+  options: RegisterOptions = {},
+): void {
   const tools: Tool[] = [];
   const handlers = new Map<string, Handler>();
 
@@ -149,6 +171,7 @@ export function registerTools(server: Server, deps: ServerDeps): void {
    * reads is the failure this shape makes visible.
    */
   function define(name: string, tool: Omit<Tool, "name">, handler: Handler): void {
+    if (options.allowedTools && !options.allowedTools.has(name)) return;
     tools.push({ name, ...tool });
     handlers.set(name, handler);
   }

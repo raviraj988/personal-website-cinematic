@@ -18,6 +18,24 @@
  * `import.meta.url` cannot be wrong. Same approach, and the same parse rules, as
  * `scripts/verify-contract.mjs`.
  *
+ * ## Why the path is assembled rather than written as a literal
+ *
+ * `mcp/tools.ts` is now imported by `src/app/api/mcp/route.ts` as well as by the
+ * stdio server, so this module goes through the Next build. Webpack treats
+ * `new URL("<string literal>", import.meta.url)` as an *asset reference* and
+ * copies the target into the build output — which put the entire `.env.local`,
+ * service-role key included, at
+ * `.next/server/chunks/static/media/.env.<hash>.local`. It was uploaded with the
+ * deployment and stored in the build cache.
+ *
+ * So the read below goes through `path.join` on a directory derived at runtime.
+ * Webpack has no special handling for `readFileSync` with a computed path, so
+ * nothing is emitted. Do not "simplify" this back into a literal `new URL(...)`.
+ *
+ * Inside a Next runtime the read is skipped entirely: Next loads `.env.local`
+ * into `process.env` itself in development, and on Vercel the variables come from
+ * the platform. There is no file to find there and no reason to look.
+ *
  * ## Nothing may write to stdout
  *
  * On a stdio transport, stdout *is* the JSON-RPC channel. One `console.log`
@@ -26,6 +44,8 @@
  * line. Diagnostics go to `stderr`, which is why `note()` exists.
  */
 import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 let fileEnv: Record<string, string> | null = null;
 
@@ -40,8 +60,21 @@ function envFile(): Record<string, string> {
   if (fileEnv) return fileEnv;
 
   const parsed: Record<string, string> = {};
+
+  // Inside Next, `process.env` is already populated and there is no `.env.local`
+  // beside the bundled module to find. Skipping the read keeps a cold start from
+  // doing a pointless failing stat, and makes the intent explicit rather than
+  // relying on the catch below to absorb it.
+  if (process.env.NEXT_RUNTIME) {
+    fileEnv = parsed;
+    return fileEnv;
+  }
+
   try {
-    const raw = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+    // Assembled, not a literal. See the header — a literal here copies
+    // `.env.local` into the Next build output.
+    const here = dirname(fileURLToPath(import.meta.url));
+    const raw = readFileSync(join(here, "..", ".env.local"), "utf8");
     for (const line of raw.split("\n")) {
       const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
       if (!match) continue;

@@ -1,0 +1,87 @@
+/*
+ * The OAuth consent screen.
+ *
+ * Loaded only by `src/app/oauth/layout.tsx`, on top of `admin.css`. Everything
+ * here is scoped to the two classes the consent page introduces — the panel,
+ * buttons, notices, and hints all come from `admin.css` unchanged, so this file
+ * stays limited to the one control the console has no precedent for: a checkbox
+ * list a person actually has to read before ticking.
+ */
+
+.oauth-scopes {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.oauth-scope {
+  display: grid;
+  align-items: start;
+  gap: 0.7rem;
+  grid-template-columns: 1rem 1fr;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.oauth-scope:hover {
+  border-color: var(--color-text-muted);
+}
+
+/*
+ * `accent-color` rather than a custom-drawn control. A hand-built checkbox is
+ * where consent screens quietly lose their keyboard focus ring and their
+ * indeterminate state, and this one has to be legible and operable to be
+ * meaningful at all.
+ */
+.oauth-scope input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.15rem;
+  accent-color: var(--color-ink);
+}
+
+.oauth-scope > span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.oauth-scope code {
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.oauth-scope small {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/*
+ * The client's own claims: id, site, redirect target, resource. Presented as a
+ * definition list because that is what it is, and kept visually quieter than the
+ * permissions above — it is corroborating detail, not the decision.
+ */
+.oauth-detail {
+  display: grid;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+  gap: 0.45rem 1rem;
+  grid-template-columns: auto 1fr;
+  font-size: 0.82rem;
+}
+
+.oauth-detail dt {
+  color: var(--color-text-muted);
+}
+
+.oauth-detail dd {
+  margin: 0;
+}
+
+/* Redirect URIs and resource identifiers are long and must not widen the panel. */
+.oauth-detail dd code {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}

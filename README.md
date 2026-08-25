@@ -166,8 +166,17 @@ key, which bypasses Row Level Security completely, and everything it does is
 downstream of a language model reading text nobody reviewed. A function that does
 not exist cannot be reached by a prompt-injected tool call.
 
-For the same reason: **this server must never be deployed, bound to a port, or
-exposed beyond the local client that spawns it.**
+For the same reason: **the stdio server must never be deployed, bound to a port,
+or exposed beyond the local client that spawns it.** That sentence is about the
+process `mcp/server.ts` starts — a server whose only caller is whoever spawned it,
+where adding a network listener would mean an unauthenticated port on a process
+holding an RLS-bypassing key.
+
+The same eight tools *are* reachable over HTTP, by a different arrangement, at
+`/api/mcp` — see [The remote endpoint](#the-remote-endpoint-for-chatgpt) below.
+There the key sits inside the Next.js runtime that already holds it for `/admin`,
+and the port is not unauthenticated: every request carries a token an
+administrator approved by hand.
 
 #### Registering it
 
@@ -277,6 +286,82 @@ The site is `noindex` and `site.canonicalBase` is still `https://example.com`, s
 `check_seo` warns on every run and these are pre-launch drafts rather than posts
 competing for rankings today.
 
+#### The remote endpoint, for ChatGPT
+
+The stdio server above needs a client that can spawn a local process. ChatGPT
+cannot, so the same eight tools are also served over HTTP at `/api/mcp` —
+one tool surface (`mcp/tools.ts`), two transports.
+
+**Off unless switched on.** Every endpoint below returns 404 unless
+`MCP_OAUTH_ENABLED=true`, so merging this code does not open a write path into the
+database; only a deliberate environment change does.
+
+##### Why this needs a whole OAuth server
+
+Because ChatGPT will not accept anything smaller. It cannot present a static API
+key or a custom header — OAuth or nothing — and it registers itself via RFC 7591
+dynamic client registration, so a hand-made `client_id` is not an option either.
+That rules out every shortcut and leaves a real authorization server, which is
+what `src/lib/mcp-auth/` and `supabase/migrations/0004_mcp_oauth.sql` are.
+
+Tokens are opaque, not JWTs: the authorization server and the resource server are
+the same deployment sharing one database, so a signature would buy nothing while
+delaying revocation until expiry. Only SHA-256 hashes are stored.
+
+##### The surface
+
+| Path | What it is |
+|---|---|
+| `/api/mcp` | The MCP endpoint. Streamable HTTP, stateless, bearer-gated |
+| `/.well-known/oauth-protected-resource/api/mcp` | RFC 9728. What the 401 challenge points at |
+| `/.well-known/oauth-authorization-server` | RFC 8414 |
+| `/oauth/register` | RFC 7591 dynamic client registration. Open, deliberately |
+| `/oauth/authorize` | The consent screen. Admin-gated, and the only real boundary |
+| `/oauth/token` | `authorization_code` and `refresh_token`, PKCE S256 required |
+| `/oauth/revoke` | RFC 7009 |
+
+##### Where the boundary actually is
+
+**Not registration.** Anyone may register a client; the RFC intends that and
+ChatGPT requires it. A registered client is powerless until a signed-in
+administrator ticks a box on `/oauth/authorize`, and everything downstream — a
+token, a tool call, a draft — descends from that click.
+
+Two scopes, split at the read/write line rather than per tool: `blog:read` and
+`blog:draft`. They gate the tool surface at *registration*, so a `blog:read` token
+has no `create_draft` in `tools/list` and no handler behind it either — see
+`mcp/scopes.ts` and `RegisterOptions` in `mcp/tools.ts`. `blog:draft` implies
+`blog:read`, because drafting needs the writing guide and the slug check.
+
+The ceiling on damage is unchanged from the stdio server: a stolen token creates
+drafts. It cannot publish, edit, or delete, because no such function exists. **If
+a publish path is ever added to `mcp/adapters/supabase.ts`, this endpoint has to
+be reconsidered, not merely re-reviewed.**
+
+##### Turning it on
+
+1. Apply `supabase/migrations/0004_mcp_oauth.sql` (`npm run db:migrate`, or paste
+   it into the Supabase SQL editor).
+2. Set `MCP_OAUTH_ENABLED=true`.
+3. Set `MCP_OAUTH_ORIGIN` to the site's absolute origin — no trailing slash, no
+   path. Required today because `site.canonicalBase` is still the placeholder
+   `https://example.com`; once that is real, this can be dropped. See
+   `src/lib/mcp-auth/origin.ts`, including why the request's `Host` header is
+   deliberately never consulted.
+4. In ChatGPT, add a connector pointing at `https://<origin>/api/mcp`. It will
+   discover the rest and run the OAuth flow itself.
+
+A quick check that it is live, without a client:
+
+```bash
+curl -i -X POST https://<origin>/api/mcp -d '{}'
+# 401 + WWW-Authenticate: Bearer resource_metadata="https://<origin>/.well-known/..."
+curl -s https://<origin>/.well-known/oauth-protected-resource/api/mcp
+```
+
+A 401 carrying that header is success — it is the whole basis of the client's
+discovery, and without it ChatGPT reports no useful error.
+
 ### SEO in the editor
 
 The output was already correct — canonical, `BlogPosting` JSON-LD, OG, Twitter,
@@ -306,6 +391,8 @@ npm run test:mcp-validation  # slugs, path guards, the site registry, module pur
 npm run test:mcp-seo         # every added SEO check, and the blocking/recommended split
 npm run test:mcp-cover       # the full cover source-priority matrix
 npm run test:mcp-handshake   # spawns the server, checks the 8 tools and stdout purity
+npm run test:mcp-scopes      # the scope-to-tool map, and that registration honours it
+npm run test:mcp-oauth       # PKCE, scope parsing, redirects, origin, the return-to guard
 
 # Against the real database. Run these serially.
 npm run verify:contract      # the wire contract and RLS
@@ -323,6 +410,13 @@ The three database suites use two different slug prefixes — `zz-contract-check
 for `verify:contract`, `zz-mcp-check-` for the other two — so they cannot delete
 each other's fixtures. Each cleans up in a `finally`, rows and storage objects
 both.
+
+`test:mcp-oauth` imports only the OAuth modules free of `import "server-only"` —
+`store.ts` and `bearer.ts` throw on import outside a Next runtime, the same
+constraint that keeps `mcp/tools.ts` reusing `validation.ts` but not `queries.ts`.
+So it covers the parts where a bug would be a vulnerability (PKCE bounds, the
+open-redirect guard, origin resolution) and leaves the database-backed token
+lifecycle to a live client.
 
 No test makes a paid image request. `openai` is imported by exactly one module,
 `mcp/image-generate.ts`, which only `mcp/deps.ts` imports; every cover test

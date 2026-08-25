@@ -22,8 +22,14 @@ function SubmitButton() {
  * `error` carries a message from the auth callback — an expired reset link, a
  * refused Google sign-in — which arrives as a query parameter on a fresh page
  * load rather than as action state, so it has to be passed in.
+ *
+ * `next` is where to land after signing in, already validated by the page via
+ * `safeReturnTo`. Present only when an OAuth consent request sent the person
+ * here; absent normally, and the action then falls back to `/admin`. It is
+ * re-validated in the action too — this hidden field is a form input like any
+ * other, so a crafted POST could carry anything.
  */
-export function LoginForm({ error }: { error?: string }) {
+export function LoginForm({ error, next }: { error?: string; next?: string | null }) {
   const [state, formAction] = useActionState(signInAction, INITIAL);
   const message = state.message ?? error;
 
@@ -35,6 +41,8 @@ export function LoginForm({ error }: { error?: string }) {
           {message}
         </p>
       ) : null}
+
+      {next ? <input type="hidden" name="next" value={next} /> : null}
 
       <div className="admin-field">
         <label htmlFor="email">Email address</label>

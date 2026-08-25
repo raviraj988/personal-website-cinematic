@@ -89,6 +89,95 @@ export type ProfileRow = {
   updated_at: string;
 };
 
+/**
+ * A JSON column. Mirrors `jsonb`, used by `oauth_clients.raw_metadata`.
+ */
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+/* -------------------------------------------------------------- 0004: OAuth */
+
+/**
+ * The three OAuth tables below back the remote MCP endpoint at `/api/mcp`.
+ * Added in 0004_mcp_oauth.sql; see that migration's header for why an entire
+ * authorization server is the minimum a ChatGPT connector will accept.
+ *
+ * `token_hash` and `code_hash` are SHA-256 hex, never the credential itself.
+ */
+export type OAuthClientRow = {
+  client_id: string;
+  client_name: string | null;
+  redirect_uris: string[];
+  grant_types: string[];
+  response_types: string[];
+  /** Constrained to `'none'` by the migration: public clients with PKCE only. */
+  token_endpoint_auth_method: string;
+  scope: string | null;
+  client_uri: string | null;
+  logo_uri: string | null;
+  software_id: string | null;
+  software_version: string | null;
+  raw_metadata: Json;
+  created_at: string;
+};
+
+export type OAuthClientInsert = Omit<OAuthClientRow, "created_at"> & {
+  created_at?: string;
+};
+
+export type OAuthAuthorizationCodeRow = {
+  code_hash: string;
+  client_id: string;
+  user_id: string;
+  redirect_uri: string;
+  code_challenge: string;
+  code_challenge_method: string;
+  scopes: string[];
+  resource: string | null;
+  expires_at: string;
+  consumed_at: string | null;
+  created_at: string;
+};
+
+export type OAuthAuthorizationCodeInsert = Omit<
+  OAuthAuthorizationCodeRow,
+  "code_challenge_method" | "consumed_at" | "created_at"
+> & {
+  code_challenge_method?: string;
+  consumed_at?: string | null;
+  created_at?: string;
+};
+
+export type OAuthTokenKind = "access" | "refresh";
+
+export type OAuthTokenRow = {
+  token_hash: string;
+  kind: OAuthTokenKind;
+  client_id: string;
+  user_id: string;
+  scopes: string[];
+  resource: string | null;
+  expires_at: string;
+  revoked_at: string | null;
+  /** The refresh token this one replaced, for replay detection. */
+  parent_hash: string | null;
+  created_at: string;
+};
+
+export type OAuthTokenInsert = Omit<
+  OAuthTokenRow,
+  "revoked_at" | "parent_hash" | "created_at"
+> & {
+  revoked_at?: string | null;
+  parent_hash?: string | null;
+  created_at?: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -116,11 +205,30 @@ export type Database = {
         Update: Partial<Omit<ProfileRow, "id" | "created_at">>;
         Relationships: [];
       };
+      oauth_clients: {
+        Row: OAuthClientRow;
+        Insert: OAuthClientInsert;
+        Update: Partial<Omit<OAuthClientRow, "client_id" | "created_at">>;
+        Relationships: [];
+      };
+      oauth_authorization_codes: {
+        Row: OAuthAuthorizationCodeRow;
+        Insert: OAuthAuthorizationCodeInsert;
+        Update: Partial<Omit<OAuthAuthorizationCodeRow, "code_hash" | "created_at">>;
+        Relationships: [];
+      };
+      oauth_tokens: {
+        Row: OAuthTokenRow;
+        Insert: OAuthTokenInsert;
+        Update: Partial<Omit<OAuthTokenRow, "token_hash" | "created_at">>;
+        Relationships: [];
+      };
     };
     Views: Record<never, never>;
     Functions: {
       is_admin: { Args: Record<never, never>; Returns: boolean };
       is_owner: { Args: Record<never, never>; Returns: boolean };
+      purge_expired_oauth_artifacts: { Args: Record<never, never>; Returns: undefined };
     };
     Enums: Record<never, never>;
     CompositeTypes: Record<never, never>;

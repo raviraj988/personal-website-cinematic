@@ -8,6 +8,7 @@ import { requireAdmin, requireOwner } from "@/lib/blog/auth";
 import { getPostForAdmin } from "@/lib/blog/queries";
 import { BLOG_PATH } from "@/lib/blog/config";
 import { NEWS_PATH } from "@/lib/news/config";
+import { safeReturnTo } from "@/lib/mcp-auth/return-to";
 import { checkCoverSize, sniffImage } from "@/lib/blog/image";
 import { reencodeCover } from "@/lib/blog/image-server";
 import {
@@ -409,7 +410,14 @@ export async function signInAction(
 
   // Whether this account has a `profiles` row is decided by the page we land on.
   // Signing in and being admitted are two different things.
-  redirect("/admin");
+  //
+  // `next` exists so an OAuth consent request survives the sign-in it forced —
+  // without it an administrator sent here by a connector lands on the dashboard
+  // and the authorization request is silently lost. Re-validated rather than
+  // trusted: a form field is attacker-controllable, and anything reaching
+  // `redirect()` unchecked is an open redirect. `safeReturnTo` permits exactly one
+  // path.
+  redirect(safeReturnTo(String(formData.get("next") ?? "")) ?? "/admin");
 }
 
 export async function signOutAction(): Promise<void> {

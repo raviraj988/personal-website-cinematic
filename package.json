@@ -14,6 +14,8 @@
     "test:password": "node --import ./scripts/register-ts.mjs scripts/test-password.mjs",
     "test:seo": "node --import ./scripts/register-ts.mjs scripts/test-seo.mjs",
     "test:mcp-validation": "node --import ./scripts/register-ts.mjs scripts/test-mcp-validation.mjs",
+    "test:mcp-scopes": "node --import ./scripts/register-ts.mjs scripts/test-mcp-scopes.mjs",
+    "test:mcp-oauth": "node --import ./scripts/register-ts.mjs scripts/test-mcp-oauth.mjs",
     "test:mcp-seo": "node --import ./scripts/register-ts.mjs scripts/test-mcp-seo.mjs",
     "test:mcp-cover": "node --import ./scripts/register-ts.mjs scripts/test-mcp-cover.mjs",
     "test:mcp-handshake": "node --import ./scripts/register-ts.mjs scripts/test-mcp-handshake.mjs",
