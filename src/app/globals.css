@@ -654,19 +654,66 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   height: var(--header-height);
   padding-inline: var(--gutter);
   color: var(--color-white);
-  background: transparent;
+  /* Translucent over the hero, not fully transparent.
+   *
+   * The scrim is forest ink rather than cream because the type here is white: a
+   * light wash under white text is the one combination that cannot work, and it
+   * would have to flip the text to ink, which is the `--solid` state. Dark glass
+   * keeps the header reading as something floating over the photograph while
+   * giving the nav a definite edge — and it *raises* contrast, since a hero
+   * photograph has bright patches that white text was previously sitting on
+   * unaided.
+   *
+   * 0.28 is deliberately light. Enough to separate the bar from the image at a
+   * glance, not enough to read as a solid band across the top of the composition.
+   */
+  background: rgba(28, 48, 37, 0.28);
+  /* Unprefixed alone is not enough — Safari still needs the prefix, and without
+     it the scrim renders flat rather than glassy on every Apple browser. */
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(10px) saturate(115%);
   transition:
     color var(--motion-ui) ease,
     background-color var(--motion-ui) ease,
     border-color var(--motion-ui) ease;
-  border-bottom: 1px solid transparent;
+  /* A hairline of light, so the bar has a bottom edge over the photograph. It
+     becomes `--color-line` in the solid state, so the edge never disappears. */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Both states now blur, so the hero-to-solid transition is a colour crossfade
+   with no blur popping in partway down the page. `backdrop-filter` is not in the
+   transition list above for exactly that reason: it does not need to change. */
+
+/* Some people turn transparency off at the OS level, usually because layered
+   translucency is uncomfortable to read. Honour it: keep the scrim, drop the
+   blur, and darken slightly to hold the same contrast without it. */
+@media (prefers-reduced-transparency: reduce) {
+  .cinematic-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(28, 48, 37, 0.62);
+  }
 }
 
 .cinematic-header--solid {
   background: rgba(248, 245, 236, 0.96);
   color: var(--color-ink);
   border-color: var(--color-line);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
+}
+
+/* The solid state is already 96% opaque, so with transparency reduced it only
+   needs the last 4% — the *same* cream, not a different one. `--color-canvas` is
+   #f8f5ec, which is what the rgba above is 96% of; `--color-paper` is #fffdf8 and
+   would make the bar visibly whiter than it is with transparency on. */
+@media (prefers-reduced-transparency: reduce) {
+  .cinematic-header--solid {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--color-canvas);
+  }
 }
 
 .cinematic-header__brand {
