@@ -106,7 +106,14 @@
 }
 
 .post__standfirst {
-  max-width: 40ch;
+  /* Wider than the old 40ch, which wrapped the lede at roughly 60% of the
+     title's width and read as cramped rather than as hierarchy.
+
+     Still short of `--post-measure` on purpose: this is set a step larger than
+     the body, so the same pixel width buys fewer characters, and a lede that runs
+     the full measure at this size stops looking like a lede. 55ch keeps it
+     visibly a summary while using the space it has. */
+  max-width: 55ch;
   margin-top: 1.9rem;
   color: var(--color-text-muted);
   font-family: var(--font-serif);

@@ -20,9 +20,20 @@ export function PostArticle({ post }: { post: PostRow }) {
   return (
     <article className="post">
       <header className="post__header">
-        <p className="section-label">
-          Blog{published ? ` — ${published}` : ""}
-        </p>
+        {/*
+          Category only, and read from the row rather than hardcoded.
+
+          Two bugs met on this line. The date was appended here *and* printed in
+          `post__meta` below, so every article showed it twice on one screen from
+          the same `published` value — the meta line is where it belongs, grouped
+          with the reading time and set off by a rule, which is what makes it read
+          as metadata rather than as part of the headline.
+
+          And the label said "Blog" unconditionally, while `src/app/news/[slug]`
+          renders this same component — so every News & Updates entry announced
+          itself as a blog post.
+        */}
+        <p className="section-label">{post.category === "news" ? "News" : "Blog"}</p>
         <h1 className="post__title">{post.title}</h1>
         <p className="post__standfirst">{post.excerpt}</p>
         <p className="post__meta">
