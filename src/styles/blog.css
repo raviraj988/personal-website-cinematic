@@ -69,6 +69,18 @@
 /* ---------------------------------------------------------------- post page */
 
 .post {
+  /* One measure for every text block on the page.
+   *
+   * 48rem is ~74 characters at the body size — the top of the comfortable range
+   * for long-form prose, which is 45–75. Past that the eye loses the start of the
+   * next line on the return sweep, which is why this cannot simply match the
+   * cover: the cover is 75rem, and prose at 75rem runs ~115 characters.
+   *
+   * A single token because the header and the body shell were previously 48rem
+   * and 40rem independently, which put the meta rule wider than the paragraphs
+   * underneath it. Two numbers meaning "the measure" is how that happened. */
+  --post-measure: 48rem;
+
   width: min(100%, calc(var(--container) + var(--gutter) * 2));
   margin-inline: auto;
   padding: clamp(4rem, 9vw, 7rem) var(--gutter) 0;
@@ -77,17 +89,12 @@
 /* Centred, not left-pinned.
  *
  * `.post` is a 75rem container with `margin-inline: auto`, and `.post__cover`
- * fills it. The header and the body shell are narrower — 48rem and 40rem — so
- * without `margin-inline: auto` they sat against the container's left edge while
- * the cover ran the full 1200px beside them. On a wide screen that left roughly
- * 560px of dead space down the right of every article and read as a broken page
- * rather than as an editorial choice.
- *
- * The measure itself is deliberate and stays: long-form prose is unreadable at
- * 1200px. The cover is the one element that breaks out wider, which is the point
- * of it being a cover. */
+ * fills it. The text blocks are narrower, so without `margin-inline: auto` they
+ * sat against the container's left edge while the cover ran the full 1200px
+ * beside them — roughly 560px of dead space down the right of every article,
+ * which read as a broken page rather than as an editorial choice. */
 .post__header {
-  max-width: 48rem;
+  max-width: var(--post-measure);
   margin-inline: auto;
 }
 
@@ -146,12 +153,9 @@
 }
 
 .post__body-shell {
-  /* ~68 characters at the body size below — the measure long-form prose reads
-     most comfortably at. */
-  max-width: 40rem;
-  /* Centred for the reason set out on `.post__header`: left-pinning a 40rem
-     column inside a 75rem container is what stranded every article against the
-     left edge. */
+  /* Shares `--post-measure` with the header, so the meta rule above the body is
+     exactly as wide as the paragraphs below it. */
+  max-width: var(--post-measure);
   margin-inline: auto;
   margin-top: clamp(3.5rem, 7vw, 5.5rem);
 }
