@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "ese-blog": {
+      "command": "node",
+      "args": [
+        "--import",
+        "/Users/ravir/CS/startup/West_oakland/test_projects/personal-website-cinematic/scripts/register-ts.mjs",
+        "/Users/ravir/CS/startup/West_oakland/test_projects/personal-website-cinematic/mcp/server.ts"
+      ],
+      "cwd": "/Users/ravir/CS/startup/West_oakland/test_projects/personal-website-cinematic"
+    }
+  }
+}

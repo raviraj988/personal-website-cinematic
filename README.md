@@ -69,10 +69,10 @@ The development server defaults to `http://localhost:3000`.
 
 ## Blog and admin console
 
-A Supabase-backed blog at `/blog` with an admin console at `/admin`. An
-external MCP drafting tool — which lives outside this repository — publishes
-drafts straight into the database over PostgREST. It can only ever create
-drafts; publishing is a human action in the console.
+A Supabase-backed blog at `/blog` with an admin console at `/admin`. An MCP
+drafting tool — in `mcp/`, see "The drafting server" below — writes drafts
+straight into the database over PostgREST. It can only ever create drafts;
+publishing is a human action in the console.
 
 ### Setting it up
 
@@ -89,8 +89,8 @@ drafts; publishing is a human action in the console.
    - `supabase/migrations/0003_focus_keyword.sql` — `posts.focus_keyword`
 3. **Create the owner.** Auth → Users → Add user (tick *Auto Confirm User*),
    then insert a `profiles` row with `role = 'owner'` for that UUID. The exact
-   SQL is at the bottom of `0001`. The external tool attributes every draft to the
-   oldest owner and **fails outright without one**.
+   SQL is at the bottom of `0001`. The drafting server attributes every draft to
+   the oldest owner and **fails outright without one**.
 4. **Restart the dev server** so it reads the new variables, then sign in at
    `/admin/login`. Further admins are granted from `/admin/people`.
 5. **Prove it works:** `npm run verify:contract -- --base-url http://localhost:3000`
@@ -150,6 +150,133 @@ account with none.
 - Length over composition, 10 characters minimum, and a 72-**byte** ceiling
   because bcrypt silently truncates there.
 
+### The drafting server
+
+An MCP server in `mcp/` that drafts SEO-shaped blog and news posts straight into
+Supabase. Its counterpart was declared before it existed: Part 1 of
+`supabase/migrations/0001_blog_and_admin.sql` calls itself "a wire contract with
+an external drafting tool", the `source` column exists to badge its output, and
+`scripts/verify-contract.mjs` has been impersonating it all along.
+
+**It can only create drafts.** Not "is configured not to publish" — there is no
+publish, update, unpublish, or delete function anywhere in
+`mcp/adapters/supabase.ts`, and `status: 'draft'` / `source: 'ai-assisted'` are
+literals in the insert. That matters because the server holds the service-role
+key, which bypasses Row Level Security completely, and everything it does is
+downstream of a language model reading text nobody reviewed. A function that does
+not exist cannot be reached by a prompt-injected tool call.
+
+For the same reason: **this server must never be deployed, bound to a port, or
+exposed beyond the local client that spawns it.**
+
+#### Registering it
+
+`.mcp.json` at the repository root is already configured:
+
+```json
+{
+  "mcpServers": {
+    "ese-blog": {
+      "command": "node",
+      "args": ["--import", "<repo>/scripts/register-ts.mjs", "<repo>/mcp/server.ts"],
+      "cwd": "<repo>"
+    }
+  }
+}
+```
+
+The paths are absolute on purpose. `--import ./scripts/register-ts.mjs` resolves
+against the working directory, and an MCP client picks that directory, not you.
+
+Needs the same Supabase variables as the site. `OPENAI_API_KEY` is optional —
+see `.env.local.example`; without it covers fall back to a branded card.
+
+#### The eight tools
+
+| Tool | What it does |
+|---|---|
+| `get_writing_guide` | The ESE brief: audience, terminology, prohibitions, post shape, and how `PostBody` really renders Markdown. **Call first.** |
+| `list_posts` | Existing titles and slugs, so a topic is not drafted twice |
+| `check_slug` | Format validity and availability, with a `slugify` suggestion when wrong |
+| `get_link_targets` | Every real route, plus the paths that look real and 404 |
+| `suggest_internal_links` | 2–4 targets, each with the phrase already in the draft that motivates it |
+| `check_seo` | The editor's own checks plus the ones it cannot run. Writes nothing |
+| `generate_cover_image` | A 1200×630 WebP cover, uploaded to `blog-images/covers/` |
+| `create_draft` | Inserts the draft, returns the id and `/admin/posts/<id>` |
+
+The workflow: `get_writing_guide` → `list_posts` → `check_slug` →
+`get_link_targets` → draft → `check_seo` → `generate_cover_image` →
+`create_draft` → a human opens the review URL.
+
+#### Cover images
+
+Three sources, in strict priority:
+
+1. **A supplied `imageUrl`** — imported. HTTPS only, no redirects followed, DNS
+   resolved and the resulting addresses checked before the fetch (loopback,
+   RFC1918, link-local, CGNAT and multicast all refused — an unguarded fetch of a
+   model-chosen URL is an SSRF primitive, and `169.254.169.254` is the standard
+   target). Type comes from magic bytes, never from the URL or `Content-Type`.
+2. **Generated artwork** — the default. The prompt forbids text, logos,
+   watermarks, implied statistics, real people, sci-fi, stock clichés, and any
+   depiction of identifiable Indigenous people, regalia, ceremony, or sacred
+   sites. That last one follows the rule `ese-content.ts` already sets for the
+   site's photography, for the same reason.
+3. **An ESE-branded title card** — the last resort *only*. Every generation
+   failure (no key, timeout, provider error, empty result, undecodable bytes)
+   lands here rather than erroring. A run of drafts coming back
+   `composed-brand-cover` means generation is broken, not that the fallback is
+   working well.
+
+Only an *upload* failure is an error, and even then a coverless draft is valid —
+`cover_image_url` is nullable.
+
+Alt text is derived from the title or taken from the caller; the image model is
+never asked to describe its own output, because it describes what it meant to
+draw. On the branded card a caller's alt text is ignored, since it was written
+for artwork that was never produced.
+
+Generated covers are normalised to 1200×630 WebP by `mcp/cover-normalise.ts` —
+**not** by `reencodeCover`, which deliberately preserves a human author's aspect
+ratio and format and should stay that way.
+
+#### The writing guide is mirrored here
+
+`mcp/writing-guide.ts` is what the tool serves; the rules below are the same
+brief for a human reading the repository. **Edit the two together.**
+
+- Write for Tribal environmental staff, community organisers, and agency
+  partners. Not consumers, not other consultants.
+- ESE's own terminology: *Native Nations*, *Tribal*, *sovereignty*,
+  *self-determination*, *marginalized communities*, *culturally-informed*.
+  "Communities", not "clients".
+- **Never invent** a client, a Tribe or Nation as an ESE client, a grant award, a
+  dollar figure, a project outcome, a statistic, a regulatory deadline, or a
+  credential. A reader may act on it. `ese-content.ts` marks its own gaps
+  `TODO(ese)` and renders honest empty states; a draft should hold the same line.
+- Never speak *for* a Nation, or imply a partnership `ese-content.ts` does not
+  document.
+- No legal, regulatory, or funding-eligibility advice as determinative. Point at
+  the agency or at `/#contact`.
+- No deficit framing. ESE's position is the opposite: *"the communities facing
+  environmental harm are the most critical lever."*
+- Answer in the first hundred words. `##` per sub-question. 300+ words. 2–4
+  internal links with descriptive anchors. End on a real CTA — in `/#…` form,
+  never a `mailto:`, because `contact.email` is still a placeholder.
+
+Four rules that are facts about the renderer rather than style:
+
+1. **Markdown only.** `rehype-raw` is deliberately absent, so raw HTML is
+   silently dropped between the draft and the page.
+2. **Never `#`** — the title is the page's only `<h1>`; a stray `#` is downgraded.
+3. External links get `nofollow`; internal links are followed.
+4. Fenced code does not count toward the word floor, and an inline image with no
+   alt text ships unlabelled.
+
+The site is `noindex` and `site.canonicalBase` is still `https://example.com`, so
+`check_seo` warns on every run and these are pre-launch drafts rather than posts
+competing for rankings today.
+
 ### SEO in the editor
 
 The output was already correct — canonical, `BlogPosting` JSON-LD, OG, Twitter,
@@ -168,14 +295,41 @@ are in `validation.ts` and in CHECK constraints.
 ### Checks
 
 ```bash
-npm run test:validation   # field rules vs. the CHECK constraints. No database.
-npm run test:password     # password rules. No database.
-npm run test:seo          # SEO checks and scoring. No database.
-npm run test:covers       # magic-byte sniffing and EXIF stripping. No database.
-npm run verify:contract   # the wire contract and RLS, against the real database.
+# The site. No database, no network.
+npm run test:validation      # field rules vs. the CHECK constraints
+npm run test:password        # password rules
+npm run test:seo             # SEO checks and scoring
+npm run test:covers          # magic-byte sniffing and EXIF stripping
+
+# The drafting server. No database, no network, no paid image request.
+npm run test:mcp-validation  # slugs, path guards, the site registry, module purity
+npm run test:mcp-seo         # every added SEO check, and the blocking/recommended split
+npm run test:mcp-cover       # the full cover source-priority matrix
+npm run test:mcp-handshake   # spawns the server, checks the 8 tools and stdout purity
+
+# Against the real database. Run these serially.
+npm run verify:contract      # the wire contract and RLS
+npm run test:mcp-adapter     # the adapter, and that it exports nothing publish-shaped
+npm run test:mcp-e2e         # one draft through the real tool surface, then deleted
 ```
 
-`verify:contract` reads `.env.local`, impersonates the external drafting tool, and
+`npm run lint` does not work, and did not before this: `next lint` needs an ESLint
+config, and there is none in the repository or in `node_modules`. It would also
+never have covered `mcp/`, which `next lint` does not walk. `npm run typecheck` is
+the real static gate, and it does cover `mcp/` — `tsconfig.json` includes
+`**/*.ts`, which is also why a type error there would fail `next build`.
+
+The three database suites use two different slug prefixes — `zz-contract-check-`
+for `verify:contract`, `zz-mcp-check-` for the other two — so they cannot delete
+each other's fixtures. Each cleans up in a `finally`, rows and storage objects
+both.
+
+No test makes a paid image request. `openai` is imported by exactly one module,
+`mcp/image-generate.ts`, which only `mcp/deps.ts` imports; every cover test
+injects a fake provider and asserts its call count. `MCP_NO_PAID_CALLS=1` is a
+second, independent stop.
+
+`verify:contract` reads `.env.local`, impersonates the drafting server, and
 asserts the negative cases that actually prove RLS is doing something — anonymous
 callers cannot read a draft, cannot insert, cannot publish, cannot read `profiles`,
 cannot upload. Pass `--base-url` to add HTTP assertions (404 on drafts, one
@@ -189,8 +343,8 @@ Everything it creates is namespaced under a `zz-contract-check-` slug prefix and
 deleted afterwards, including on failure.
 
 The database schema in Part 1 of that migration is a **wire contract** with the
-external tool. Do not rename, retype, or drop any of those columns; add
-alongside them instead.
+drafting server in `mcp/`. Do not rename, retype, or drop any of those columns;
+add alongside them instead.
 
 ### How authorization works
 
