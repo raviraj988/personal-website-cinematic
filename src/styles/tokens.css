@@ -54,6 +54,107 @@
     0 1px 2px rgba(14, 39, 25, 0.08),
     0 1.25rem 2.5rem -0.85rem rgba(14, 39, 25, 0.32);
 
+  /* ------------------------------------------------------------- the brand
+   *
+   * ESE's palette as the brand kit specifies it, transcribed from
+   * `ref_docs/brand/colors-and-fonts.jpg`.
+   *
+   * These are NOT the page's colours. The site above is built on cream and
+   * forest green; this block is the brand's own navy-and-sunset palette, and the
+   * two disagree. Nothing here is wired into a page element — the tokens exist so
+   * the logo work, and any later decision to move the site onto the real palette,
+   * have exact values to reach for instead of eyedropped approximations.
+   *
+   * The disagreement is worth stating plainly, because it is a live design
+   * question rather than an oversight. The brand walkthrough
+   * (`ESE Magic Hour.pdf`, not committed — 74MB) puts it this way: "the deep navy
+   * the sector already trusts, paired with sunset tones most of the sector won't
+   * touch... In a category built on institutional blue and forest green, personal
+   * is the disruption." This site is currently institutional forest green. Moving
+   * it is a deliberate repaint of every page and a full contrast re-audit, so it
+   * is not being done as a side effect of adding a logo.
+   *
+   * `--brand-paper` and `--brand-ink` are the kit's two neutrals, and the kit is
+   * explicit that they replace #ffffff and #000000 "whenever possible, including
+   * text and backgrounds". */
+  --brand-navy: #2b4552;
+  --brand-olive: #899163;
+  --brand-terracotta: #c98150;
+  --brand-rose: #c24e78;
+  --brand-gold: #dec26a;
+  --brand-sky: #b8d0d8;
+  --brand-paper: #e5e8eb;
+  --brand-ink: #081b23;
+
+  /* The three signature gradients, each pulled from one of the emblem's
+   * protection bands — the same three things the shield says ESE protects.
+   *
+   * The kit names them but prints no stop values, so these are sampled from the
+   * gradient swatches on the brand walkthrough's usage page and snapped to the
+   * palette above at each end. Intended for backgrounds and banner accents,
+   * where the kit's instruction is that they carry colour "without competing
+   * with the wordmark" — so never behind the logo itself. */
+  --grad-land: linear-gradient(90deg, var(--brand-olive), var(--brand-gold));
+  --grad-sunrise: linear-gradient(
+    90deg,
+    var(--brand-gold),
+    var(--brand-terracotta),
+    var(--brand-rose)
+  );
+  --grad-water: linear-gradient(90deg, var(--brand-sky), var(--brand-navy));
+
+  /* --------------------------------------------------- the emblem's bands
+   *
+   * The three colours inside the ESE shield, as this site draws them.
+   *
+   * Read by TWO things, and they must not drift apart: the SVG marks in
+   * `src/components/brand/`, and `scripts/prepare-brand.mjs`, which parses THIS
+   * BLOCK to colour the favicon and the social card. Change a value here and
+   * re-run the script — do not hand-edit the rasters.
+   *
+   * These are *not* `--brand-*` above, and the difference is deliberate. The kit
+   * draws the bands in navy, sky blue, and a rose-to-gold sunset, sitting inside
+   * a navy outline. Dropped onto this cream-and-forest page the navy outline
+   * fights the greens and the rose reads as a different brand entirely — the mark
+   * looked applied rather than belonging.
+   *
+   * So the structure follows the page and the bands follow the brand's *meaning*:
+   * the outline is `currentColor`, which makes it near-white over the hero and
+   * forest ink on cream, and each band keeps its own hue — the leaf green, the
+   * water cool, the sunrise warm — pulled down in saturation into the muted,
+   * earthy register the rest of the site is in.
+   *
+   * The hues have to stay distinguishable from each other. Mapping all three into
+   * the site's greens was tried and collapses the mark: three shades of green in
+   * a shield says nothing, and the whole point of the three bands is that they
+   * name three different things ESE protects. `--ese-band-water` is the only
+   * genuinely new hue on the site for exactly that reason.
+   *
+   * Flat, not gradients. The kit's bands carry the three signature gradients, and
+   * at every size this site renders the emblem — 26px to 150px — a two-stop
+   * gradient across a 40px shape is invisible. Flat fills also keep the marks
+   * free of `<defs>` and generated ids, which is what lets one component render
+   * from both Server and Client Components without id collisions.
+   *
+   * ON CONTRAST — measured, and deliberately left as is. Against the cream page
+   * these land at 2.8:1 (land), 4.5:1 (water) and 2.2:1 (sunrise), and against
+   * the forest footer at 4.0 / 2.5 / 4.9. Band against band is lower still,
+   * 1.2–2.0:1, because they are separated by hue rather than by value.
+   *
+   * None of that is a failure to fix. WCAG 1.4.11 exempts logotypes outright, and
+   * more to the point the mark's legibility is not carried by the bands: it is
+   * carried by the outline, which is `currentColor` and measures 12.9:1 on cream
+   * and 14.1–14.5:1 on the dark grounds. Every band is bounded on all sides by
+   * that outline, so none of them ever has to be told apart from the ground, or
+   * from each other, unaided.
+   *
+   * Pushing these to 3:1 against both a cream and a forest ground would force
+   * them to mid-values, which is exactly what flattens the three hues into three
+   * greys. Measure the outline if the mark's legibility is ever in question. */
+  --ese-band-land: #969862;
+  --ese-band-water: #54777f;
+  --ese-band-sunrise: #ca9e63;
+
   --font-serif: var(--font-newsreader), Georgia, serif;
   --font-sans: var(--font-inter), Arial, sans-serif;
 
@@ -90,4 +191,19 @@
   --motion-cinematic: 1200ms;
   --ease-standard: cubic-bezier(0.645, 0.045, 0.355, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Elevation.
+   *
+   * Tinted with forest-deep, never neutral black — the same reason the muted
+   * text note above gives for avoiding grey: a grey shadow over #f8f5ec cream
+   * reads as dirt rather than as depth.
+   *
+   * Two layers each, and the lifted one adds a third. A single large blur reads
+   * as a smudge; a tight contact shadow plus a wide ambient one is what makes a
+   * surface look like it is resting on something. */
+  --shadow-card: 0 1px 1px rgba(14, 39, 25, 0.03),
+    0 3px 10px -6px rgba(14, 39, 25, 0.08);
+  --shadow-card-lift: 0 2px 3px rgba(14, 39, 25, 0.05),
+    0 18px 34px -16px rgba(14, 39, 25, 0.2),
+    0 44px 64px -44px rgba(14, 39, 25, 0.16);
 }

@@ -1,20 +1,20 @@
+import { EseLogo } from "@/components/brand/EseMark";
 import { Arrow } from "@/components/ui/Arrow";
-import { navigation, ese, site } from "@/lib/data/ese-content";
+import { navigation, site } from "@/lib/data/ese-content";
 
 /**
  * Compact footer for the blog.
  *
  * The landing page's footer is a full-bleed photographic contact section; that
- * would outweigh a short post. This keeps the same dark forest ground, serif
- * wordmark, and hairline rule, and drops the imagery.
+ * would outweigh a short post. This keeps the same dark forest ground, logo, and
+ * hairline rule, and drops the imagery.
  */
 export function BlogFooter() {
   return (
     <footer className="blog-footer">
       <div className="blog-footer__inner">
         <div>
-          <p className="cinematic-footer__name">{ese.abbreviation}</p>
-          <p>{site.name}</p>
+          <EseLogo className="cinematic-footer__logo" label={site.name} />
         </div>
 
         <nav aria-label="Footer navigation">

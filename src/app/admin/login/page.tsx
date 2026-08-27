@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/admin/LoginForm";
 import { getViewer } from "@/lib/blog/auth";
 import { safeReturnTo } from "@/lib/mcp-auth/return-to";
+import { EseEmblem } from "@/components/brand/EseMark";
+import { site } from "@/lib/data/ese-content";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -23,7 +25,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
   return (
     <main id="main-content" className="admin-gate">
       <div className="admin-gate__panel">
-        <p className="section-label">ESE</p>
+        <EseEmblem className="admin-gate__mark" label={site.name} />
         <h1>Admin console</h1>
         <p className="admin-gate__lede">
           Sign in to write, edit, and publish posts and newsletters.

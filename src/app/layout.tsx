@@ -43,7 +43,27 @@ export const metadata: Metadata = {
     siteName: site.name,
     locale: "en_US",
     url: "/",
+    /**
+     * The emblem on brand navy, composited by `scripts/prepare-brand.mjs`.
+     *
+     * Inherited by every route that does not set its own — which is all of them
+     * except blog posts, whose `generateMetadata` supplies the post's cover.
+     */
+    images: [
+      {
+        url: "/brand/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: site.name,
+      },
+    ],
   },
+  /**
+   * Twitter reads `openGraph.images` when no `twitter.images` is given, but not
+   * the card type — without this it renders the 1200x630 card as a small square
+   * thumbnail beside the text instead of a full-width image.
+   */
+  twitter: { card: "summary_large_image" },
   robots: {
     /**
      * One switch for the whole site, shared with `app/robots.ts` so the meta tag

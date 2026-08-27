@@ -690,6 +690,22 @@
   background: var(--color-paper);
 }
 
+/* The emblem alone, above the heading on the sign-in and request-access panels.
+ *
+ * It replaced an "ESE" label set in the small-caps `section-label` style, which
+ * was a text stand-in from before the repository had the mark. The emblem is the
+ * right weight here: a gate screen is the one admin surface reached cold, from a
+ * connector's redirect or a bookmark, so it is worth being unmistakably ESE's.
+ *
+ * `--color-forest` rather than `currentColor` — the panel's body text is muted
+ * grey-green for legibility, and the mark should not inherit that. */
+.admin-gate__mark {
+  display: block;
+  height: 2.6rem;
+  width: auto;
+  color: var(--color-forest);
+}
+
 .admin-gate__panel h1 {
   margin-top: 0.9rem;
   font-size: clamp(1.9rem, 3.2vw, 2.5rem);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BotanicalMark } from "./BotanicalMark";
+import { EseEmblem } from "@/components/brand/EseMark";
 import { site } from "@/lib/data/ese-content";
 
 const SESSION_KEY = "ese-intro-seen";
@@ -45,8 +45,11 @@ export function PageIntro() {
       className={`page-intro${leaving ? " page-intro--leaving" : ""}`}
       aria-hidden="true"
     >
+      {/* ESE's own emblem, not the generic botanical mark that used to open the
+          site. The organisation has a real one, and the opening frame is the
+          single place on the site with nothing to compete with it. */}
       <div className="page-intro__mark">
-        <BotanicalMark />
+        <EseEmblem />
       </div>
       <p>{site.name}</p>
     </div>

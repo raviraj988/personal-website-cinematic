@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AmbientLayer } from "@/components/motion/AmbientLayer";
+import { EseLogo } from "@/components/brand/EseMark";
 import { Arrow } from "@/components/ui/Arrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
@@ -9,6 +10,7 @@ import { ScrollWords } from "@/components/motion/ScrollWords";
 import { NewsTeaser } from "@/components/news/NewsTeaser";
 import { PersonCard } from "@/components/people/PersonCard";
 import {
+  brand,
   contact,
   ese,
   people,
@@ -456,8 +458,21 @@ export function EseLanding() {
 
         <div className="cinematic-footer__bottom">
           <div>
-            <p className="cinematic-footer__name">{ese.abbreviation}</p>
-            <p>{ese.name}</p>
+            {/* The logo carries the name here, so the "ESE" / full-name pair it
+                replaced would only have repeated it in type. The mark is white
+                by `currentColor` against the footer photograph. */}
+            <EseLogo
+              className="cinematic-footer__logo"
+              label={site.name}
+            />
+            {/* The tagline as live text rather than the kit's lockup artwork —
+                see the note on `brand.tagline`. One clause per line, as every
+                lockup in the kit sets it. */}
+            <ul className="cinematic-footer__tagline">
+              {brand.tagline.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
             <p className="cinematic-footer__org">{site.footerDescription}</p>
           </div>
           <nav aria-label="Footer navigation">

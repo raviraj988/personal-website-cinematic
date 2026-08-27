@@ -70,6 +70,9 @@ function wideImage(
 
 export const site = {
   name: "Environment Sovereignty & Equity",
+  /* Read by the MCP server's site descriptor (`mcp/site.ts`), not by any page —
+     the header rendered this until it gained the logo. Pages that need the
+     abbreviation use `ese.abbreviation`. */
   shortName: "ESE",
   role: "Environmental consulting for Native Nations and communities",
   homepageTitle:
@@ -80,6 +83,23 @@ export const site = {
   canonicalBase: "https://example.com",
   footerDescription:
     "The bridge between underserved communities and the government agencies, non-profits, and resources that can help them solve real environmental problems.",
+} as const;
+
+/**
+ * ESE's own brand language, from the kit in `ref_docs/brand/`.
+ *
+ * Distinct from the `site` export above, which is metadata. This is copy the
+ * organisation had written for it and had set in type, so it is quotable as-is
+ * rather than paraphrased.
+ *
+ * The tagline is carried as three separate lines because that is how every
+ * lockup in the kit sets it — three stacked clauses, one verb each, not a
+ * sentence that happens to wrap. It renders as live text rather than as the
+ * kit's `tagline-lockup` artwork: the artwork is outlined type, and a mission
+ * statement is worth having selectable and indexed.
+ */
+export const brand = {
+  tagline: ["Protect the environment", "Empower people", "Connect resources"],
 } as const;
 
 export const navigation = [
@@ -118,12 +138,16 @@ export const hero = {
 /**
  * Laura McKelvey — the driving force behind ESE.
  *
- * TODO(ese): "Founder" is inferred from "the driving force behind the business".
- * Replace with her actual title. Confirm the portrait is her — it is the one
- * professional portrait in the supplied archive, but the archive named nobody.
- * `main`'s `laura-mckelvey-portrait.jpg` is deliberately not used here: it is a
- * generated placeholder, and a synthetic face under a real person's name is not
- * something this site should ship.
+ * "Founder" is no longer an inference. It was read off "the driving force behind
+ * the business", and the brand kit's business-card mockups set it in type:
+ * "Laura McKelvey / FOUNDER". Same source confirms the "McKelvey" spelling for
+ * her — see the surnames note below, which is still open for Joshua.
+ *
+ * TODO(ese): confirm the portrait is her — it is the one professional portrait in
+ * the supplied archive, but the archive named nobody. `main`'s
+ * `laura-mckelvey-portrait.jpg` is deliberately not used here: it is a generated
+ * placeholder, and a synthetic face under a real person's name is not something
+ * this site should ship.
  */
 export const people = {
   eyebrow: "The people",
@@ -148,9 +172,10 @@ export const people = {
    * sentences each and they drop straight in — the card and the `/people` page
    * both render `bio` the moment it is non-empty.
    *
-   * TODO(ese): confirm the surnames. "McKelvey" and "McKelvie" were both supplied
-   * and differ by one letter, which is either two spellings of one family name or
-   * a typo, and neither is safe to guess at.
+   * The surnames are settled. Both are "McKelvey": the brand kit's business cards
+   * confirmed Laura's, and Joshua's was confirmed directly. The source document
+   * had supplied "McKelvie" for him, one letter off, and that spelling is gone
+   * from the repository — it was a typo, not a second family name.
    *
    * TODO(ese): Joshua's role. The source document's only trace of him is the note
    * "(Josh fill out)" beside the EJ GIS Cumulative Impact Tool, which suggests he
@@ -174,8 +199,8 @@ export const people = {
       portrait: image("portrait-laura", "Portrait of Laura McKelvey outdoors."),
     },
     {
-      slug: "joshua-mckelvie",
-      name: "Joshua McKelvie",
+      slug: "joshua-mckelvey",
+      name: "Joshua McKelvey",
       /** TODO(ese): replace with his actual title. */
       role: "",
       /**

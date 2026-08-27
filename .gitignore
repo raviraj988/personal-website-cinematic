@@ -25,6 +25,12 @@ next-env.d.ts
 supabase/migrations/APPLY_ALL.generated.sql
 supabase/migrations/RUN_ME.generated.sql
 
+# The brand kit as delivered. 85MB, most of it the 74MB `ESE Magic Hour.pdf` and
+# PNG exports that the committed `.ai` files supersede. The build inputs are
+# extracted into `ref_docs/brand/`, and that directory's README transcribes what
+# the walkthrough says, so nothing the site depends on lives only in the archive.
+ESE*-*-001.zip
+
 # Added by `vercel link`. `.env*` is broader than the block above and, being
 # later in the file, overrides the `!.env.local.example` negation there — git
 # applies the LAST matching pattern. The negation is therefore repeated below,

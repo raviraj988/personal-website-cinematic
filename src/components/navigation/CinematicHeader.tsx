@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { EseLogo } from "@/components/brand/EseMark";
 import { navigation, site } from "@/lib/data/ese-content";
 import { onScrollFrame } from "@/lib/scroll";
 
@@ -68,11 +69,13 @@ export function CinematicHeader({ solid = false }: { solid?: boolean }) {
           href="/"
           aria-label={`${site.name}, home`}
         >
-          {/* The abbreviation is the wordmark; the full name is the subtitle.
-              "Environment Sovereignty & Equity" set at wordmark size wraps to two
-              lines in the header's fixed 12rem column at every breakpoint. */}
-          <span>{site.shortName}</span>
-          <small>{site.name}</small>
+          {/* The real primary logo, drawn in `currentColor` — so it crosses from
+              near-white over the hero to ink in the solid state on the same
+              transition the nav links already use, with no second asset.
+
+              This replaced a serif "ESE" over the full name as a subtitle, which
+              was standing in for a logo the repository did not yet have. */}
+          <EseLogo className="cinematic-header__logo" />
         </a>
 
         <nav className="cinematic-header__desktop" aria-label="Primary navigation">

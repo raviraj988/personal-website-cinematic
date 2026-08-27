@@ -35,8 +35,8 @@ export function AmbientLayer({
 
       {marks ? (
         <>
-          <BotanicalMark variant="leaf" className="ambient__mark ambient__mark--a" />
-          <BotanicalMark variant="leaf" className="ambient__mark ambient__mark--b" />
+          <BotanicalMark className="ambient__mark ambient__mark--a" />
+          <BotanicalMark className="ambient__mark ambient__mark--b" />
         </>
       ) : null}
 

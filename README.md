@@ -594,6 +594,51 @@ add alongside them instead.
 - The photograph selection and the image pipeline: `scripts/prepare-images.mjs`.
   Re-run it with `node scripts/prepare-images.mjs` after changing the selection
   or dropping a new archive into `ref_docs/`.
+- The logo assets and the brand pipeline: `scripts/prepare-brand.mjs`. Re-run it
+  with `node scripts/prepare-brand.mjs` after dropping a new kit into
+  `ref_docs/brand/`. Needs `pdftocairo` (`brew install poppler`) — an authoring
+  dependency only; everything it writes is committed, so the build never needs it.
+
+### The logo
+
+The marks come from the Illustrator files in `ref_docs/brand/`, which are PDFs
+with the artwork already outlined, so the site ships real vector rather than
+downscaled PNG exports. `ref_docs/brand/README.md` covers the kit itself — what
+each file is, the palette, and what the brand walkthrough says.
+
+- Components: `src/components/brand/EseMark.tsx` — `EseLogo` (emblem + wordmark),
+  `EseEmblem`, `EseWordmark`, `EseTaglineLockup`.
+- Geometry: `src/components/brand/mark-paths.ts`, generated. Do not edit.
+- Favicon and app icon: `src/app/icon.png`, `src/app/apple-icon.png`, picked up by
+  Next.js file convention. Open Graph card: `public/brand/og-default.png`. All
+  three are composed from the same geometry and colours as the on-page logo.
+
+The mark is coloured in two registers, and the split is the point:
+
+- **Structure follows the page.** The emblem outline, its interior detail and the
+  wordmark are `currentColor` — so one asset is near-white over the photographic
+  hero and forest ink once the header goes solid, riding the colour transition the
+  nav links already animate.
+- **Colour follows the brand.** The emblem's three bands and the wordmark's
+  ampersand take fixed values from `--ese-band-*` in `src/styles/tokens.css`. Each
+  band is one of the three things the shield says ESE protects, so the hues are
+  meaning rather than decoration.
+
+The four interior segments are left undrawn on purpose, so the page shows through
+as the mark's negative space. That is what makes a single asset work on cream, on
+the forest footer, and over a photograph.
+
+`--ese-band-*` are the kit's hues pulled into this site's muted register, not the
+kit's own navy-and-rose — the note in `tokens.css` covers why, why they are flat
+rather than the kit's gradients, and why their measured contrast is left alone.
+`scripts/prepare-brand.mjs` parses those same tokens to colour the rasters, so an
+icon cannot drift from the logo on the page; change a value there and re-run it.
+
+The kit's *unmodified* palette and its three signature gradients are also
+recorded, as `--brand-*` and `--grad-*`. **Those are not the page's colours** —
+the kit specifies navy and sunset tones, the site is built on cream and forest
+green, and that gap is a live design decision, deliberately not settled by adding
+a logo.
 
 ## Committing
 
