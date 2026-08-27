@@ -84,7 +84,7 @@ export async function NewsTeaser() {
 
       <div className="news-teaser__grid">
         <Reveal className="news-teaser__heading" variant="rule">
-          <p className="section-label">08 — {newsTeaser.eyebrow}</p>
+          <p className="section-label">09 — {newsTeaser.eyebrow}</p>
           <ScrollWords as="h2" id="news-teaser-title" text={newsTeaser.heading} />
           <Link className="text-link" href={newsTeaser.cta.href}>
             {newsTeaser.cta.label} <Arrow />

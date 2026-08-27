@@ -322,7 +322,7 @@ export function EseLanding() {
           </Reveal>
           <Reveal className="case-study__copy" delay={140}>
             <p className="section-label section-label--light">
-              05 — {ese.caseStudy.eyebrow}: {ese.caseStudy.label}
+              06 — {ese.caseStudy.eyebrow}: {ese.caseStudy.label}
             </p>
             <ScrollWords as="h2" id="case-title" text={ese.caseStudy.heading} />
             <p>{ese.caseStudy.body}</p>
@@ -353,7 +353,7 @@ export function EseLanding() {
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid">
           <Reveal className="scholarship-band__inner">
-            <p className="section-label">06 — {ese.scholarship.eyebrow}</p>
+            <p className="section-label">07 — {ese.scholarship.eyebrow}</p>
             <ScrollWords as="h2" id="scholarship-title" text={ese.scholarship.heading} />
             <p>{ese.scholarship.body}</p>
             <a className="button" href={ese.scholarship.cta.href}>
@@ -387,7 +387,7 @@ export function EseLanding() {
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid scholarship-band__grid--reverse">
           <Reveal className="scholarship-band__inner">
-            <p className="section-label">07 — {ese.becomePartner.eyebrow}</p>
+            <p className="section-label">08 — {ese.becomePartner.eyebrow}</p>
             <ScrollWords as="h2" id="partner-title" text={ese.becomePartner.heading} />
             <p>{ese.becomePartner.body}</p>
             <a className="button" href={ese.becomePartner.cta.href}>
@@ -417,7 +417,7 @@ export function EseLanding() {
       <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} marks />
         <Reveal className="section-heading-row" variant="rule">
-          <p className="section-label">09 — {ese.tools.eyebrow}</p>
+          <p className="section-label">10 — {ese.tools.eyebrow}</p>
           <ScrollWords as="h2" id="tools-title" text={ese.tools.heading} />
         </Reveal>
 
@@ -461,7 +461,7 @@ export function EseLanding() {
         </div>
 
         <div className="cinematic-footer__cta">
-          <p className="section-label section-label--light">10 — {contact.eyebrow}</p>
+          <p className="section-label section-label--light">11 — {contact.eyebrow}</p>
           <h2>{contact.heading}</h2>
           <p>{contact.copy}</p>
           <a className="footer-button" href={`mailto:${contact.email}`}>
