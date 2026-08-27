@@ -183,11 +183,47 @@ export function EseLanding() {
         </div>
       </section>
 
+      {/* ---------------------------------------------------------- people */}
+      {/*
+        The people, as their own section rather than a coda to "Who we are".
+
+        Each card is the Service Area card — media, description, a link pinned to
+        the foot — so the two card types on the page read as one component.
+        Descriptions come from `people` in lib/data/ese-content.ts and stay empty
+        rather than invented where nothing was supplied.
+      */}
+      <section
+        id="people"
+        className="people-band section-shell"
+        aria-labelledby="people-title"
+        data-scroll-theme="cream"
+      >
+        <AmbientLayer blooms={1} marks />
+
+        <Reveal className="people-group people-group--standalone">
+          <div className="people-group__head">
+            <p className="section-label">03 — {people.eyebrow}</p>
+            <ScrollWords as="h2" id="people-title" text={people.heading} />
+            <p className="people-group__lede">{people.lede}</p>
+          </div>
+
+          <div className="people-group__grid">
+            {people.members.map((person, index) => (
+              <PersonCard key={person.slug} person={person} index={index} />
+            ))}
+          </div>
+
+          <Link className="button" href={people.cta.href}>
+            {people.cta.label} <Arrow />
+          </Link>
+        </Reveal>
+      </section>
+
       {/* --------------------------------------------------- who we serve */}
       <section id="who-we-serve" className="serve-band section-shell" aria-labelledby="serve-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} />
         <Reveal className="serve-band__heading" variant="rule">
-          <p className="section-label">03 — {ese.whoWeServe.eyebrow}</p>
+          <p className="section-label">04 — {ese.whoWeServe.eyebrow}</p>
           <ScrollWords as="h2" id="serve-title" text={ese.whoWeServe.heading} />
         </Reveal>
         <div className="serve-band__body">
@@ -230,7 +266,7 @@ export function EseLanding() {
       <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="cream">
         <AmbientLayer blooms={2} marks />
         <Reveal className="section-heading-row" variant="rule">
-          <p className="section-label">04 — {ese.services.eyebrow}</p>
+          <p className="section-label">05 — {ese.services.eyebrow}</p>
           <ScrollWords as="h2" id="services-title" text={ese.services.heading} />
         </Reveal>
 
@@ -299,7 +335,21 @@ export function EseLanding() {
       </section>
 
       {/* ----------------------------------------------------- scholarship */}
-      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="cream">
+      {/*
+        Forest, not cream. 05, 06 and 07 were three cream sections in a row, which
+        flattened the middle of the page.
+
+        Note what this does rather than what it fixes: the case study above is also
+        forest, so these two now read as one longer dark passage before the page
+        returns to cream at 07. That is a deliberate hold, not alternation.
+
+        Nothing else here changes. `data-scroll-theme` drives the whole inversion:
+        the label picks up `--color-accent-light`, the heading and body take paper
+        and soft white through `--ink` / `--ink-muted`, and the photograph swaps its
+        drop shadow for the light ring the dark grounds use — a shadow is invisible
+        on forest, so separation has to come from light instead.
+      */}
+      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="forest">
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid">
           <Reveal className="scholarship-band__inner">
@@ -362,47 +412,12 @@ export function EseLanding() {
       {/* ------------------------------------------------------------ news */}
       <NewsTeaser />
 
-      {/* ---------------------------------------------------------- people */}
-      {/*
-        The people, as their own section rather than a coda to "Who we are".
-
-        Each card is the Service Area card — media, description, a link pinned to
-        the foot — so the two card types on the page read as one component.
-        Descriptions come from `people` in lib/data/ese-content.ts and stay empty
-        rather than invented where nothing was supplied.
-      */}
-      <section
-        id="people"
-        className="people-band section-shell"
-        aria-labelledby="people-title"
-        data-scroll-theme="cream"
-      >
-        <AmbientLayer blooms={1} marks />
-
-        <Reveal className="people-group people-group--standalone">
-          <div className="people-group__head">
-            <p className="section-label">09 — {people.eyebrow}</p>
-            <ScrollWords as="h2" id="people-title" text={people.heading} />
-            <p className="people-group__lede">{people.lede}</p>
-          </div>
-
-          <div className="people-group__grid">
-            {people.members.map((person, index) => (
-              <PersonCard key={person.slug} person={person} index={index} />
-            ))}
-          </div>
-
-          <Link className="button" href={people.cta.href}>
-            {people.cta.label} <Arrow />
-          </Link>
-        </Reveal>
-      </section>
 
       {/* ----------------------------------------------------------- tools */}
       <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="cream">
         <AmbientLayer blooms={1} marks />
         <Reveal className="section-heading-row" variant="rule">
-          <p className="section-label">10 — {ese.tools.eyebrow}</p>
+          <p className="section-label">09 — {ese.tools.eyebrow}</p>
           <ScrollWords as="h2" id="tools-title" text={ese.tools.heading} />
         </Reveal>
 
@@ -446,7 +461,7 @@ export function EseLanding() {
         </div>
 
         <div className="cinematic-footer__cta">
-          <p className="section-label section-label--light">11 — {contact.eyebrow}</p>
+          <p className="section-label section-label--light">10 — {contact.eyebrow}</p>
           <h2>{contact.heading}</h2>
           <p>{contact.copy}</p>
           <a className="footer-button" href={`mailto:${contact.email}`}>

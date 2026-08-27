@@ -1279,7 +1279,10 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .selected-work-grid { grid-template-columns: 1fr; }
   .work-card:last-child { grid-column: auto; width: auto; }
   .cinematic-footer { padding-right: 1.5rem; padding-left: 1.5rem; }
-  .cinematic-footer__visual { height: 31rem; }
+  /* Scaled with the base: 31rem was ~65% of the old 48rem ceiling, and left at
+     31rem it would sit almost on top of the new 34rem one, undoing the change on
+     every phone. */
+  .cinematic-footer__visual { height: 22rem; }
   /* Anchored to both edges rather than the right, so the line keeps its measure
      instead of being squeezed into a column by the 30ch cap. */
   .cinematic-footer__visual > p { right: 1.5rem; left: 1.5rem; }
@@ -2359,7 +2362,11 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 .scholarship-band__inner p:not(.section-label) {
   margin-top: 1.5rem;
   margin-bottom: 1.75rem;
-  color: var(--color-text-muted);
+  /* `--ink-muted` first: this band renders on the forest ground now, where the
+     light-ground #596159 is very nearly invisible. The theme sets `--ink-muted`
+     per ground, and the fallback keeps this correct if the band ever moves back
+     onto cream. */
+  color: var(--ink-muted, var(--color-text-muted));
   font-size: var(--type-body-md);
   line-height: 1.68;
 }
@@ -2433,8 +2440,13 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
  * corner. */
 .cinematic-footer__visual {
   position: relative;
+  /* Width stays on `--container` deliberately. `.principle-band__frame` is capped
+     to the same value so the two photographs share an edge on a wide screen and
+     the green field around them reads as one margin — narrowing only this one
+     would break that alignment silently. The photograph is made smaller by
+     height instead, which is also what gives back the most green. */
   width: min(100%, var(--container));
-  height: clamp(24rem, 56vw, 48rem);
+  height: clamp(19rem, 40vw, 34rem);
   margin: 0 auto clamp(6rem, 10vw, 9rem);
   overflow: hidden;
 }
