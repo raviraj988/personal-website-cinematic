@@ -306,38 +306,6 @@
   inset: 0;
 }
 
-/* --------------------------------------- the portrait video in section 04
- *
- * Replaces the 4:3 photographic plate with a 9:16 frame matching the footage.
- *
- * The aspect is the whole point. The master is 1080x1920 and the frame is 9:16,
- * so `object-fit: cover` has nothing to remove — the video is shown entire, at
- * native resolution. Any other frame shape would crop it, and a 16:9 one would
- * cost 68% of the picture.
- *
- * Height is capped rather than left to the column width, because 9:16 grows fast:
- * at the media column's ~425px the frame would run past 750px tall and tower over
- * the six-row index beside it. The cap keeps the two columns in proportion and
- * the width follows from it. */
-/* The doubled class is load-bearing, not a typo.
- *
- * `globals.css` sets `.serve-band__media figure { aspect-ratio: 4 / 3 }` for the
- * photographic plate this replaces. That selector and a single-class version of
- * this one both score (0,1,1), and `globals.css` imports THIS file on its line 5
- * — so its own rules come later and win the tie. The figure stayed 4:3 and
- * `object-fit: cover` cropped the 9:16 video into a landscape box, which is the
- * opposite of the one thing this placement exists to do.
- *
- * Repeating the class takes it to (0,2,1) and settles it on specificity, so it no
- * longer depends on which file is imported where. Same fix as
- * `.lede-hero .video-backdrop` above, same underlying trap. */
-.serve-band__media.serve-band__media--video figure {
-  aspect-ratio: 9 / 16;
-  /* Width derived from the height cap, so the cap is what actually binds. */
-  width: min(100%, calc(min(72vh, 40rem) * 9 / 16));
-  margin-inline: auto;
-}
-
 /* ------------------------------------------- the mission scrim, over video
  *
  * `globals.css` tunes `.principle-band__scrim` for a PHOTOGRAPH: two stacked
@@ -432,6 +400,56 @@
   .principle-band .principle-band__frame {
     aspect-ratio: 16 / 9;
     align-self: center;
+  }
+}
+
+/* ------------------------------------------------- the video bands on mobile
+ *
+ * Both video surfaces are laid out for a wide screen, and both fail on a phone
+ * in ways that only show up once the columns collapse.
+ *
+ * MISSION. The frame stretches to `min-height: 100svh`, so on a 390x844 phone it
+ * is a ~378x820 PORTRAIT box holding a 16:9 video under `object-fit: contain`.
+ * That fills 26% of its height and leaves 607px of empty green. The 16:9 frame
+ * rule that fixes this on desktop is `min-width: 60rem`, so it never applied
+ * where the problem is worst.
+ *
+ * The fix is not `cover` — that would crop, which is the one thing this band is
+ * explicitly not allowed to do. Instead the video stops being a BACKGROUND on
+ * mobile and becomes a block: a 16:9 strip at the top of the frame, filling it
+ * exactly, with the copy in normal flow underneath on the forest ground. Nothing
+ * is cropped and nothing is letterboxed, because the box finally matches the
+ * footage.
+ *
+ * The scrim goes with it. Its whole job is making text legible ON the video; with
+ * the copy no longer over the video it would only be dimming the picture. */
+@media (max-width: 60rem) {
+  section.principle-band {
+    /* Nothing left to stretch to fill — the height now follows the content. */
+    min-height: 0;
+  }
+
+  .principle-band .principle-band__frame {
+    /* Was `end start`, which parked the copy in the foot of a full-height box.
+       Rows now stack from the top: video, then copy. */
+    align-content: start;
+    justify-content: stretch;
+    padding: 0;
+  }
+
+  /* `position: relative` is what turns it from an overlay into a grid row. */
+  .principle-band__frame .video-backdrop {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .principle-band__frame .principle-band__scrim {
+    display: none;
+  }
+
+  .principle-band .principle-band__content {
+    padding: clamp(1.5rem, 5vw, 2rem);
   }
 }
 

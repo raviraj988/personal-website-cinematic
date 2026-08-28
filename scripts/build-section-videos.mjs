@@ -60,15 +60,6 @@ const CLIPS = [
      never crossfades. */
   { id: "hero-1", file: "20732245-uhd_4096_2160_30fps.mp4", start: 2, seconds: 12, tier: "hero" },
 
-  // ---- 04 who we serve: a portrait figure, not a full-bleed ground.
-  /* UNCROPPED. The master is 1080x1920, which is exactly 9:16, so the "tall"
-     rendition is the whole frame at native resolution — `fit()` reports no
-     downscale because 1080 is under the 1440 cap. This is the one placement
-     where this clip is at its best: it was removed from the mission band because
-     a 16:9 cut left it at 1080x608, and the fix was never a better encode, it was
-     a frame shaped like the footage. */
-  { id: "serve-1", file: "10348654-hd_1080_1920_30fps.mp4", start: 4, seconds: 12, renditions: ["tall"] },
-
   // ---- mission: one clip, looping.
   /* A single clip rather than a cycle, so `VideoBackdrop` sets `loop` on it and
      never crossfades. 12s at 0.5x plays for 24 real seconds before it repeats,

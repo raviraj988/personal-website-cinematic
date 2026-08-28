@@ -194,6 +194,17 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   .text-card::before { transition: none !important; }
 }
 
+/* The lede that now sits above section 01's cards — the section's opening
+   paragraph, lifted out of the card stack so the cards carry short statements
+   rather than full paragraphs. */
+.org-intro__lede {
+  max-width: 54ch;
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
 /* ---------------------------------------------------------- the text cards
  *
  * Prose given card surfaces, in sections 01 and 02.
@@ -222,25 +233,36 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   padding: clamp(1.1rem, 2vw, 1.5rem);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--card-radius);
-  /* The navigation's glass, so the two surfaces read as one material.
+  /* `--color-forest` (#173d2a) — the palette's own mid green, one step up from
+   * the `--color-forest-deep` these sit on.
    *
-   * The colour is the header's exactly — forest ink, `rgba(28, 48, 37, ...)` —
-   * but at the header's FALLBACK opacity (0.62) rather than the 0.28 it uses
-   * over the hero. That is not a liberty; 0.28 works on the header because it
-   * floats over a photograph, and these sit on flat `--color-forest-deep`, which
-   * is the same hue. Composited over it, 0.28 lands within 4/255 of the section
-   * background and the cards simply vanish. Same colour, opacity that survives
-   * the ground it is actually on.
+   * Chosen by measurement rather than eye. The card has to separate from its
+   * ground, and the previous value (the header's forest ink) did not:
    *
-   * The blur is carried across too, so where an `AmbientLayer` bloom passes
-   * behind a card it diffuses exactly as it does behind the nav. */
-  background: rgba(28, 48, 37, 0.62);
+   *   header ink  rgba(28,48,37,.62) -> composites to (23,45,32)  1.08x the ground
+   *   this        rgba(23,61,42,.88) -> composites to (22,59,40)  1.29x
+   *
+   * 1.08x is a card you have to look for. The header's ink works on the header
+   * because it sits over a photograph; over a flat green of nearly the same value
+   * it has almost nothing to separate from. Staying inside the same hue family
+   * is what keeps it harmonious — this is lighter, not different.
+   *
+   * Paper text on it measures 12.2:1 and `--color-accent-light` 7.1:1, so the
+   * lift costs nothing in legibility.
+   *
+   * A little translucency is kept so the blur still has something to do where an
+   * `AmbientLayer` bloom passes behind a card. */
+  background: rgba(23, 61, 42, 0.88);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
   backdrop-filter: blur(10px) saturate(115%);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
     border-color var(--motion-ui) var(--ease-out-expo),
-    background-color var(--motion-ui) var(--ease-out-expo);
+    background-color var(--motion-ui) var(--ease-out-expo),
+    /* Colour is transitioned too. Without it the type snaps from paper to ink
+       while the ground fades under it, and for ~300ms the card shows dark text
+       on a still-dark background. */
+    color var(--motion-ui) var(--ease-out-expo);
 }
 
 /* The seam, in the light accent rather than the dark one — `--color-accent`
@@ -260,15 +282,47 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   pointer-events: none;
 }
 
+/* Hover flips the card to cream — the header's `--solid` ground, which is also
+ * the ground of the people band below.
+ *
+ * THE BACKGROUND CANNOT FLIP ALONE. These cards sit on forest, so their type is
+ * `--color-paper`; cream under near-white text is the one combination that
+ * cannot work, and it is the same trade the header documents for why its own
+ * over-hero state is dark rather than light. Going cream means going to ink.
+ *
+ * Done by re-theming rather than recolouring. The section sets `--ink`,
+ * `--ink-muted`, `--rule` and `--label-color`, and everything inside reads those;
+ * redefining the four on the hovered card makes its heading, paragraph and rules
+ * all follow with no element-by-element overrides, and it stays correct if the
+ * card ever gains new content.
+ *
+ * `0.96`, matching `.cinematic-header--solid` exactly rather than rounding to a
+ * flat cream — the sliver of translucency is what keeps it reading as the same
+ * glass as the nav.
+ *
+ * Contrast after the flip is the site's own primary pairing: ink on cream, and
+ * `--color-accent` on cream at 8.26:1 for the number and seam. */
 @media (hover: hover) {
   .text-card:hover {
     transform: translateY(-0.3rem);
-    border-color: rgba(255, 255, 255, 0.3);
-    /* Lifts within the same colour rather than washing white over it. */
-    background: rgba(34, 57, 44, 0.74);
+    background: rgba(248, 245, 236, 0.96);
+    border-color: var(--color-line);
+    --ink: var(--color-ink);
+    --ink-muted: var(--color-text-muted);
+    --rule: var(--color-line);
+    --label-color: var(--color-accent);
+    color: var(--ink);
   }
+
+  /* These two name `--color-accent-light` directly rather than reading a theme
+     variable, so re-theming above does not reach them. */
+  .text-card:hover .text-card__num {
+    color: var(--color-accent);
+  }
+
   .text-card:hover::before {
     transform: scaleY(1);
+    background: var(--color-accent);
   }
 }
 

@@ -103,18 +103,34 @@ export function EseLanding() {
           <Reveal className="org-intro__copy">
             <p className="section-label section-label--light">01 — {ese.intro.eyebrow}</p>
             <ScrollWords as="h2" id="about-title" text={ese.intro.heading} />
-            {/* The section's own two paragraphs, given card surfaces.
-                Same copy as before — this splits what was one wall of prose into
-                two distinct statements, which is what it already was. */}
+            {/* The opening paragraph runs as prose above the cards; the second
+                is split at its sentence break into two short cards.
+
+                Both halves of that are about card LENGTH. Holding the whole
+                section in two cards made each one a six-line block of body copy,
+                which is a paragraph with a border round it rather than a card.
+                Lifting the first paragraph out gives the section a lede, and
+                splitting the second gives two cards of roughly thirty words each.
+
+                No copy is written or altered here — this is the same text, cut at
+                a full stop the author already put there. `intro.paragraphs` stays
+                the single source; if a third paragraph is ever added it lands in
+                the cards automatically. */}
+            <p className="org-intro__lede">{ese.intro.paragraphs[0]}</p>
+
             <div className="text-cards">
-              {ese.intro.paragraphs.map((paragraph, index) => (
-                <div className="text-card" key={paragraph} style={{ "--i": index } as CSSProperties}>
-                  <span className="text-card__num" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p>{paragraph}</p>
-                </div>
-              ))}
+              {ese.intro.paragraphs
+                .slice(1)
+                .flatMap((paragraph) => paragraph.split(/(?<=\.)\s+/))
+                .filter(Boolean)
+                .map((sentence, index) => (
+                  <div className="text-card" key={sentence} style={{ "--i": index } as CSSProperties}>
+                    <span className="text-card__num" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p>{sentence}</p>
+                  </div>
+                ))}
             </div>
           </Reveal>
 
@@ -283,14 +299,14 @@ export function EseLanding() {
               ))}
             </ol>
           </Reveal>
-          {/* A portrait video in place of the plate.
-              Uncropped and native: the master is 1080x1920, the frame is 9:16, so
-              the whole picture is used at full resolution. `orientation="tall"`
-              stops the component swapping to a 16:9 cut on wide screens — the
-              frame's shape governs here, not the viewport's. */}
-          <Reveal className="serve-band__media serve-band__media--video" delay={120}>
+          <Reveal className="serve-band__media" delay={120}>
             <figure className="photo-frame photo-frame--plate">
-              <VideoBackdrop clips={["serve-1"]} rate={0.6} orientation="tall" />
+              <ParallaxImage
+                src={ese.whoWeServe.image.src}
+                alt={ese.whoWeServe.image.alt}
+                sizes="(min-width: 960px) 38vw, 92vw"
+                zoom="in"
+              />
             </figure>
           </Reveal>
         </div>
