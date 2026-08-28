@@ -1,0 +1,25 @@
+# Vercel reads THIS file, not `.gitignore` — a distinction that cost a failed
+# deploy. Without it the CLI uploaded 633MB and was rejected for a single file
+# over the 100MB limit: `videos/360527.mp4` is 123.8MB.
+#
+# `videos/` is the master footage folder. It is gitignored AND must be listed
+# again here. Nothing in it is served — `scripts/build-section-videos.mjs`
+# transcodes it into `public/video/`, and only that ships.
+videos/
+
+# Build output and VCS history. Vercel builds from source; uploading a local
+# `.next` both wastes the upload and risks a stale artefact being used.
+.next/
+.git/
+
+node_modules
+*.log
+.DS_Store
+
+# Source material and archives. None of it is imported by the app; it was adding
+# ~101MB to every upload.
+ref_docs/
+*.zip
+
+# Scratch and local env
+.env*.local

@@ -222,7 +222,21 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   padding: clamp(1.1rem, 2vw, 1.5rem);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--card-radius);
-  background: rgba(255, 255, 255, 0.05);
+  /* The navigation's glass, so the two surfaces read as one material.
+   *
+   * The colour is the header's exactly — forest ink, `rgba(28, 48, 37, ...)` —
+   * but at the header's FALLBACK opacity (0.62) rather than the 0.28 it uses
+   * over the hero. That is not a liberty; 0.28 works on the header because it
+   * floats over a photograph, and these sit on flat `--color-forest-deep`, which
+   * is the same hue. Composited over it, 0.28 lands within 4/255 of the section
+   * background and the cards simply vanish. Same colour, opacity that survives
+   * the ground it is actually on.
+   *
+   * The blur is carried across too, so where an `AmbientLayer` bloom passes
+   * behind a card it diffuses exactly as it does behind the nav. */
+  background: rgba(28, 48, 37, 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(10px) saturate(115%);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
     border-color var(--motion-ui) var(--ease-out-expo),
@@ -250,7 +264,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   .text-card:hover {
     transform: translateY(-0.3rem);
     border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.08);
+    /* Lifts within the same colour rather than washing white over it. */
+    background: rgba(34, 57, 44, 0.74);
   }
   .text-card:hover::before {
     transform: scaleY(1);
