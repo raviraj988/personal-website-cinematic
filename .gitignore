@@ -38,3 +38,13 @@ ESE*-*-001.zip
 .vercel
 .env*
 !.env.local.example
+
+# The 430MB of master footage supplied for the section backdrops. This is the
+# SOURCE folder, not an asset folder — nothing here is served.
+# `scripts/build-section-videos.mjs` transcodes it into `public/video/`, and it is
+# `public/video/` that ships (17MB, committed). Keeping the masters out of git is
+# deliberate: they are an order of magnitude larger than the entire rest of the
+# repository and would be carried in every clone forever.
+# Anyone re-running the build script needs this folder restored from wherever the
+# footage was originally licensed.
+videos/

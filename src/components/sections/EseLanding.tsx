@@ -6,6 +6,8 @@ import { EseLogo } from "@/components/brand/EseMark";
 import { Arrow } from "@/components/ui/Arrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
+import { VideoBackdrop } from "@/components/motion/VideoBackdrop";
+import { ScrollDissolve } from "@/components/motion/ScrollDissolve";
 import { ScrollWords } from "@/components/motion/ScrollWords";
 import { NewsTeaser } from "@/components/news/NewsTeaser";
 import { PersonCard } from "@/components/people/PersonCard";
@@ -58,15 +60,24 @@ export function EseLanding() {
            so this section sets its own light ink. See the note in globals.css. */
         data-ink="own"
       >
-        <ParallaxImage
-          className="lede-hero__media"
-          src={hero.image.src}
-          alt={hero.image.alt}
-          sizes="100vw"
-          zoom="out"
-          priority
+        {/* Three landscape clips, cycling at 0.62x. `eager` because this is
+            above the fold — the lazy default would show the poster first and
+            then visibly swap.
+
+            Slower than the section backdrops would be wrong here: the hero is
+            looked at directly rather than read over, and below about 0.6x the
+            30fps masters start to judder on a moving horizon. */}
+        <VideoBackdrop
+          clips={["hero-1"]}
+          rate={0.62}
+          crossfade={1.8}
+          eager
         />
         <div className="lede-hero__scrim" aria-hidden="true" />
+
+        {/* The cinematic part: the hero erodes upward into the page as it
+            leaves, rather than sliding away intact. */}
+        <ScrollDissolve target="#top" />
 
         <div className="lede-hero__grid">
           <div className="lede-hero__copy">
@@ -92,9 +103,19 @@ export function EseLanding() {
           <Reveal className="org-intro__copy">
             <p className="section-label section-label--light">01 — {ese.intro.eyebrow}</p>
             <ScrollWords as="h2" id="about-title" text={ese.intro.heading} />
-            {ese.intro.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            {/* The section's own two paragraphs, given card surfaces.
+                Same copy as before — this splits what was one wall of prose into
+                two distinct statements, which is what it already was. */}
+            <div className="text-cards">
+              {ese.intro.paragraphs.map((paragraph, index) => (
+                <div className="text-card" key={paragraph} style={{ "--i": index } as CSSProperties}>
+                  <span className="text-card__num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p>{paragraph}</p>
+                </div>
+              ))}
+            </div>
           </Reveal>
 
           {/* A real photograph of a real ESE session. People are visible, so it
@@ -120,9 +141,20 @@ export function EseLanding() {
           <Reveal className="network-band__copy">
             <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
-            {ese.whoWeAre.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            {/* Two sentences, two cards. The source document's whole of "Who We
+                Are" is these two lines — see the TODO in `ese-content.ts`. Giving
+                each its own surface makes that read as deliberate brevity rather
+                than as a section that trailed off. */}
+            <div className="text-cards">
+              {ese.whoWeAre.body.map((paragraph, index) => (
+                <div className="text-card" key={paragraph} style={{ "--i": index } as CSSProperties}>
+                  <span className="text-card__num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p>{paragraph}</p>
+                </div>
+              ))}
+            </div>
           </Reveal>
 
           {/* Another real photograph — an ESE session, people visible. */}
@@ -163,13 +195,12 @@ export function EseLanding() {
         {/* The photograph sits inside a frame so the forest ground shows as a
             thin border around it, rather than bleeding to the viewport edge. */}
         <div className="principle-band__frame">
-          <ParallaxImage
-            src={ese.mission.image.src}
-            alt=""
-            sizes="100vw"
-            zoom="out"
-            intensity="soft"
-          />
+          {/* Was a single parallax photograph. Three clips now cross-dissolve
+              here at half speed — the section had a whole viewport and one still
+              image in it, which is the case a moving ground is actually for.
+              `ese.mission.image` is still in the content file and is no longer
+              read; the poster comes from the first clip. */}
+          <VideoBackdrop clips={["mission-1"]} rate={1} orientation="wide" />
           <div className="principle-band__scrim" />
           <Reveal className="principle-band__content">
             {/* The rule and the copy sit in the foot of the frame, so the top two
@@ -236,27 +267,30 @@ export function EseLanding() {
             `--i` in CSS, which also lets the rule under each row wipe in — a
             per-row transition the old markup had nowhere to hang.
           */}
-          <Reveal className="serve-index">
+          {/* Six cards rather than six rules-under-rows. Same numbered-index
+              language, same single reveal driving a `--i` stagger; what changes is
+              that each audience now reads as its own constituency instead of a
+              line to scan past. */}
+          <Reveal className="audience-cards">
             <ol>
               {ese.whoWeServe.audiences.map((audience, index) => (
                 <li key={audience} style={{ "--i": index } as CSSProperties}>
-                  <span className="serve-index__num" aria-hidden="true">
+                  <span className="audience-card__num" aria-hidden="true">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="serve-index__name">{audience}</span>
-                  <span className="serve-index__rule" aria-hidden="true" />
+                  <span className="audience-card__name">{audience}</span>
                 </li>
               ))}
             </ol>
           </Reveal>
-          <Reveal className="serve-band__media" delay={120}>
+          {/* A portrait video in place of the plate.
+              Uncropped and native: the master is 1080x1920, the frame is 9:16, so
+              the whole picture is used at full resolution. `orientation="tall"`
+              stops the component swapping to a 16:9 cut on wide screens — the
+              frame's shape governs here, not the viewport's. */}
+          <Reveal className="serve-band__media serve-band__media--video" delay={120}>
             <figure className="photo-frame photo-frame--plate">
-              <ParallaxImage
-                src={ese.whoWeServe.image.src}
-                alt={ese.whoWeServe.image.alt}
-                sizes="(min-width: 960px) 38vw, 92vw"
-                zoom="in"
-              />
+              <VideoBackdrop clips={["serve-1"]} rate={0.6} orientation="tall" />
             </figure>
           </Reveal>
         </div>
@@ -291,6 +325,7 @@ export function EseLanding() {
                     </span>
                   </h3>
                   <p>{service.description}</p>
+
                   {/* Pushed to the foot of the card by `margin-top: auto`, so the
                       five buttons sit on one line regardless of how much
                       description each service has. */}

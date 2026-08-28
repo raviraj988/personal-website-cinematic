@@ -46,6 +46,32 @@
    * one is ambient. A single mid-sized shadow reads as a drop shadow; the pair
    * reads as a photograph resting on paper. */
   --frame-radius: 3px;
+
+  /* Card corners.
+   *
+   * A corner you can see, deliberately. This was 6px, chosen so the rounding
+   * would not announce itself against an editorial layout built on hairlines and
+   * hard column edges — but at a card's actual size, roughly 380px across in the
+   * three-up grid, 6px on a 1px hairline is invisible. The cards read as square
+   * boxes, which is not softening the corner, it is doing nothing.
+   *
+   * 14px is the value where the curve registers at a glance without turning a
+   * card into an app tile. The distinction the old note was protecting is real
+   * and still holds — the ceiling is somewhere near 20px, past which these stop
+   * looking like plates on a page — but 6px was well under the floor.
+   *
+   * `--frame-radius` stays at 3px and is NOT scaled with this. A standalone
+   * photograph is not a card: its 3px only exists to stop a soft image looking
+   * mechanically cut, and curving it further would read as a filter applied to
+   * the picture.
+   *
+   * The media block at the head of a card takes `--card-radius-inner`, NOT this.
+   * It sits inside the card's 1px border, so its corner has to be 1px tighter to
+   * stay concentric — matched radii make the photograph look like it is bulging
+   * past the card's own corner. The gap matters more at 14px than it did at 6px,
+   * where both were small enough for the error to hide. */
+  --card-radius: 14px;
+  --card-radius-inner: calc(var(--card-radius) - 1px);
   --frame-shadow:
     0 1px 2px rgba(14, 39, 25, 0.07),
     0 0.75rem 1.75rem -0.75rem rgba(14, 39, 25, 0.26);

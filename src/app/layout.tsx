@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Newsreader } from "next/font/google";
 import { site } from "@/lib/data/ese-content";
 import { SEARCH_ENGINE_INDEXING } from "@/lib/blog/config";
+import { LoadingCover } from "@/components/motion/LoadingCover";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import "./globals.css";
 
 /**
@@ -91,7 +93,23 @@ export default function RootLayout({
       className={`${newsreader.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        {/*
+          Both mounted here rather than per-page, and both render no markup of
+          their own except the curtain itself.
+
+          The curtain is FIRST in the body so it exists in the server HTML — a
+          cover that mounts after hydration is not a cover, it is a flash of the
+          page followed by something dropping over it. It removes itself; see the
+          three independent guarantees in the component.
+
+          `SmoothScroll` owns the single Lenis instance and the GSAP ticker
+          binding for the whole site. It must not be mounted twice.
+        */}
+        <LoadingCover />
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }

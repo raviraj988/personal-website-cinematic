@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Arrow } from "@/components/ui/Arrow";
 import { formatPostDate, machineDate } from "@/lib/blog/format";
@@ -17,14 +18,24 @@ import type { NewsletterSummary } from "@/lib/news/queries";
 export function NewsletterCard({
   issue,
   sizes,
+  index = 0,
 }: {
   issue: NewsletterSummary;
   sizes: string;
+  /**
+   * Position in its grid, which becomes the card's stagger step — see the
+   * `card-rise` note in `globals.css`. Defaults to 0, so a card rendered on its
+   * own simply arrives without a delay.
+   */
+  index?: number;
 }) {
   const issued = formatPostDate(issue.issue_date);
 
   return (
-    <article className="newsletter-card">
+    <article
+      className="newsletter-card"
+      style={{ "--i": index } as CSSProperties}
+    >
       {issue.cover_image_url ? (
         <div className="newsletter-card__media photo-frame">
           <Image

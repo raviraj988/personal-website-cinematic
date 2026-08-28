@@ -586,6 +586,14 @@ add alongside them instead.
   `src/lib/news/config.ts`
 - Design tokens: `src/styles/tokens.css`
 - Layout and responsive styling: `src/app/globals.css`
+- Cards: the "card edges", "card seam" and "card arrival" blocks in `globals.css`.
+  Corners come from `--card-radius`, and a card's media block takes
+  `--card-radius-inner` so it stays concentric inside the 1px border. Two things
+  there are load-bearing and easy to undo by accident: cards must keep
+  `overflow: visible` (they would otherwise clip the `outline-offset: 4px` focus
+  ring of every link inside them), and the arrival animation moves `translate`
+  rather than `transform`, so it cannot strand the hover lift. Both are commented
+  at the rules.
 - News & Updates styling: `src/styles/news.css`
 - Motion primitives: `src/components/motion/`
 - Shared scroll loop and reduced-motion watcher: `src/lib/scroll.ts`

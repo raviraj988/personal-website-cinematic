@@ -1,4 +1,11 @@
 @import "../styles/tokens.css";
+/* The cinematic layer — curtain, hero video and dissolve, pinned stack. Global
+   rather than per-route: the curtain and the smooth-scroll provider are mounted
+   from the root layout and apply to every page. */
+@import "../styles/motion.css";
+/* Card surfaces for content that was plain text or a plain list. Global, since
+   the landing page and /people both use them. */
+@import "../styles/cards.css";
 
 *,
 *::before,
@@ -1361,6 +1368,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   }
   .serve-index__rule { transform: scaleX(1) !important; transition: none !important; }
 
+
   /* People cards settle with no stagger, lift, or drawn seam. */
   .person-card,
   html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
@@ -1474,6 +1482,131 @@ footer[data-scroll-theme="pine"] .photo-frame--plate {
     0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.6);
 }
 
+/* --------------------------------------------------------------- card edges
+ *
+ * All four card families rounded from one token. The selector for each is
+ * whichever element actually draws the border and background, which is not the
+ * same element in every family: `.work-card`, `.newsletter-card` and
+ * `.person-card` draw their own, while `.service-card` is the grid item and
+ * draws them on its inner `article`.
+ *
+ * `.founder-card` is deliberately absent. It is a two-column grid with a
+ * `border-top` rule and no box of its own, so it has no corners to round. */
+.work-card,
+.newsletter-card,
+.person-card,
+.service-card article {
+  border-radius: var(--card-radius);
+}
+
+/* The media block at the head of each card, rounded on its TOP corners only —
+ * the body below it carries the bottom two, which the card's own radius clips.
+ *
+ * Compound selectors because every one of these also carries `.photo-frame`,
+ * which sets the flat 3px `--frame-radius` for standalone figures. Two single
+ * classes on one element would leave source order to decide it; `0,2,0` settles
+ * it regardless of where this block sits in the file.
+ *
+ * No `overflow: hidden` is added anywhere here, deliberately. It would be the
+ * obvious way to clip the photograph to the card, but `:focus-visible` on this
+ * site draws a 2px outline at `outline-offset: 4px` — entirely OUTSIDE the
+ * element — so a card clipping its own overflow would swallow the focus ring of
+ * every link inside it. Each media block already clips its own overflow, via
+ * `.photo-frame` or its own rule, which is the right scope for it. */
+.work-card__media.photo-frame,
+.newsletter-card__media.photo-frame,
+.person-card__media.photo-frame,
+.service-card__media.photo-frame,
+.person-card__media--monogram {
+  border-radius: var(--card-radius-inner) var(--card-radius-inner) 0 0;
+}
+
+/* ------------------------------------------------------------- the card seam
+ *
+ * A 2px rule in the accent, on the boundary between a card's photograph and its
+ * body, drawn in from the left on hover.
+ *
+ * `.person-card` has had this since the people page was built and it is the best
+ * gesture any card on the site makes — it reads as a deliberate mark rather than
+ * a generic highlight, and it gives the hover somewhere to resolve to besides
+ * the lift. This extends it to the other three families so the cards behave as
+ * one system. The person card keeps its own copy in `people.css`, whose media is
+ * a 2:3 portrait and wants a slower sweep.
+ *
+ * A pseudo-element on the MEDIA block, not the card, so it is anchored to the
+ * boundary by construction rather than by a measured offset. Every one of these
+ * blocks is `position: relative` and clips its own overflow already.
+ *
+ * `scaleX` from `transform-origin: left` is a composited transform, so the sweep
+ * costs no layout. It sits above the photograph's own `::after` gradient. */
+.work-card__media::before,
+.newsletter-card__media::before,
+.service-card__media::before {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms var(--ease-out-expo);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .work-card:hover .work-card__media::before,
+  .newsletter-card:hover .newsletter-card__media::before,
+  .service-card:hover .service-card__media::before {
+    transform: scaleX(1);
+  }
+}
+
+/* Unguarded, like every other `:focus-within` on this page: a keyboard user has
+   no pointer for the media query to test. */
+.work-card:focus-within .work-card__media::before,
+.newsletter-card:focus-within .newsletter-card__media::before,
+.service-card:focus-within .service-card__media::before {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------ card arrival, indexed
+ *
+ * A staggered rise for the blog and news index grids, which had no entrance at
+ * all — their cards simply existed on load while every other card group on the
+ * site arrives. The landing page's service cards and the people cards already
+ * have scroll-triggered reveals of their own and are untouched here.
+ *
+ * No `IntersectionObserver` and no `Reveal` wrapper, because both index grids
+ * sit at the top of their page and are on screen the moment it loads. Observing
+ * something already in view only adds a frame of delay and a DOM wrapper.
+ *
+ * It animates `translate`, NOT `transform`, and that is the load-bearing detail.
+ * These cards lift on hover via `transform`, and an animation with a fill mode
+ * keeps applying its final keyframe forever — so animating `transform` here
+ * would win against the hover transition and the lift would silently stop
+ * working once the entrance finished. `translate` is an independent property, so
+ * the two compose instead of fighting.
+ *
+ * `prefers-reduced-motion` is already handled: the global block near the foot of
+ * this file forces `animation-duration` to 0.01ms, so these appear at once. */
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.selected-work-grid > .work-card,
+.newsletter-grid > .newsletter-card {
+  animation: card-rise 620ms var(--ease-out-expo) both calc(var(--i, 0) * 70ms);
+}
 
 /* A card's photograph comes forward on hover.
  *

@@ -1,0 +1,484 @@
+/* ==========================================================================
+   Motion — the cinematic layer
+   ==========================================================================
+
+   Four effects adapted from the reference this pass was briefed against. They
+   are reimplemented rather than ported: that site is a WordPress theme running
+   GSAP + Lenis + Splide + Alpine against Tailwind utility classes, and this one
+   is an editorial layout with its own tokens and its own scroll loop. What
+   carried over is the technique — a masked hero, a parted curtain, a pinned
+   panel stack — not any of its code or assets.
+
+   EVERY EFFECT IN THIS FILE HAS TO SURVIVE THREE FAILURES:
+     no JavaScript      the page is complete and readable without it;
+     reduced motion     the effect is removed, not merely slowed;
+     no GSAP            nothing here is the only way to reach any content.
+   ========================================================================== */
+
+/* ------------------------------------------------------------ the curtain */
+
+.loading-cover {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  /* Not interactive at any point in its life, including mid-animation — a
+     curtain that eats a click on the header underneath it is a bug even if it
+     is about to disappear. */
+  pointer-events: none;
+}
+
+.loading-cover__half {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50.5%;
+  background: var(--color-forest-deep);
+}
+
+/* The half-percent overlap above is deliberate. Two elements meeting at exactly
+   50% leave a hairline of page showing through on fractional device pixel
+   ratios, and a bright seam across the middle of a dark curtain is the first
+   thing the eye finds. */
+.loading-cover__half[data-cover-half="top"] { top: 0; }
+.loading-cover__half[data-cover-half="bottom"] { bottom: 0; }
+
+.loading-cover__mark {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  padding: 0 var(--gutter);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------- the hero video */
+
+.hero-video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------- the hero dissolve
+ *
+ * The hero erodes from its bottom edge upward as it leaves, instead of sliding
+ * away intact.
+ *
+ * The mask image is twice the section's height and only its top half is opaque,
+ * so at rest — `--dissolve-position: 0%` — the section is untouched and looks
+ * exactly as it would with no mask at all. `ScrollDissolve` scrubs the position
+ * to 100%, which slides the gradient's transparent edge up across the content.
+ *
+ * Gated behind `[data-dissolve="on"]`, which only that component sets. Nothing
+ * is masked until JS has run and confirmed the reader has not asked for reduced
+ * motion — so the failure mode is a completely normal hero, never a half-erased
+ * one. The `-webkit-` properties are not optional: Safari still needs the prefix
+ * on several current versions, and a mask that only half-applies would clip the
+ * headline. */
+.lede-hero[data-dissolve="on"] {
+  --dissolve-position: 0%;
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 50%);
+  mask-image: linear-gradient(to top, transparent 0%, #000 50%);
+  -webkit-mask-size: 100% 200%;
+  mask-size: 100% 200%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0% var(--dissolve-position);
+  mask-position: 0% var(--dissolve-position);
+}
+
+/* --------------------------------------------------------- the pinned stack
+ *
+ * The track is `count x 100vh` tall and draws nothing; the viewport inside it is
+ * sticky and holds one screen; the panels are stacked inside that and swapped by
+ * `PinnedStack`.
+ *
+ * Below 60rem none of that applies and the panels are an ordinary vertical list.
+ * That is not a fallback grudgingly provided — a pinned stack on a phone fights
+ * the browser's own address-bar collapse, costs `count` screens of scrolling to
+ * read five short paragraphs, and traps readers who scroll by flinging. The
+ * component tears its ScrollTrigger down at the same breakpoint. */
+.pinned-stack {
+  position: relative;
+}
+
+.pinned-stack__viewport {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pinned-stack__panel {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.pinned-stack__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #dfe5dd;
+}
+
+.pinned-stack__number {
+  display: block;
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+.pinned-stack__body h3 {
+  margin-top: 0.9rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.pinned-stack__body p {
+  max-width: 46ch;
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.66;
+}
+
+.pinned-stack__cta {
+  margin-top: 1.75rem;
+}
+
+.pinned-stack__ticks {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .pinned-stack {
+    height: calc(var(--panel-count) * 100vh);
+  }
+
+  .pinned-stack__viewport {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-content: center;
+    /* `100svh`, not `100vh`. On mobile Safari `vh` is the tallest the viewport
+       ever gets, so a `100vh` sticky pane is taller than the visible area while
+       the address bar is showing and the foot of every panel is cut off. `svh`
+       is the smallest, which is the only one guaranteed to fit. */
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .pinned-stack__panel {
+    position: absolute;
+    inset: 0;
+    align-content: center;
+    grid-template-columns: 1fr 0.9fr;
+    align-items: center;
+    padding: 0 var(--gutter);
+    opacity: 0;
+    /* Held slightly below its resting place and lifted in — the same settle the
+       card families use, so a panel arrives rather than blinking on. */
+    transform: translateY(2.5rem);
+    transition:
+      opacity 720ms var(--ease-standard) 90ms,
+      transform 900ms var(--ease-out-expo);
+    /* Not reachable by pointer or keyboard while it is invisible. Without this
+       the CTA of all five panels is tabbable at once and a keyboard user tabs
+       into links they cannot see. */
+    pointer-events: none;
+  }
+
+  /* A panel already scrolled past leaves upward, so the stack reads as a
+     sequence with a direction rather than a set of cards fading at random. */
+  .pinned-stack__panel[data-direction="behind"] {
+    transform: translateY(-2.5rem);
+  }
+
+  .pinned-stack__panel[data-state="active"] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    z-index: 2;
+    transition:
+      opacity 520ms var(--ease-standard),
+      transform 900ms var(--ease-out-expo);
+  }
+
+  .pinned-stack__media {
+    height: min(62vh, 34rem);
+    aspect-ratio: auto;
+  }
+
+  .pinned-stack__ticks {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(2rem, 5vh, 3.5rem);
+    left: var(--gutter);
+    display: flex;
+    gap: 0.4rem;
+    z-index: 3;
+  }
+
+  .pinned-stack__tick {
+    flex: 1;
+    height: 2px;
+    background: var(--color-line);
+    transition: background-color 520ms var(--ease-standard);
+  }
+
+  .pinned-stack__tick[data-state="active"] {
+    background: var(--color-accent);
+  }
+}
+
+
+
+/* ------------------------------------------------------- the video backdrop
+ *
+ * A stack of clips filling whatever it is placed inside, cross-dissolving as
+ * `VideoBackdrop` advances them. It positions itself absolutely, so its parent
+ * needs `position: relative` and its own stacking context — every host below
+ * already establishes one.
+ *
+ * The transition DURATION is set inline by the component rather than here,
+ * because the same number also decides how early the switch fires. Two copies of
+ * it, one in CSS and one in JS, would drift the moment either is tuned and the
+ * dissolve would either clip or hang. */
+.video-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  /* The ground the first clip fades up from, and what shows in the gap if a
+     decode is slow. Forest rather than black: this sits inside dark green
+     sections and a black hole in the middle of one is more obvious than a
+     slightly-off green. */
+  background: var(--color-forest-deep);
+}
+
+.video-backdrop__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition-property: opacity;
+  transition-timing-function: var(--ease-standard);
+}
+
+.video-backdrop__layer[data-state="active"] {
+  opacity: 1;
+}
+
+/* Inside the mission frame the backdrop replaces the parallax photograph, and
+   takes its place in the same stack — under the scrim, under the copy. */
+.principle-band__frame .video-backdrop {
+  z-index: 0;
+}
+
+/* The hero's backdrop sits where its parallax photograph used to.
+ *
+ * NOT reusing `.lede-hero__media`: that class carries `inset: -5rem 0` to
+ * overscan for parallax travel the video does not do, and it is defined in
+ * `globals.css`, which is imported AFTER this file — so at equal specificity it
+ * would win and drag the video's own `inset: 0` with it. This is scoped one level
+ * deeper instead, which settles it on specificity rather than order.
+ *
+ * `z-index: -3` is inherited from the layout it replaces: the hero stacks its
+ * scrim, copy and header above a negative-index ground. */
+.lede-hero .video-backdrop {
+  z-index: -3;
+  inset: 0;
+}
+
+/* --------------------------------------- the portrait video in section 04
+ *
+ * Replaces the 4:3 photographic plate with a 9:16 frame matching the footage.
+ *
+ * The aspect is the whole point. The master is 1080x1920 and the frame is 9:16,
+ * so `object-fit: cover` has nothing to remove — the video is shown entire, at
+ * native resolution. Any other frame shape would crop it, and a 16:9 one would
+ * cost 68% of the picture.
+ *
+ * Height is capped rather than left to the column width, because 9:16 grows fast:
+ * at the media column's ~425px the frame would run past 750px tall and tower over
+ * the six-row index beside it. The cap keeps the two columns in proportion and
+ * the width follows from it. */
+/* The doubled class is load-bearing, not a typo.
+ *
+ * `globals.css` sets `.serve-band__media figure { aspect-ratio: 4 / 3 }` for the
+ * photographic plate this replaces. That selector and a single-class version of
+ * this one both score (0,1,1), and `globals.css` imports THIS file on its line 5
+ * — so its own rules come later and win the tie. The figure stayed 4:3 and
+ * `object-fit: cover` cropped the 9:16 video into a landscape box, which is the
+ * opposite of the one thing this placement exists to do.
+ *
+ * Repeating the class takes it to (0,2,1) and settles it on specificity, so it no
+ * longer depends on which file is imported where. Same fix as
+ * `.lede-hero .video-backdrop` above, same underlying trap. */
+.serve-band__media.serve-band__media--video figure {
+  aspect-ratio: 9 / 16;
+  /* Width derived from the height cap, so the cap is what actually binds. */
+  width: min(100%, calc(min(72vh, 40rem) * 9 / 16));
+  margin-inline: auto;
+}
+
+/* ------------------------------------------- the mission scrim, over video
+ *
+ * `globals.css` tunes `.principle-band__scrim` for a PHOTOGRAPH: two stacked
+ * gradients reaching 0.92 vertically and 0.50 horizontally. Over a still that is
+ * fine — a photograph has no motion to lose. Over video it is not: the two
+ * combine to ~0.46 through the middle of the frame, so barely half the picture
+ * was getting through and the footage read as dim and soft rather than as the
+ * 2560x1440 it actually is.
+ *
+ * Rebalanced so the darkness is concentrated where the copy sits instead of
+ * spread across the whole frame. Measured rather than eyeballed, because this
+ * gradient is the only thing carrying text contrast:
+ *
+ *   text zone, worst case (a sunlit cloud directly behind the heading)
+ *     before  alpha 0.960 -> 12.76:1
+ *     after   alpha 0.846 ->  6.96:1     (4.5:1 required)
+ *   mid-frame
+ *     before  alpha 0.460 -> 54% of the picture visible
+ *     after   alpha 0.069 -> 93%
+ *
+ * So it gives up contrast headroom it did not need and buys back most of the
+ * image. Do not flatten the foot of the vertical ramp any further — 0.92 at 100%
+ * is what the eyebrow, the smallest and lowest-contrast text on the section,
+ * is sitting on.
+ *
+ * Two classes, deliberately: `globals.css` imports this file on its line 5, so at
+ * equal specificity its own rule would win on source order. Same trap as the
+ * section 04 figure above. */
+.principle-band__frame .principle-band__scrim {
+  /* Darkening confined to the band the copy actually occupies, so the picture
+     itself runs at full brightness.
+   *
+   * The horizontal gradient is gone entirely. It laid ~0.5 alpha down the whole
+   * left edge to weight the corner the copy sits in, which on a photograph is
+   * cheap and on video costs half the frame — at 20% down it was leaving only 40%
+   * of the picture visible, top to bottom.
+   *
+   * The vertical ramp holds at ~0 until the halfway mark and then climbs hard.
+   * The stops are measured, not eyeballed, because the copy sits INSIDE this
+   * frame (roughly 68-89% of its height) and the eyebrow over it is 11.5px:
+   *
+   *   brightness      20% down   40% visible -> 99%
+   *                   40% down   35% visible -> 98%
+   *                   55% down   24% visible -> 77%
+   *   text contrast   68% down   4.92:1      (4.5:1 required, worst case a
+   *                   89% down   8.41:1       sunlit cloud behind the text)
+   *
+   * The 63% and 70% stops are the load-bearing ones. Softening either drops the
+   * eyebrow below 4.5:1 — an earlier pass with 0.45/0.78 measured 4.23:1 and had
+   * to be pulled back up. */
+  background: linear-gradient(
+    180deg,
+    rgba(7, 30, 17, 0) 0%,
+    rgba(6, 26, 15, 0.03) 50%,
+    rgba(5, 21, 13, 0.55) 63%,
+    rgba(5, 21, 13, 0.82) 70%,
+    rgba(4, 18, 11, 0.93) 100%
+  );
+}
+
+/* A small lift on the footage itself. The scrim above removes a flat wash of
+   dark green, which also pulls saturation out of whatever shows through; this
+   puts back the colour rather than raising exposure. Kept modest — anything
+   stronger starts clipping highlights in a sky, and this clip is mostly sky. */
+.principle-band__frame .video-backdrop__layer {
+  /* No colour filter. An earlier pass added `saturate(1.08) contrast(1.03)` to
+     compensate for the heavy wash this scrim used to apply; with the wash gone
+     the footage should read exactly as the master does, not as a graded version
+     of it. */
+  /* `contain`, not the `cover` every other backdrop uses.
+   *
+   * `cover` fills the box and throws away whatever does not fit — which is the
+   * right default for a section ground, and wrong here: the frame stretches to
+   * the viewport, so a 16:9 clip in a taller box lost its sides. `contain` shows
+   * the entire frame at every container shape, which is the requirement.
+   *
+   * The letterbox this can leave is not a bar. `.video-backdrop` paints
+   * `--color-forest-deep`, and the section behind it is the same colour, so any
+   * unfilled space reads as the green mount the band already puts around its
+   * media rather than as something missing. */
+  object-fit: contain;
+}
+
+/* And above 60rem the frame is given the footage's own shape, so `contain` has
+   nothing left to letterbox — the video fills it exactly, uncropped.
+   Not applied below that width: the frame would come out ~200px tall on a phone,
+   which is less than the copy sitting inside it needs. There `contain` letterboxes
+   into the green instead, which is the honest trade for never cropping.
+   Two classes because `globals.css` defines the frame and is imported after this
+   file — the same source-order trap as the rules above. */
+@media (min-width: 60rem) {
+  .principle-band .principle-band__frame {
+    aspect-ratio: 16 / 9;
+    align-self: center;
+  }
+}
+
+/* ------------------------------------------------------------ reduced motion
+ *
+ * Written last so it wins on source order without needing `!important` on every
+ * declaration — the opposite of the situation in `globals.css`, whose
+ * reduced-motion block sits near the top of the file and has to fight for it.
+ *
+ * The curtain is removed here as well as in JS. This rule does not depend on
+ * `LoadingCover` running, so even a JS failure cannot leave a reader who asked
+ * for reduced motion staring at a stationary full-screen panel. */
+@media (prefers-reduced-motion: reduce) {
+  .loading-cover { display: none; }
+
+  /* The mask comes off entirely rather than freezing at a position. */
+  .lede-hero[data-dissolve="on"] {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .pinned-stack { height: auto; }
+
+  .pinned-stack__viewport {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .pinned-stack__panel {
+    position: static;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: none;
+    padding: 0;
+  }
+
+  .pinned-stack__panel + .pinned-stack__panel {
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .pinned-stack__ticks { display: none; }
+
+  /* The clips are paused by `VideoBackdrop` itself, which is what actually stops
+     the motion; this only makes sure the dissolve between them cannot animate if
+     an advance is somehow still pending, so the section behaves as one still
+     frame rather than a slow fade between two. */
+  .video-backdrop__layer { transition: none !important; }
+}

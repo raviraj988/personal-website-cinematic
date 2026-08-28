@@ -70,10 +70,11 @@ export default async function NewsIndexPage() {
             Newsletter issues
           </h2>
           <div className="newsletter-grid">
-            {issues.map((issue) => (
+            {issues.map((issue, index) => (
               <NewsletterCard
                 key={issue.id}
                 issue={issue}
+                index={index}
                 sizes="(min-width: 1024px) 31vw, (min-width: 680px) 48vw, 100vw"
               />
             ))}
@@ -87,10 +88,11 @@ export default async function NewsIndexPage() {
             Announcements
           </h2>
           <div className="selected-work-grid blog-index__grid">
-            {posts.map((post) => (
+            {posts.map((post, index) => (
               <PostCard
                 key={post.id}
                 post={post}
+                index={index}
                 basePath={NEWS_PATH}
                 actionLabel="Read the update"
                 sizes="(min-width: 1024px) 31vw, (min-width: 680px) 48vw, 100vw"

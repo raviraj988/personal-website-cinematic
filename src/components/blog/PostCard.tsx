@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "@/components/ui/Arrow";
@@ -15,11 +16,18 @@ import type { PostSummary } from "@/lib/blog/queries";
 export function PostCard({
   post,
   sizes,
+  index = 0,
   basePath = "/blog",
   actionLabel = "Read the post",
 }: {
   post: PostSummary;
   sizes: string;
+  /**
+   * Position in its grid, which becomes the card's stagger step — see the
+   * `card-rise` note in `globals.css`. Defaults to 0, so a card rendered on its
+   * own simply arrives without a delay.
+   */
+  index?: number;
   /** `/blog` or `/news` — the two routes that render posts. */
   basePath?: string;
   actionLabel?: string;
@@ -27,7 +35,10 @@ export function PostCard({
   const published = formatPostDate(post.published_at);
 
   return (
-    <article className="work-card post-card">
+    <article
+      className="work-card post-card"
+      style={{ "--i": index } as CSSProperties}
+    >
       {post.cover_image_url ? (
         <div className="work-card__media photo-frame">
           <Image

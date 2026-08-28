@@ -229,6 +229,20 @@ export const ese = {
       "At Environment Sovereignty & Equity (ESE) we're here to support Native Nations and other marginalized communities through expertise and experience. We believe that the communities facing environmental harm are the most critical lever in addressing the harms that impact their homes.",
       "At ESE, we've assembled a network of partners and experts with decades' worth of technical expertise to help communities across the country find resources to fix local environmental issues. We are the bridge between underserved communities and the appropriate government agencies, non-profits, and other resources to work together and solve real problems.",
     ],
+    /**
+     * TODO(ese): this alt text is wrong, and so are the dimensions.
+     *
+     * The file is a photograph of land managers standing in high-desert scrub
+     * (see `COMMUNITY_IMAGE_SOURCES.md`); the sentence below describes an alpine
+     * lake, and belongs to a generated placeholder this replaced. The declared
+     * 1672x941 is the placeholder's size too — the real file is 1600x1200, so
+     * the intrinsic ratio handed to the layout is wrong by a third.
+     *
+     * `scholarship.image` below has the identical problem. Both are left as
+     * found: correcting them changes what two other sections say about
+     * photographs of identifiable people, which is a copy decision rather than a
+     * layout one. Flagged here so it is not mistaken for intent.
+     */
     image: wideImage(
       "ese/community-hopi-navajo-restoration.webp",
       "A still alpine lake below granite ridges, with pines along the near shore in late light.",

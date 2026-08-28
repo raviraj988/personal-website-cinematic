@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { Arrow } from "@/components/ui/Arrow";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import type { EseImage } from "@/lib/data/ese-content";
 
@@ -30,10 +29,11 @@ export type Person = {
  * their initials in the display face, which holds the card's shape and reads as a
  * decision where an empty frame reads as a missing file.
  *
- * **The empty `summary`.** Nothing in the source document describes an
- * individual, and writing a description on a named person's behalf is not
- * something this site should do. Name and role are facts and render now; the
- * description appears the moment real copy exists, with no other change.
+ * **No description.** Nothing in the source document describes an individual,
+ * and writing one on a named person's behalf is not something this site should
+ * do. The card carries the two things that ARE facts — name and role — and the
+ * `summary` field stays on the type so real copy can be reinstated here without
+ * touching anything else.
  */
 export function PersonCard({
   person,
@@ -71,27 +71,27 @@ export function PersonCard({
         </div>
       )}
 
+      {/* Name and role only.
+       *
+       * The summary, the "Biography to come." placeholder and the footer CTA are
+       * all gone. Nothing in the source document describes an individual, so the
+       * card was spending two thirds of its height on an empty state and a button
+       * — it announced a gap rather than presenting a person.
+       *
+       * The NAME carries the link now instead of a separate button. That keeps
+       * the card keyboard-reachable and keeps `:focus-within` firing, which is
+       * what drives the lift and the seam; a card with no focusable child would
+       * have those states only for mouse users. */}
       <div className="person-card__body">
         <Heading>
-          <span className="mask-rise">
-            <span className="mask-rise__inner">{person.name}</span>
-          </span>
+          <Link className="person-card__link" href="/people">
+            <span className="mask-rise">
+              <span className="mask-rise__inner">{person.name}</span>
+            </span>
+            <span className="visually-hidden">{` — read biography`}</span>
+          </Link>
         </Heading>
         {person.role ? <p className="person-card__role">{person.role}</p> : null}
-
-        {person.summary ? (
-          <p className="person-card__summary">{person.summary}</p>
-        ) : (
-          <p className="person-card__pending">Biography to come.</p>
-        )}
-
-        {/* Pushed to the foot by `margin-top: auto`, so the links line up across
-            cards however much description each person has — same as the services. */}
-        <Link className="button person-card__cta" href="/people">
-          Read biography
-          <span className="visually-hidden">{`: ${person.name}`}</span>
-          <Arrow />
-        </Link>
       </div>
     </article>
   );

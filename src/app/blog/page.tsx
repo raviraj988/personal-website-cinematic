@@ -60,10 +60,11 @@ export default async function BlogIndexPage() {
         </p>
       ) : (
         <div className="selected-work-grid blog-index__grid">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <PostCard
               key={post.id}
               post={post}
+              index={index}
               sizes="(min-width: 1024px) 31vw, (min-width: 680px) 48vw, 100vw"
             />
           ))}

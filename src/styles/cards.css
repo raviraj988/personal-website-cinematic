@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Card surfaces
+   ==========================================================================
+
+   Content that was plain text or a plain list, given the page's own card
+   language: paper ground, hairline border, `--card-radius` corner, a quiet lift
+   on hover and the accent seam drawing in from the left.
+
+   ONE RULE WORTH KNOWING BEFORE EDITING THIS FILE.
+
+   `globals.css` imports it, so everything here is emitted BEFORE globals' own
+   rules. Any selector that overrides something globals defines must therefore win
+   on SPECIFICITY, not source order — which is why several selectors below repeat
+   a class or reach one level further up than they look like they need to. That is
+   deliberate. Single-class versions of them are silently dead.
+   ========================================================================== */
+
+/* ------------------------------------------------------ the people cards
+ *
+ * Compacted. The card used to carry a portrait, a name, a role, a description
+ * slot and a footer button; with no descriptions written, two thirds of its
+ * height was an empty state and a call to action. It now carries the portrait and
+ * the two facts that exist.
+ *
+ * The grid narrows with it. At 15–19rem the old card needed the height for its
+ * body copy; at 12–15rem a portrait, a name and a role sit comfortably and four
+ * fit a row where three did — which is what "smaller" actually means here, since
+ * a card is only as small as its column lets it be. */
+.people-group .people-group__grid,
+.people-page .people-page__grid {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 15rem));
+}
+
+.person-card .person-card__body {
+  /* Was clamp(1.5rem, 2.4vw, 2rem) — sized for a paragraph that is no longer
+     there. */
+  padding: clamp(1rem, 1.6vw, 1.3rem);
+}
+
+.person-card .person-card__body h2,
+.person-card .person-card__body h3 {
+  /* `--type-h3` is a heading scale for a section title. On a 13rem card it wraps
+     a two-word name onto three lines. */
+  font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+}
+
+/* The whole name is the link. No underline — the card's own hover states are the
+   affordance, and an underline inside a card reads as a second, competing one.
+   The focus ring is untouched: it is the only thing a keyboard user has. */
+.person-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------- the audience cards
+ *
+ * Section 04's six audiences, as cards rather than a table of contents.
+ *
+ * Two columns inside the copy half of the band. Six full-width rows read as a
+ * list to scan past; six cards read as six distinct constituencies, which is what
+ * the section is actually saying.
+ *
+ * The number stays. It is the same numbered-index language the page uses for its
+ * own sections, and losing it would make these generic tiles. */
+.audience-cards ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audience-cards li {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: clamp(1rem, 1.8vw, 1.35rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--card-radius);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    box-shadow var(--motion-ui) var(--ease-out-expo),
+    border-color var(--motion-ui) var(--ease-out-expo);
+}
+
+/* The seam, matching the other card families: a 2px accent rule on the card's
+   own left edge, drawn top-down on hover. Vertical rather than horizontal here
+   because these cards have no media block for it to sit under. */
+.audience-cards li::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 520ms var(--ease-out-expo);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .audience-cards li:hover {
+    transform: translateY(-0.35rem);
+    border-color: rgba(28, 48, 37, 0.34);
+    box-shadow: var(--shadow-card-lift);
+  }
+  .audience-cards li:hover::before {
+    transform: scaleY(1);
+  }
+}
+
+.audience-card__num {
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+.audience-card__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.24;
+  text-wrap: balance;
+}
+
+/* Staggered arrival off the single parent reveal, the same mechanism the rest of
+   the page uses. Guarded by `data-motion="ready"` so no-JS leaves them visible. */
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li {
+  opacity: 0;
+  transform: translateY(0.8rem);
+}
+
+.reveal[data-visible="true"] .audience-cards li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 520ms var(--ease-standard) calc(var(--i) * 70ms),
+    transform 640ms var(--ease-out-expo) calc(var(--i) * 70ms);
+}
+
+/* --------------------------------------------------------- the tools cards
+ *
+ * Surfaces, NOT affordances — and the distinction is the whole point.
+ *
+ * `globals.css` sets these as rows divided by a `border-top`, with a note saying
+ * they are deliberately not cards because neither tool exists yet and a tile that
+ * looks clickable but is not costs more trust than an honest "in development"
+ * state. That reasoning still holds, so what changes here is only the surface:
+ * they get the page's ground, corner and elevation so they stop reading as raw
+ * text, and they get NO hover lift, NO seam, and no cursor change. Nothing here
+ * suggests they can be pressed.
+ *
+ * Two classes, because globals defines `.tools-list li` and is emitted after this
+ * file. */
+.tools-index .tools-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.tools-index .tools-list li {
+  padding: clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--card-radius);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audience-cards li,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .audience-cards li::before { transition: none !important; }
+
+  .text-card,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .text-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .text-card::before { transition: none !important; }
+}
+
+/* ---------------------------------------------------------- the text cards
+ *
+ * Prose given card surfaces, in sections 01 and 02.
+ *
+ * Both sit on `data-scroll-theme="forest"`, so these cannot reuse the paper card:
+ * a cream panel on a dark green ground would read as a hole punched in the
+ * section. They are built the other way round — a barely-lighter wash of the
+ * ground itself, bounded by a light hairline. The surface is defined by LIGHT
+ * here, the same reasoning `globals.css` gives for why `.photo-frame` swaps its
+ * drop shadow for a ring on the dark grounds: a shadow is invisible on forest, so
+ * separation has to come from a lit edge instead.
+ *
+ * Stacked rather than side by side. Both sections put these in a copy column
+ * beside a photograph, and two cards abreast in half a container would set prose
+ * at ~28 characters a line. */
+.text-cards {
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.1rem);
+  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+
+.text-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--card-radius);
+  background: rgba(255, 255, 255, 0.05);
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    border-color var(--motion-ui) var(--ease-out-expo),
+    background-color var(--motion-ui) var(--ease-out-expo);
+}
+
+/* The seam, in the light accent rather than the dark one — `--color-accent`
+   measures 2.8:1 on forest and would barely register. */
+.text-card::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--color-accent-light);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 560ms var(--ease-out-expo);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .text-card:hover {
+    transform: translateY(-0.3rem);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .text-card:hover::before {
+    transform: scaleY(1);
+  }
+}
+
+.text-card__num {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--color-accent-light);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+/* `p` inside these already inherits the section's light ink; this only holds the
+   measure, since a card removes the column width that was doing it. */
+.text-card p {
+  max-width: 58ch;
+}
+
+/* Staggered arrival off the one ancestor reveal, matching every other card family
+   on the page. `data-motion="ready"` guards the rest state so no-JS shows them. */
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .text-card {
+  opacity: 0;
+  transform: translateY(0.9rem);
+}
+
+.reveal[data-visible="true"] .text-card {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 560ms var(--ease-standard) calc(var(--i) * 90ms),
+    transform 680ms var(--ease-out-expo) calc(var(--i) * 90ms);
+}
+
+/* ------------------------------------------------- the mission band's mount
+ *
+ * A narrower green border, so the picture inside it is bigger.
+ *
+ * Two things were holding the video in: a full `--gutter` of padding on the
+ * section (up to 3.5rem a side) and a frame capped at `--container` (75rem). On a
+ * wide screen the cap was the binding constraint, so trimming the padding alone
+ * would have moved nothing — both have to give.
+ *
+ * `section.principle-band` and the doubled frame selector are for specificity:
+ * `globals.css` defines both and is emitted after this file.
+ *
+ * TRADE-OFF, stated because it is a real one: `globals.css` caps the frame on
+ * `--container` so that on a wide screen it shares an edge with
+ * `.cinematic-footer__visual` and the green field around the two reads as one
+ * margin rather than two. At 84rem that alignment is gone. The picture is bigger,
+ * which is what was asked for; if the shared edge matters more, this is the line
+ * to revert. */
+section.principle-band {
+  padding: clamp(0.6rem, 1.2vw, 1rem);
+}
+
+.principle-band .principle-band__frame {
+  width: min(100%, 84rem);
+}
