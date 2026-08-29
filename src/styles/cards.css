@@ -185,13 +185,17 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   }
   .audience-cards li::before { transition: none !important; }
 
-  .text-card,
-  html[data-motion="ready"] .reveal:not([data-visible="true"]) .text-card {
+  .prose-reveal p,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .prose-reveal p {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-  .text-card::before { transition: none !important; }
+  /* The rule is shown drawn rather than animated — it is a mark, not motion. */
+  .prose-reveal__rule {
+    transform: scaleY(1) !important;
+    transition: none !important;
+  }
 }
 
 /* The lede that now sits above section 01's cards — the section's opening
@@ -205,157 +209,70 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   line-height: 1.7;
 }
 
-/* ---------------------------------------------------------- the text cards
+/* ------------------------------------------------------- prose on the green
  *
- * Prose given card surfaces, in sections 01 and 02.
+ * Sections 01 and 02, which sit on flat `--color-forest-deep`.
  *
- * Both sit on `data-scroll-theme="forest"`, so these cannot reuse the paper card:
- * a cream panel on a dark green ground would read as a hole punched in the
- * section. They are built the other way round — a barely-lighter wash of the
- * ground itself, bounded by a light hairline. The surface is defined by LIGHT
- * here, the same reasoning `globals.css` gives for why `.photo-frame` swaps its
- * drop shadow for a ring on the dark grounds: a shadow is invisible on forest, so
- * separation has to come from a lit edge instead.
+ * These were cards and are deliberately not any more. A bordered panel on a flat
+ * dark ground has nothing to separate from — it has to be lit into existence with
+ * a border and a wash, and four of them stacked in a copy column read as boxes
+ * drawn on the page, competing with the photograph beside them. The paper cards
+ * elsewhere work because they sit on cream and carry a photograph; neither is
+ * true here.
  *
- * Stacked rather than side by side. Both sections put these in a copy column
- * beside a photograph, and two cards abreast in half a container would set prose
- * at ~28 characters a line. */
-.text-cards {
+ * What replaces them is the mark the rest of this layout already uses: a hairline
+ * that draws itself. Same gesture as `.serve-index__rule` wiping in under each
+ * audience row and the `border-left` on the mission statement — the difference is
+ * only that these run vertically and arrive staggered.
+ *
+ * No box, no ground, no border. The rule is the only mark, so nothing has to be
+ * lit to be visible and nothing competes with the image. */
+.prose-reveal {
   display: grid;
-  gap: clamp(0.75rem, 1.4vw, 1.1rem);
+  gap: clamp(1.1rem, 2vw, 1.6rem);
   margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
 }
 
-.text-card {
+.prose-reveal p {
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: clamp(1.1rem, 2vw, 1.5rem);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--card-radius);
-  /* `--color-forest` (#173d2a) — the palette's own mid green, one step up from
-   * the `--color-forest-deep` these sit on.
-   *
-   * Chosen by measurement rather than eye. The card has to separate from its
-   * ground, and the previous value (the header's forest ink) did not:
-   *
-   *   header ink  rgba(28,48,37,.62) -> composites to (23,45,32)  1.08x the ground
-   *   this        rgba(23,61,42,.88) -> composites to (22,59,40)  1.29x
-   *
-   * 1.08x is a card you have to look for. The header's ink works on the header
-   * because it sits over a photograph; over a flat green of nearly the same value
-   * it has almost nothing to separate from. Staying inside the same hue family
-   * is what keeps it harmonious — this is lighter, not different.
-   *
-   * Paper text on it measures 12.2:1 and `--color-accent-light` 7.1:1, so the
-   * lift costs nothing in legibility.
-   *
-   * A little translucency is kept so the blur still has something to do where an
-   * `AmbientLayer` bloom passes behind a card. */
-  background: rgba(23, 61, 42, 0.88);
-  -webkit-backdrop-filter: blur(10px) saturate(115%);
-  backdrop-filter: blur(10px) saturate(115%);
-  transition:
-    transform var(--motion-ui) var(--ease-out-expo),
-    border-color var(--motion-ui) var(--ease-out-expo),
-    background-color var(--motion-ui) var(--ease-out-expo),
-    /* Colour is transitioned too. Without it the type snaps from paper to ink
-       while the ground fades under it, and for ~300ms the card shows dark text
-       on a still-dark background. */
-    color var(--motion-ui) var(--ease-out-expo);
+  max-width: 54ch;
+  padding-left: clamp(1rem, 1.8vw, 1.5rem);
+  color: var(--ink-muted, rgba(238, 240, 234, 0.82));
 }
 
-/* The seam, in the light accent rather than the dark one — `--color-accent`
-   measures 2.8:1 on forest and would barely register. */
-.text-card::before {
-  content: "";
+/* The hairline, as an element so it can be drawn from one end — a `border-left`
+   cannot be animated from the top. */
+.prose-reveal__rule {
   position: absolute;
-  z-index: 2;
-  top: 0;
-  bottom: 0;
+  top: 0.35em;
+  bottom: 0.35em;
   left: 0;
-  width: 2px;
+  width: 1px;
   background: var(--color-accent-light);
   transform: scaleY(0);
   transform-origin: top;
-  transition: transform 560ms var(--ease-out-expo);
-  pointer-events: none;
 }
 
-/* Hover flips the card to cream — the header's `--solid` ground, which is also
- * the ground of the people band below.
- *
- * THE BACKGROUND CANNOT FLIP ALONE. These cards sit on forest, so their type is
- * `--color-paper`; cream under near-white text is the one combination that
- * cannot work, and it is the same trade the header documents for why its own
- * over-hero state is dark rather than light. Going cream means going to ink.
- *
- * Done by re-theming rather than recolouring. The section sets `--ink`,
- * `--ink-muted`, `--rule` and `--label-color`, and everything inside reads those;
- * redefining the four on the hovered card makes its heading, paragraph and rules
- * all follow with no element-by-element overrides, and it stays correct if the
- * card ever gains new content.
- *
- * `0.96`, matching `.cinematic-header--solid` exactly rather than rounding to a
- * flat cream — the sliver of translucency is what keeps it reading as the same
- * glass as the nav.
- *
- * Contrast after the flip is the site's own primary pairing: ink on cream, and
- * `--color-accent` on cream at 8.26:1 for the number and seam. */
-@media (hover: hover) {
-  .text-card:hover {
-    transform: translateY(-0.3rem);
-    background: rgba(248, 245, 236, 0.96);
-    border-color: var(--color-line);
-    --ink: var(--color-ink);
-    --ink-muted: var(--color-text-muted);
-    --rule: var(--color-line);
-    --label-color: var(--color-accent);
-    color: var(--ink);
-  }
-
-  /* These two name `--color-accent-light` directly rather than reading a theme
-     variable, so re-theming above does not reach them. */
-  .text-card:hover .text-card__num {
-    color: var(--color-accent);
-  }
-
-  .text-card:hover::before {
-    transform: scaleY(1);
-    background: var(--color-accent);
-  }
+.reveal[data-visible="true"] .prose-reveal__rule {
+  transform: scaleY(1);
+  /* Slower than the text it marks, and started after it, so the line reads as
+     being drawn alongside the paragraph rather than racing it. */
+  transition: transform 820ms var(--ease-out-expo) calc(var(--i) * 120ms + 140ms);
 }
 
-.text-card__num {
-  display: block;
-  margin-bottom: 0.6rem;
-  color: var(--color-accent-light);
-  font-family: var(--font-sans);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-label);
-}
-
-/* `p` inside these already inherits the section's light ink; this only holds the
-   measure, since a card removes the column width that was doing it. */
-.text-card p {
-  max-width: 58ch;
-}
-
-/* Staggered arrival off the one ancestor reveal, matching every other card family
-   on the page. `data-motion="ready"` guards the rest state so no-JS shows them. */
-html[data-motion="ready"] .reveal:not([data-visible="true"]) .text-card {
+/* The paragraph itself rises with the rule, staggered off the same `--i`.
+   Guarded by `data-motion="ready"` so with no JS the copy is simply there. */
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .prose-reveal p {
   opacity: 0;
-  transform: translateY(0.9rem);
+  transform: translateY(0.7rem);
 }
 
-.reveal[data-visible="true"] .text-card {
+.reveal[data-visible="true"] .prose-reveal p {
   opacity: 1;
   transform: none;
   transition:
-    opacity 560ms var(--ease-standard) calc(var(--i) * 90ms),
-    transform 680ms var(--ease-out-expo) calc(var(--i) * 90ms);
+    opacity 620ms var(--ease-standard) calc(var(--i) * 120ms),
+    transform 720ms var(--ease-out-expo) calc(var(--i) * 120ms);
 }
 
 /* ------------------------------------------------- the mission band's mount

@@ -64,10 +64,18 @@ const CLIPS = [
   /* A single clip rather than a cycle, so `VideoBackdrop` sets `loop` on it and
      never crossfades. 12s at 0.5x plays for 24 real seconds before it repeats,
      which is long enough that the loop is not the thing you notice. */
-  /* `wide` only. The master is 2560x1440 — exactly 16:9 — so the wide rendition
-     is the entire frame with nothing cropped, and the band renders it whole. A
-     9:16 cut would be an 810px slice of it that nothing ever requests. */
-  { id: "mission-1", file: "347325_medium.mp4", start: 2, seconds: 12, renditions: ["wide"] },
+  /* Both renditions, and they are used at different widths for different reasons.
+   *
+   * `wide` is the whole 2560x1440 frame, uncropped — that is what desktop shows,
+   * inside a 16:9 mount.
+   *
+   * `tall` is a 9:16 cut, and it exists only because the phone layout is
+   * full-bleed. A portrait viewport cannot show a 16:9 frame edge to edge without
+   * either cropping it or letterboxing it; the hero has the same constraint and
+   * resolves it the same way. Cutting at encode time rather than leaving CSS to
+   * `cover` the wide file also means the phone downloads a 810px-wide clip rather
+   * than a 2560px one it would throw three quarters of away. */
+  { id: "mission-1", file: "347325_medium.mp4", start: 2, seconds: 12 },
 ];
 
 /* REMOVED, and why.

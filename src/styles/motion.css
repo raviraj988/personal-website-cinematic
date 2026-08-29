@@ -403,53 +403,55 @@
   }
 }
 
-/* ------------------------------------------------- the video bands on mobile
+/* --------------------------------------------- the mission band on a phone
  *
- * Both video surfaces are laid out for a wide screen, and both fail on a phone
- * in ways that only show up once the columns collapse.
+ * Full-bleed, like the hero: no mount, no green margin, the video edge to edge
+ * and the mission set over it. Desktop is untouched — there the band keeps its
+ * green mount and its uncropped 16:9 frame.
  *
- * MISSION. The frame stretches to `min-height: 100svh`, so on a 390x844 phone it
- * is a ~378x820 PORTRAIT box holding a 16:9 video under `object-fit: contain`.
- * That fills 26% of its height and leaves 607px of empty green. The 16:9 frame
- * rule that fixes this on desktop is `min-width: 60rem`, so it never applied
- * where the problem is worst.
+ * THIS LAYOUT CROPS, AND IT HAS TO. A portrait viewport cannot show a 16:9 frame
+ * edge to edge without either cropping it or letterboxing it; "borderless" is a
+ * choice of the first. The crop is done at ENCODE time rather than by CSS — the
+ * component serves `mission-1-tall.mp4`, a 9:16 cut, below 48rem — so the phone
+ * downloads an 810px-wide clip instead of a 2560px one it would discard three
+ * quarters of. `object-fit: cover` then finishes the job for the widths between.
  *
- * The fix is not `cover` — that would crop, which is the one thing this band is
- * explicitly not allowed to do. Instead the video stops being a BACKGROUND on
- * mobile and becomes a block: a 16:9 strip at the top of the frame, filling it
- * exactly, with the copy in normal flow underneath on the forest ground. Nothing
- * is cropped and nothing is letterboxed, because the box finally matches the
- * footage.
+ * The scrim comes back with the copy. Overlaid text needs it; the previous mobile
+ * layout could drop it only because the copy had moved off the video.
  *
- * The scrim goes with it. Its whole job is making text legible ON the video; with
- * the copy no longer over the video it would only be dimming the picture. */
+ * `.principle-band.principle-band` is (0,2,0), which beats the (0,1,1) of
+ * `section.principle-band` in `cards.css` — that file is imported after this one,
+ * so equal specificity would lose on source order. */
 @media (max-width: 60rem) {
-  section.principle-band {
-    /* Nothing left to stretch to fill — the height now follows the content. */
-    min-height: 0;
-  }
-
-  .principle-band .principle-band__frame {
-    /* Was `end start`, which parked the copy in the foot of a full-height box.
-       Rows now stack from the top: video, then copy. */
-    align-content: start;
-    justify-content: stretch;
+  .principle-band.principle-band {
     padding: 0;
   }
 
-  /* `position: relative` is what turns it from an overlay into a grid row. */
+  .principle-band .principle-band__frame {
+    width: 100%;
+    min-height: 100svh;
+    /* Back to the desktop anchoring: copy in the foot, picture above it. */
+    place-content: end start;
+    padding: clamp(2rem, 8vw, 3rem) clamp(1.25rem, 5vw, 2rem) clamp(2.5rem, 8vh, 3.5rem);
+    border-radius: 0;
+  }
+
+  /* An overlay again, not a grid row. */
   .principle-band__frame .video-backdrop {
-    position: relative;
-    inset: auto;
-    aspect-ratio: 16 / 9;
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+  }
+
+  /* `cover`, overriding the `contain` this band uses on desktop. Same selector
+     and same specificity as that rule, winning on source order because this
+     block is later in the file. */
+  .principle-band__frame .video-backdrop__layer {
+    object-fit: cover;
   }
 
   .principle-band__frame .principle-band__scrim {
-    display: none;
-  }
-
-  .principle-band .principle-band__content {
-    padding: clamp(1.5rem, 5vw, 2rem);
+    display: block;
   }
 }
 

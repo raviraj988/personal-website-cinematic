@@ -103,33 +103,28 @@ export function EseLanding() {
           <Reveal className="org-intro__copy">
             <p className="section-label section-label--light">01 — {ese.intro.eyebrow}</p>
             <ScrollWords as="h2" id="about-title" text={ese.intro.heading} />
-            {/* The opening paragraph runs as prose above the cards; the second
-                is split at its sentence break into two short cards.
+            {/* No cards on this ground.
+                A bordered panel on flat forest reads as a box drawn on the page —
+                it needs a lit edge to exist at all, and four of them stacked
+                fought the photograph beside them. What the section wants is the
+                same thing the audience index and the mission band already do:
+                type, and a rule that draws itself.
 
-                Both halves of that are about card LENGTH. Holding the whole
-                section in two cards made each one a six-line block of body copy,
-                which is a paragraph with a border round it rather than a card.
-                Lifting the first paragraph out gives the section a lede, and
-                splitting the second gives two cards of roughly thirty words each.
-
-                No copy is written or altered here — this is the same text, cut at
-                a full stop the author already put there. `intro.paragraphs` stays
-                the single source; if a third paragraph is ever added it lands in
-                the cards automatically. */}
+                Each paragraph gets a hairline that wipes down from the top as it
+                arrives, staggered off `--i`. Nothing is boxed; the rule is the
+                only mark, which is what the rest of the editorial layout does. */}
             <p className="org-intro__lede">{ese.intro.paragraphs[0]}</p>
 
-            <div className="text-cards">
+            <div className="prose-reveal">
               {ese.intro.paragraphs
                 .slice(1)
                 .flatMap((paragraph) => paragraph.split(/(?<=\.)\s+/))
                 .filter(Boolean)
                 .map((sentence, index) => (
-                  <div className="text-card" key={sentence} style={{ "--i": index } as CSSProperties}>
-                    <span className="text-card__num" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <p>{sentence}</p>
-                  </div>
+                  <p key={sentence} style={{ "--i": index } as CSSProperties}>
+                    <span className="prose-reveal__rule" aria-hidden="true" />
+                    {sentence}
+                  </p>
                 ))}
             </div>
           </Reveal>
@@ -157,18 +152,14 @@ export function EseLanding() {
           <Reveal className="network-band__copy">
             <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
-            {/* Two sentences, two cards. The source document's whole of "Who We
-                Are" is these two lines — see the TODO in `ese-content.ts`. Giving
-                each its own surface makes that read as deliberate brevity rather
-                than as a section that trailed off. */}
-            <div className="text-cards">
+            {/* Same treatment as 01 — a drawn hairline per paragraph rather
+                than a card. See the note there. */}
+            <div className="prose-reveal">
               {ese.whoWeAre.body.map((paragraph, index) => (
-                <div className="text-card" key={paragraph} style={{ "--i": index } as CSSProperties}>
-                  <span className="text-card__num" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p>{paragraph}</p>
-                </div>
+                <p key={paragraph} style={{ "--i": index } as CSSProperties}>
+                  <span className="prose-reveal__rule" aria-hidden="true" />
+                  {paragraph}
+                </p>
               ))}
             </div>
           </Reveal>
@@ -216,7 +207,9 @@ export function EseLanding() {
               image in it, which is the case a moving ground is actually for.
               `ese.mission.image` is still in the content file and is no longer
               read; the poster comes from the first clip. */}
-          <VideoBackdrop clips={["mission-1"]} rate={1} orientation="wide" />
+          {/* No `orientation`: the default picks the 9:16 cut on phones, where the band
+              is full-bleed, and the uncropped 16:9 file everywhere else. */}
+          <VideoBackdrop clips={["mission-1"]} rate={1} />
           <div className="principle-band__scrim" />
           <Reveal className="principle-band__content">
             {/* The rule and the copy sit in the foot of the frame, so the top two
