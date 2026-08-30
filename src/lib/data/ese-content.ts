@@ -119,6 +119,7 @@ export const brand = {
  * duplicate.
  */
 export const navigation = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "News", href: "/news" },

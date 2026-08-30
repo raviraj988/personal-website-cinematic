@@ -955,3 +955,27 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
   margin-left: 0.75rem;
   border-color: rgba(226, 232, 235, 0.34);
 }
+
+/* Clearance between a card group and the button that follows it.
+ *
+ * The card grids set no bottom margin — they are usually the last thing in their
+ * section — so a button placed after one sat directly against the final row.
+ *
+ * The adjacent-sibling selector still applies even though `.glow-cards` and
+ * `.statement-cards` are `display: contents`: the combinator matches DOM
+ * siblings, and display has no bearing on it. */
+.statement-cards + .button,
+.glow-cards + .button,
+.audience-cards + .button,
+.index-cards + .button,
+.people-group__grid + .button,
+.glow-cards + .reveal > .button {
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+/* On the landing page the button follows the grid inside a `Reveal`, so the
+   group and the button are not siblings — the wrapper is. */
+.section-shell > .reveal > .button,
+.section-shell > .button {
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}

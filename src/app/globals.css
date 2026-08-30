@@ -279,13 +279,28 @@ html[data-scroll-theme="clay"] {
  *
  * `.text-link` stays for genuinely secondary, inline navigation.
  */
+/* NAVY, not ink.
+ *
+ * The border, the label and the hover fill all defaulted to `--color-ink`
+ * (#081b23), which is the brand's near-black neutral. On the light grounds that
+ * gave a black outline that filled solid black on hover — correct for the old
+ * cream-and-forest palette, wrong for this one, where the kit's navy is the
+ * accent every other element on a light ground already uses.
+ *
+ * `--color-accent` is navy #2b4552 and measures 8.23:1 on paper, and paper on
+ * navy measures the same 8.23:1 — so the resting state and the filled hover both
+ * clear 4.5:1 comfortably.
+ *
+ * Padding is up from 0.9/1.35rem: at the old value the label sat tight inside the
+ * rule, which is what made the button read as a boxed link rather than a
+ * control. */
 .button {
   display: inline-flex;
   align-items: center;
   gap: 1.25rem;
-  padding: 0.9rem 1.35rem;
-  border: 1px solid var(--button-border, var(--color-ink));
-  color: var(--button-ink, var(--color-ink));
+  padding: 1.05rem 1.7rem;
+  border: 1px solid var(--button-border, var(--color-accent));
+  color: var(--button-ink, var(--color-accent));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -297,8 +312,9 @@ html[data-scroll-theme="clay"] {
 }
 
 .button:hover {
-  background: var(--button-hover-ground, var(--color-ink));
+  background: var(--button-hover-ground, var(--color-accent));
   color: var(--button-hover-ink, var(--color-paper));
+  border-color: var(--button-hover-ground, var(--color-accent));
 }
 
 /* On a dark or photographic ground. */
