@@ -66,11 +66,30 @@
    * like buttons. On the dark grounds the same idea is a 7%-to-2% wash of the
    * paper neutral, which is what gives a near-black card an edge to catch. */
   --card-sheen: linear-gradient(160deg, #f4f7f8 0%, #e5e8eb 100%);
-  --card-sheen-dark: linear-gradient(
-    160deg,
-    rgba(226, 232, 235, 0.075) 0%,
-    rgba(226, 232, 235, 0.02) 100%
-  );
+  /* The dark card surface is NAVY, not a wash of white.
+   *
+   * It was `rgba(226, 232, 235, 0.075 -> 0.02)` — a neutral lift of whatever was
+   * behind it. Over `--color-ground-deep` that composites to #12252d, which
+   * separates from the ground by only 1.11x. The light cards manage 1.26x, so the
+   * dark ones were the faintest surfaces on the site, and colourless with it: a
+   * grey card on a navy page.
+   *
+   * These stops are the kit's own navy family, one step up from the ink the page
+   * is built on — the same relationship `data-scroll-theme="navy"` has to
+   * `dusk`. Opaque rather than translucent so the surface is a colour in its own
+   * right instead of a function of what it happens to sit on.
+   *
+   *            separation      paper      muted       gold
+   *   top       1.46x         9.8:1      6.1:1      6.9:1
+   *   bottom    1.29x        11.1:1      6.9:1      7.8:1
+   *
+   * Every value clears 4.5:1 and both ends beat the 1.26x bar. */
+  --card-sheen-dark: linear-gradient(160deg, #1a3a47 0%, #14313d 100%);
+  /* Hover lifts within the same family — 1.26x above resting, which reads as a
+     lift without becoming a different colour. Its top stop is the tightest
+     measurement in the set at 4.9:1 for muted copy, so do not brighten it
+     further without re-checking that number. */
+  --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 
