@@ -368,7 +368,7 @@ section.principle-band {
       /* Wider than the card so the falloff is gentle across it rather than a
          tight dot tracking the cursor. */
       16rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
-      var(--glow-colour, var(--color-accent-light)),
+      var(--glow-colour, var(--color-accent)),
       transparent 72%
     ),
     conic-gradient(
@@ -394,7 +394,7 @@ section.principle-band {
 /* The card the pointer is actually over also gets a soft outer bloom, so there
    is a clear "this one" among several lit neighbours. */
 [data-glow-card]:hover {
-  box-shadow: 0 0 0 1px var(--glow-colour, var(--color-accent-light)) inset,
+  box-shadow: 0 0 0 1px var(--glow-colour, var(--color-accent)) inset,
     0 1.5rem 3rem -1.5rem rgba(8, 27, 35, 0.65);
 }
 
@@ -424,7 +424,7 @@ section.principle-band {
 
 .glow-card__desc > span {
   overflow: hidden;
-  color: var(--ink-muted, var(--color-muted-light));
+  color: var(--ink-muted, var(--color-text-muted));
   font-size: 0.86rem;
   line-height: 1.6;
 }
@@ -459,18 +459,29 @@ section.principle-band {
 .statement-cards li {
   overflow: hidden;
   padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.15rem, 2.2vw, 1.6rem);
-  border: 1px solid var(--color-line-dark);
+  border: 1px solid var(--color-line);
   border-radius: var(--card-radius);
-  background: rgba(226, 232, 235, 0.04);
+  background: var(--color-paper);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
     background-color var(--motion-ui) var(--ease-out-expo);
 }
 
-.statement-cards li[data-band="0"] { --glow-colour: #dec26a; }
-.statement-cards li[data-band="1"] { --glow-colour: #b8d0d8; }
-.statement-cards li[data-band="2"] { --glow-colour: #c98150; }
-.statement-cards li[data-band="3"] { --glow-colour: #899163; }
+/* The per-card ring colours, scoped to the dark grounds.
+ *
+ * These are the emblem's own hues and they are chosen to glow against the deep
+ * ink. Unscoped they outranked the ground rule at (0,2,1), so on a light page —
+ * /about, /who-we-are — every ring was gold or sky at 1.4-1.6:1 against a paper
+ * card. On a light ground the cards fall back to the navy default instead, which
+ * is the only one of the kit's colours that reads there. */
+[data-scroll-theme="dusk"] .statement-cards li[data-band="0"],
+[data-scroll-theme="navy"] .statement-cards li[data-band="0"] { --glow-colour: #dec26a; }
+[data-scroll-theme="dusk"] .statement-cards li[data-band="1"],
+[data-scroll-theme="navy"] .statement-cards li[data-band="1"] { --glow-colour: #b8d0d8; }
+[data-scroll-theme="dusk"] .statement-cards li[data-band="2"],
+[data-scroll-theme="navy"] .statement-cards li[data-band="2"] { --glow-colour: #c98150; }
+[data-scroll-theme="dusk"] .statement-cards li[data-band="3"],
+[data-scroll-theme="navy"] .statement-cards li[data-band="3"] { --glow-colour: #899163; }
 
 .statement-card__band {
   position: absolute;
@@ -495,7 +506,7 @@ section.principle-band {
 
 .statement-card__num {
   display: block;
-  color: var(--color-accent-light);
+  color: var(--label-color, var(--color-accent));
   font-family: var(--font-sans);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -521,7 +532,7 @@ section.principle-band {
  * are now. */
 .statement-card__line {
   margin-top: 0.75rem;
-  color: var(--color-paper);
+  color: var(--ink, var(--color-ink));
   font-family: var(--font-serif);
   font-size: clamp(1.15rem, 1.7vw, 1.5rem);
   font-weight: 300;
@@ -563,17 +574,29 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   .glow-card__desc { transition: none !important; }
 }
 
-/* The glow colour follows the ground's polarity.
+/* THE DEFAULTS ARE LIGHT, AND THE DARK GROUNDS OPT IN. It was the other way
+ * round, and that shipped invisible text.
  *
- * Gold is the accent on the dark grounds and measures 1.42:1 on paper — a gold
- * ring on a light card is invisible, which would silently disable the effect on
- * four of the six grounds. The light grounds take navy instead, the same accent
- * their text already uses. */
-[data-scroll-theme="haze"] [data-glow-card],
-[data-scroll-theme="paper"] [data-glow-card],
-[data-scroll-theme="sand"] [data-glow-card],
-[data-scroll-theme="clay"] [data-glow-card] {
-  --glow-colour: var(--color-accent);
+ * These cards were built for the landing page's dark sections, so every value
+ * was hardcoded to its dark-ground form: paper text, a 4%-white surface, gold
+ * numbers. That works only where a `data-scroll-theme` is present to justify it.
+ * `/about` and `/who-we-are` set no theme at all — they are not inside the
+ * `(site)` layout, which is what mounts `ScrollTheme` — so on those pages every
+ * one of those values landed on a light background: near-white text on
+ * near-white, and a gold ring at 1.42:1.
+ *
+ * Inverting it makes the safe case the default. A card with no theme around it
+ * is now readable; a card that wants the dark treatment has to sit in a dark
+ * section, which is exactly where the attribute already is. */
+[data-scroll-theme="dusk"] [data-glow-card],
+[data-scroll-theme="navy"] [data-glow-card] {
+  --glow-colour: var(--color-accent-light);
+}
+
+[data-scroll-theme="dusk"] .statement-cards li,
+[data-scroll-theme="navy"] .statement-cards li {
+  border-color: var(--color-line-dark);
+  background: rgba(226, 232, 235, 0.04);
 }
 
 /* `border-radius: inherit` on the ring only works when the radius is on the same
@@ -596,7 +619,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 .case-study__lede {
   max-width: 52ch;
   margin-top: 1.5rem;
-  color: var(--ink-muted, var(--color-muted-light));
+  color: var(--ink-muted, var(--color-text-muted));
   font-size: var(--type-body-md);
   line-height: 1.68;
 }
