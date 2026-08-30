@@ -64,6 +64,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  /**
+   * `/who-we-are` was its own route until it merged into `/about` — "what ESE
+   * does" and "who does it" turned out to be halves of one answer, and two
+   * navigation items each telling you to read the other is not a structure.
+   *
+   * `permanent: true` is a 308, which is the correct signal: the page did not
+   * move temporarily, it was absorbed. Search engines transfer the old URL's
+   * standing to `/about` rather than treating it as a dead end, and anything
+   * already linking to it keeps working.
+   *
+   * The fragment cannot be added here — Next matches on path only — but `/about`
+   * carries `id="who-we-are"` on that section, so a link that already included
+   * the fragment still lands in the right place.
+   */
+  async redirects() {
+    return [{ source: "/who-we-are", destination: "/about", permanent: true }];
+  },
 };
 
 export default nextConfig;

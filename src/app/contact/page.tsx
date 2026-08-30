@@ -53,8 +53,8 @@ export default function ContactPage() {
             <Reveal className="page-section">
               <h2 className="page-section__heading">{ese.becomePartner.eyebrow}</h2>
               <p className="page-prose">{ese.becomePartner.body}</p>
-              <Link className="button" href="/who-we-are">
-                Who we are <Arrow />
+              <Link className="button" href="/about">
+                About ESE <Arrow />
               </Link>
             </Reveal>
           </div>

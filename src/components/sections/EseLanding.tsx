@@ -231,7 +231,7 @@ export function EseLanding() {
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
             <p className="org-intro__lede">{ese.whoWeAre.lede}</p>
             <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body)} offset={1} />
-            <Link className="button button--light" href="/who-we-are">
+            <Link className="button button--light" href="/about">
               Who we are <Arrow />
             </Link>
           </Reveal>

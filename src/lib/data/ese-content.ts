@@ -106,7 +106,10 @@ export const brand = {
  * Every item is a ROUTE, not an anchor.
  *
  * Three of these used to be `/#about`, `/#services` and `/#who-we-are` — links
- * that scrolled the landing page rather than going anywhere. That made the
+ * that scrolled the landing page rather than going anywhere.
+ *
+ * "Who we are" is no longer among them: it merged into "About", because the two
+ * were halves of one answer and each item's page told you to read the other. That made the
  * navigation a table of contents for one page: nothing could be linked to,
  * shared, or found by a search engine as its own thing, and returning to a
  * section meant loading the whole landing page and jumping.
@@ -118,7 +121,6 @@ export const brand = {
 export const navigation = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
-  { label: "Who we are", href: "/who-we-are" },
   { label: "News", href: "/news" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
