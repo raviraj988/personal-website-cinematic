@@ -46,17 +46,70 @@ import {
  *
  * The card shows the lead; the rest is revealed on hover. This is progressive
  * disclosure of copy that is already in `ese-content.ts` — nothing is written,
- * summarised or reworded, and the split is at a full stop the author put there.
+ * summarised or reworded, and the split is at a full stop or semicolon the
+ * author put there.
  *
  * A single-sentence paragraph yields no `rest`, and its card simply has no hover
  * panel. That is the honest outcome rather than padding it with invented text.
  */
 function splitLead(paragraph: string): { lead: string; rest: string } {
-  const parts = paragraph.split(/(?<=\.)\s+/);
-  return { lead: parts[0] ?? paragraph, rest: parts.slice(1).join(" ") };
+  const parts = paragraph.split(/(?<=[.;])\s+/);
+  /* A lead ending on a semicolon is left dangling once the clause after it moves
+     behind hover — "field trials are underway;" reads as truncated. The semicolon
+     becomes a full stop, which is what it would be if the clause had never been
+     joined. A lead ending in "." is untouched. */
+  const lead = (parts[0] ?? paragraph).replace(/;$/, ".");
+  return { lead, rest: parts.slice(1).join(" ") };
+}
+
+/**
+ * The dark sections' card set: one card per sentence, each revealing its own
+ * remainder on hover. Shared by 01, 02, 06 and 07 so the four cannot drift.
+ *
+ * `offset` shifts which gradient band each card takes, so two adjacent sections
+ * do not open with the same colour.
+ */
+/** Every sentence of a paragraph, as its own line. */
+function splitSentences(paragraph: string): string[] {
+  return paragraph.split(/(?<=\.)\s+/).filter(Boolean);
+}
+
+function StatementCards({ lines, offset = 0 }: { lines: string[]; offset?: number }) {
+  return (
+    <GlowCards className="statement-cards">
+      <ol>
+        {lines.map((line, index) => {
+          const { lead, rest } = splitLead(line);
+          return (
+            <li
+              key={line}
+              style={{ "--i": index } as CSSProperties}
+              data-band={(index + offset) % 4}
+              data-glow-card
+            >
+              <span className="statement-card__band" aria-hidden="true" />
+              <span className="statement-card__num" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <p className="statement-card__line">{lead}</p>
+              {rest ? (
+                <span className="glow-card__desc">
+                  <span>{rest}</span>
+                </span>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+    </GlowCards>
+  );
 }
 
 export function EseLanding() {
+  /* Sentences two and three of the case-study body. The first is set as prose
+     above them, so it is deliberately not repeated here. */
+  const caseStudyFacts = splitSentences(ese.caseStudy.body).slice(1);
+
   return (
     <>
       {/* ------------------------------------------------------------ hero */}
@@ -413,11 +466,16 @@ export function EseLanding() {
               06 — {ese.caseStudy.eyebrow}: {ese.caseStudy.label}
             </p>
             <ScrollWords as="h2" id="case-title" text={ese.caseStudy.heading} />
-            <p>{ese.caseStudy.body}</p>
-            <p className="case-study__status">
-              <span aria-hidden="true" />
-              {ese.caseStudy.status}
-            </p>
+
+            {/* The opening sentence as prose, then the supporting facts as cards.
+                The standalone `case-study__status` line that used to close this
+                section is gone: it said "Bench testing and field trials underway",
+                which is the opening clause of the third sentence now carried by
+                the last card. `caseStudy.status` is referenced nowhere else — no
+                schema or metadata reads it — so it is left in the content file
+                rather than deleted, in case the badge is ever wanted back. */}
+            <p className="case-study__lede">{splitLead(ese.caseStudy.body).lead}</p>
+            <StatementCards lines={caseStudyFacts} offset={2} />
           </Reveal>
         </div>
       </section>
@@ -443,7 +501,8 @@ export function EseLanding() {
           <Reveal className="scholarship-band__inner">
             <p className="section-label">07 — {ese.scholarship.eyebrow}</p>
             <ScrollWords as="h2" id="scholarship-title" text={ese.scholarship.heading} />
-            <p>{ese.scholarship.body}</p>
+            {/* Both sentences as cards. The heading is the text above them. */}
+            <StatementCards lines={splitSentences(ese.scholarship.body)} offset={1} />
             <a className="button" href={ese.scholarship.cta.href}>
               {ese.scholarship.cta.label} <Arrow />
             </a>

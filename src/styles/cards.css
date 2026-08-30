@@ -667,3 +667,21 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 .tools-list li[data-glow-card]:hover {
   box-shadow: var(--shadow-card);
 }
+
+/* The case study's opening sentence, set as prose above its cards. Matches the
+   muted body copy the section already used, so lifting the sentence out of the
+   paragraph changed its role without changing its appearance. */
+.case-study__lede {
+  max-width: 52ch;
+  margin-top: 1.5rem;
+  color: var(--ink-muted, var(--color-muted-light));
+  font-size: var(--type-body-md);
+  line-height: 1.68;
+}
+
+/* Cards inside a two-column copy column are narrower than a full-width grid, so
+   they stack rather than sitting two abreast and squeezing the line length. */
+.case-study__copy .statement-cards ol,
+.scholarship-band__inner .statement-cards ol {
+  grid-template-columns: 1fr;
+}
