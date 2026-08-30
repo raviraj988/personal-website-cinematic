@@ -777,7 +777,7 @@ async function main() {
 
   /**
    * Every colour baked into a raster below is read from `tokens.css`, never
-   * written here. `--color-forest` is the ink for the icons and `--color-canvas`
+   * written here. `--color-ground-deep` is the ink for the icons and `--color-canvas`
    * would be too light on them; the social card inverts the pair, matching the
    * footer.
    */
@@ -787,7 +787,7 @@ async function main() {
     water: token(css, "ese-band-water"),
     sunrise: token(css, "ese-band-sunrise"),
   };
-  const forest = token(css, "color-forest");
+  const ink = token(css, "color-ground-deep");
   const canvas = token(css, "color-canvas");
 
   const dir = mkdtempSync(path.join(tmpdir(), "ese-brand-"));
@@ -797,12 +797,12 @@ async function main() {
 
     console.log(
       `\ncolours from tokens.css — land ${colours.land}  water ${colours.water}` +
-        `  sunrise ${colours.sunrise}  ink ${forest}`,
+        `  sunrise ${colours.sunrise}  ink ${ink}`,
     );
 
-    await writeIcons(marks, colours, forest, canvas);
-    await writePublicBrand(marks, colours, forest);
-    await writeOpenGraphImage(marks, colours, canvas, forest);
+    await writeIcons(marks, colours, ink, canvas);
+    await writePublicBrand(marks, colours, ink);
+    await writeOpenGraphImage(marks, colours, canvas, ink);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

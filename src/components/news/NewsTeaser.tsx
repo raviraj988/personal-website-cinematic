@@ -78,7 +78,7 @@ export async function NewsTeaser() {
     <section
       className="news-teaser section-shell"
       aria-labelledby="news-teaser-title"
-      data-scroll-theme="moss"
+      data-scroll-theme="clay"
     >
       <AmbientLayer blooms={1} marks />
 

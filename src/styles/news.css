@@ -113,7 +113,7 @@
 }
 
 .newsletter-signup__form input:focus-visible {
-  outline: 2px solid var(--color-forest);
+  outline: 2px solid var(--color-navy);
   outline-offset: 2px;
 }
 
@@ -122,8 +122,8 @@
   align-items: center;
   gap: 0.7rem;
   padding: 0.85rem 1.5rem;
-  border: 1px solid var(--color-forest);
-  background: var(--color-forest);
+  border: 1px solid var(--color-navy);
+  background: var(--color-navy);
   color: var(--color-white);
   cursor: pointer;
   font-family: inherit;
@@ -135,7 +135,7 @@
 }
 
 .newsletter-signup__form button:hover {
-  background: var(--color-forest-deep);
+  background: var(--color-ground-deep);
 }
 
 .newsletter-signup--pending .text-link {

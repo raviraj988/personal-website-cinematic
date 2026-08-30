@@ -140,7 +140,7 @@
 
 .drop__zone.is-over {
   border-color: var(--color-ink);
-  background: rgba(28, 48, 37, 0.035);
+  background: rgba(8, 27, 35, 0.035);
 }
 
 .drop__zone.is-busy { opacity: 0.65; }

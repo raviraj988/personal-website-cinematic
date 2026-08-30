@@ -156,7 +156,7 @@
    the same area and leaves the mount in paper. */
 .post__cover img {
   object-fit: cover;
-  background: #dfe5dd;
+  background: #1b333d;
 }
 
 .post__body-shell {
@@ -226,7 +226,7 @@
 }
 
 .post-body a:hover {
-  color: var(--color-forest);
+  color: var(--color-navy);
 }
 
 .post-body strong {
@@ -265,7 +265,7 @@
 /* GFM task lists. */
 .post-body li input[type="checkbox"] {
   margin-right: 0.5em;
-  accent-color: var(--color-forest);
+  accent-color: var(--color-navy);
 }
 
 .post-body blockquote {
@@ -322,7 +322,7 @@
 .post-body__pre {
   overflow-x: auto;
   padding: clamp(1.1rem, 2.4vw, 1.6rem);
-  background: var(--color-forest-deep);
+  background: var(--color-ground-deep);
   color: var(--color-paper);
   font-size: 0.85rem;
   line-height: 1.6;
@@ -388,7 +388,7 @@
 
 .blog-footer {
   padding: clamp(4rem, 8vw, 6rem) var(--gutter) 2.5rem;
-  background: var(--color-forest-deep);
+  background: var(--color-ground-deep);
   color: var(--color-paper);
 }
 

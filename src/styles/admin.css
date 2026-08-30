@@ -163,7 +163,7 @@
   white-space: nowrap;
 }
 
-.admin-chip--live { color: var(--color-forest); }
+.admin-chip--live { color: var(--color-navy); }
 .admin-chip--draft { color: var(--color-text-muted); }
 .admin-chip--scheduled { color: var(--color-stone); }
 /* The one chip with a filled ground: an unreviewed machine-written draft is the
@@ -173,7 +173,7 @@
   background: var(--color-accent);
   color: var(--color-white);
 }
-/* Was `--color-moss`, which measured 4.06:1 on the paper ground and fails AA for
+/* Was `--color-slate`, which measured 4.06:1 on the paper ground and fails AA for
    a 0.6rem label. Muted also reads correctly here: a role is quiet metadata, not
    a status that needs to catch the eye. */
 .admin-chip--role { color: var(--color-text-muted); }
@@ -206,14 +206,14 @@
 }
 
 .admin-button--primary {
-  border-color: var(--color-forest);
-  background: var(--color-forest);
+  border-color: var(--color-navy);
+  background: var(--color-navy);
   color: var(--color-paper);
 }
 
 .admin-button--primary:hover {
-  border-color: var(--color-forest-deep);
-  background: var(--color-forest-deep);
+  border-color: var(--color-ground-deep);
+  background: var(--color-ground-deep);
 }
 
 .admin-button--quiet {
@@ -248,7 +248,7 @@
 }
 
 .admin-button--primary:disabled:hover {
-  background: var(--color-forest);
+  background: var(--color-navy);
   color: var(--color-paper);
 }
 
@@ -395,7 +395,7 @@
 .admin-field input:focus,
 .admin-field select:focus,
 .admin-field textarea:focus {
-  border-color: var(--color-forest);
+  border-color: var(--color-navy);
 }
 
 .admin-field textarea {
@@ -511,7 +511,7 @@
 }
 
 .admin-notice--success {
-  border-left-color: var(--color-forest);
+  border-left-color: var(--color-navy);
   color: var(--color-ink);
 }
 
@@ -589,7 +589,7 @@
   max-height: 22rem;
   object-fit: cover;
   border: 1px solid var(--color-line);
-  background: #dfe5dd;
+  background: #1b333d;
 }
 
 .admin-cover__meta {
@@ -697,13 +697,13 @@
  * right weight here: a gate screen is the one admin surface reached cold, from a
  * connector's redirect or a bookmark, so it is worth being unmistakably ESE's.
  *
- * `--color-forest` rather than `currentColor` — the panel's body text is muted
+ * `--color-navy` rather than `currentColor` — the panel's body text is muted
  * grey-green for legibility, and the mark should not inherit that. */
 .admin-gate__mark {
   display: block;
   height: 2.6rem;
   width: auto;
-  color: var(--color-forest);
+  color: var(--color-navy);
 }
 
 .admin-gate__panel h1 {
@@ -868,7 +868,7 @@
 }
 
 .admin-gate__foot a {
-  color: var(--color-forest);
+  color: var(--color-navy);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

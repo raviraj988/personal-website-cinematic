@@ -38,20 +38,25 @@ body {
   transition: background-color 1400ms var(--ease-standard);
 }
 
-/* Scroll-linked page tones.
+/* Scroll-linked page tones — Magic Hour.
  *
- * Warmed and deepened away from the earlier pastel greens: sage and moss now sit
- * closer to stone and olive than to mint, and sand reads as linen. The result is
- * a quieter, more expensive-looking progression through the page. */
-html[data-scroll-theme="cream"] { --page-background: #f8f5ec; }
-html[data-scroll-theme="paper"] { --page-background: #fffdf8; }
-html[data-scroll-theme="sage"] { --page-background: #e0e6d8; }
-html[data-scroll-theme="moss"] { --page-background: #dae0d1; }
-html[data-scroll-theme="forest"] { --page-background: #0e2719; }
-/* The second dark ground. Sits 1.72:1 off forest, which is enough for two dark
-   sections to read as two sections rather than one long one — the brown `umber`
-   it replaces got that separation from being a different hue instead. */
-html[data-scroll-theme="pine"] { --page-background: #20503d; }
+ * Six grounds, and the page now spends most of its length on the two dark ones.
+ * That is the palette's own instruction rather than a preference: the kit's
+ * sunset tones measure 1.3-2.5:1 on a light neutral and 5.7-11:1 on the deep
+ * ink, so they can only be themselves against a dark ground. The light grounds
+ * are relief between them.
+ *
+ * `dusk` and `navy` sit 1.74:1 apart. That is deliberately the same separation
+ * the forest/pine pair had before this repaint (1.72:1) — proven to be enough for
+ * two dark sections to read as two rather than as one long one, without either
+ * losing its own identity. `sand` and `clay` are the warm light pair, carrying
+ * the sunset half of the palette at low saturation. */
+html[data-scroll-theme="haze"] { --page-background: #eef1f2; }
+html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
+html[data-scroll-theme="sand"] { --page-background: #f0e7db; }
+html[data-scroll-theme="clay"] { --page-background: #e3d5c4; }
+html[data-scroll-theme="dusk"] { --page-background: #081b23; }
+html[data-scroll-theme="navy"] { --page-background: #2b4552; }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -133,7 +138,7 @@ p {
   transform: translateY(-160%);
   padding: 0.75rem 1rem;
   background: var(--color-paper);
-  color: var(--color-forest);
+  color: var(--color-navy);
   transition: transform var(--motion-ui) var(--ease-out-expo);
 }
 
@@ -173,21 +178,21 @@ p {
  * side of it, but its text sits on a full-bleed photograph and has to stay
  * white. Without the opt-out this rule wins on specificity and turns the
  * headline dark green on a dark picture. */
-section[data-scroll-theme="forest"]:not([data-ink="own"]),
-section[data-scroll-theme="pine"]:not([data-ink="own"]),
-footer[data-scroll-theme="forest"]:not([data-ink="own"]),
-footer[data-scroll-theme="pine"]:not([data-ink="own"]) {
+section[data-scroll-theme="dusk"]:not([data-ink="own"]),
+section[data-scroll-theme="navy"]:not([data-ink="own"]),
+footer[data-scroll-theme="dusk"]:not([data-ink="own"]),
+footer[data-scroll-theme="navy"]:not([data-ink="own"]) {
   --ink: var(--color-paper);
-  --ink-muted: rgba(238, 240, 234, 0.82);
-  --rule: rgba(255, 255, 255, 0.22);
+  --ink-muted: var(--color-muted-light);
+  --rule: var(--color-line-dark);
   --label-color: var(--color-accent-light);
   color: var(--ink);
 }
 
-section[data-scroll-theme="cream"]:not([data-ink="own"]),
+section[data-scroll-theme="haze"]:not([data-ink="own"]),
 section[data-scroll-theme="paper"]:not([data-ink="own"]),
-section[data-scroll-theme="sage"]:not([data-ink="own"]),
-section[data-scroll-theme="moss"]:not([data-ink="own"]) {
+section[data-scroll-theme="sand"]:not([data-ink="own"]),
+section[data-scroll-theme="clay"]:not([data-ink="own"]) {
   --ink: var(--color-ink);
   --ink-muted: var(--color-text-muted);
   --rule: var(--color-line);
@@ -204,18 +209,18 @@ section[data-scroll-theme="moss"]:not([data-ink="own"]) {
   text-transform: uppercase;
 }
 
-/* No per-ground label override is needed any more. The accent is green and was
-   chosen against *moss*, the tightest of the four light grounds, where it clears
-   5.65:1 — the rust it replaces measured 4.41:1 there and failed. The old rule
-   existed to rescue that accent on the warm grounds, which are now gone. */
+/* No per-ground label override is needed. The accent is navy and it is the only
+   one of the kit's colours that clears 4.5:1 on a light ground — 8.23:1 on
+   paper, 8.91:1 on haze, 8.27:1 on sand, 7.02:1 on clay. It cannot fail on any
+   of the four.
 
-/* Muted copy on the two light greens sits at 4.75–5.03:1 with the default token
-   — over the line, but only just, and an ambient bloom drifting across takes it
-   under. Darkening the token on those two grounds fixes every component at once,
-   rather than patching the two that happened to get noticed. 5.47:1 on moss. */
-html[data-scroll-theme="sage"],
-html[data-scroll-theme="moss"] {
-  --color-text-muted: #4f5850;
+   `clay` is the tightest light ground on the page, so muted copy is checked
+   against it: the default token measures 4.87:1 there. That clears 4.5:1, but
+   only just, and an ambient bloom drifting across takes it under — so the two
+   warm grounds darken the token, exactly as the two light greens used to. */
+html[data-scroll-theme="sand"],
+html[data-scroll-theme="clay"] {
+  --color-text-muted: #37484e;
 }
 
 .section-label--light {
@@ -301,7 +306,7 @@ html[data-scroll-theme="moss"] {
   --button-border: rgba(255, 253, 248, 0.7);
   --button-ink: var(--color-paper);
   --button-hover-ground: var(--color-paper);
-  --button-hover-ink: var(--color-forest-deep);
+  --button-hover-ink: var(--color-ground-deep);
 }
 
 /* The quieter of two adjacent actions on a dark ground. */
@@ -493,8 +498,8 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 .ambient--light {
   --ambient-bloom: rgba(120, 138, 106, 0.2);
   --ambient-bloom-alt: rgba(186, 121, 82, 0.13);
-  --ambient-mark: rgba(28, 48, 37, 0.1);
-  --ambient-vignette: rgba(28, 48, 37, 0.05);
+  --ambient-mark: rgba(8, 27, 35, 0.1);
+  --ambient-vignette: rgba(8, 27, 35, 0.05);
 }
 
 .ambient--dark {
@@ -682,7 +687,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    * 0.28 is deliberately light. Enough to separate the bar from the image at a
    * glance, not enough to read as a solid band across the top of the composition.
    */
-  background: rgba(28, 48, 37, 0.28);
+  background: rgba(8, 27, 35, 0.28);
   /* Unprefixed alone is not enough — Safari still needs the prefix, and without
      it the scrim renders flat rather than glassy on every Apple browser. */
   -webkit-backdrop-filter: blur(10px) saturate(115%);
@@ -707,7 +712,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .cinematic-header {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: rgba(28, 48, 37, 0.62);
+    background: rgba(8, 27, 35, 0.62);
   }
 }
 
@@ -721,7 +726,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 
 /* The solid state is already 96% opaque, so with transparency reduced it only
    needs the last 4% — the *same* cream, not a different one. `--color-canvas` is
-   #f8f5ec, which is what the rgba above is 96% of; `--color-paper` is #fffdf8 and
+   #eef1f2, which is what the rgba above is 96% of; `--color-paper` is #e5e8eb and
    would make the bar visibly whiter than it is with transparency on. */
 @media (prefers-reduced-transparency: reduce) {
   .cinematic-header--solid {
@@ -830,13 +835,13 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    with paper; on the solid cream bar that would be invisible, so it fills with
    forest instead. */
 .header-auth__button:hover {
-  color: var(--color-forest-deep);
+  color: var(--color-ground-deep);
   background: var(--color-paper);
 }
 
 .cinematic-header--solid .header-auth__button:hover {
   color: var(--color-paper);
-  background: var(--color-forest);
+  background: var(--color-navy);
 }
 
 .fullscreen-menu__auth {
@@ -906,7 +911,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   z-index: 90;
   visibility: hidden;
   overflow-y: auto;
-  background: var(--color-forest-deep);
+  background: var(--color-ground-deep);
   color: var(--color-paper);
   opacity: 0;
   transform: translateY(-2rem);
@@ -1078,7 +1083,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   min-height: 60rem;
   /* Matches the `sage` page tone. This section paints its own full-bleed
      background, so it would otherwise drift away from the scroll palette. */
-  background: #e0e6d8;
+  background: #f0e7db;
 }
 
 .approach-editorial__media { position: sticky; top: 0; height: 100vh; overflow: hidden; }
@@ -1088,13 +1093,13 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    its right; 18ch settles it into two. */
 .approach-editorial__content h2 { max-width: 18ch; margin-top: 1.5rem; font-size: var(--type-h2); }
 .approach-editorial__lede { max-width: 45ch; margin-top: 2rem; color: var(--color-text-muted); }
-.approach-editorial ol { margin-top: 4rem; border-top: 1px solid rgba(28, 48, 37, 0.24); }
+.approach-editorial ol { margin-top: 4rem; border-top: 1px solid rgba(8, 27, 35, 0.24); }
 .approach-editorial li {
   display: grid;
   grid-template-columns: 3rem 1fr;
   gap: 1rem;
   padding-block: 1.6rem;
-  border-bottom: 1px solid rgba(28, 48, 37, 0.24);
+  border-bottom: 1px solid rgba(8, 27, 35, 0.24);
 }
 .approach-editorial li > span { color: var(--color-accent); font-size: 0.72rem; letter-spacing: 0.08em; }
 .approach-editorial li h3 { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.2; }
@@ -1125,20 +1130,20 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    treatment below is invisible to anyone not using a pointer. */
 @media (hover: hover) {
   .work-card:hover {
-    border-color: rgba(28, 48, 37, 0.34);
+    border-color: rgba(8, 27, 35, 0.34);
     transform: translateY(-0.5rem);
     box-shadow: var(--shadow-card-lift);
   }
 }
 
 .work-card:focus-within {
-  border-color: rgba(28, 48, 37, 0.34);
+  border-color: rgba(8, 27, 35, 0.34);
   transform: translateY(-0.5rem);
   box-shadow: var(--shadow-card-lift);
 }
 
 .work-card article { display: flex; flex-direction: column; height: 100%; }
-.work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #dfe5dd; }
+.work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #1b333d; }
 
 .work-card__media .parallax-media { width: 100%; height: 100%; }
 
@@ -1187,7 +1192,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   position: absolute;
   inset: auto 0 0 0;
   height: 30%;
-  background: linear-gradient(to top, rgba(14, 39, 25, 0.14), transparent);
+  background: linear-gradient(to top, rgba(8, 27, 35, 0.14), transparent);
   pointer-events: none;
 }
 
@@ -1221,9 +1226,9 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 /* `overflow: clip`, not `overflow-x: clip`: the background photograph is inset
    -4rem top and bottom so its parallax travel never reveals an edge, and clipping
    only the horizontal axis would let it spill into the section above. */
-.cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-forest-deep); color: var(--color-paper); }
+.cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-ground-deep); color: var(--color-paper); }
 .footer-button { display: inline-flex; align-items: center; gap: 2rem; margin-top: 2.5rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
-.footer-button:hover { background: var(--color-paper); color: var(--color-forest-deep); }
+.footer-button:hover { background: var(--color-paper); color: var(--color-ground-deep); }
 .cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.22); font-size: 0.72rem; }
 /* Wider than the header's mark, because this one is the footer's masthead rather
    than a fixture in a 4.5rem bar, and it is the only place the logo gets to be
@@ -1464,19 +1469,19 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    for it to fall on. The separation has to come from light instead — a faint warm
    ring, well under the strength of the hairline this replaces, plus a deep
    ambient shadow that still does quiet work under the lower edge. */
-section[data-scroll-theme="forest"] .photo-frame,
-section[data-scroll-theme="pine"] .photo-frame,
-footer[data-scroll-theme="forest"] .photo-frame,
-footer[data-scroll-theme="pine"] .photo-frame {
+section[data-scroll-theme="dusk"] .photo-frame,
+section[data-scroll-theme="navy"] .photo-frame,
+footer[data-scroll-theme="dusk"] .photo-frame,
+footer[data-scroll-theme="navy"] .photo-frame {
   box-shadow:
     0 0 0 1px rgba(255, 253, 248, 0.09),
     0 1rem 2.25rem -0.85rem rgba(0, 0, 0, 0.5);
 }
 
-section[data-scroll-theme="forest"] .photo-frame--plate,
-section[data-scroll-theme="pine"] .photo-frame--plate,
-footer[data-scroll-theme="forest"] .photo-frame--plate,
-footer[data-scroll-theme="pine"] .photo-frame--plate {
+section[data-scroll-theme="dusk"] .photo-frame--plate,
+section[data-scroll-theme="navy"] .photo-frame--plate,
+footer[data-scroll-theme="dusk"] .photo-frame--plate,
+footer[data-scroll-theme="navy"] .photo-frame--plate {
   box-shadow:
     0 0 0 1px rgba(255, 253, 248, 0.11),
     0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.6);
@@ -1720,17 +1725,17 @@ footer[data-scroll-theme="pine"] .photo-frame--plate {
   background:
     linear-gradient(
       90deg,
-      rgba(6, 22, 14, 0.54),
-      rgba(6, 22, 14, 0.22) 52%,
-      rgba(6, 22, 14, 0.02) 78%
+      rgba(6, 20, 26, 0.54),
+      rgba(6, 20, 26, 0.22) 52%,
+      rgba(6, 20, 26, 0.02) 78%
     ),
     /* Reaches to 68% rather than 46%: the eyebrow is the topmost line of the copy
        block and sat just above where the old foot gradient stopped, landing it on
        bright water at 3.90:1 against the 4.5:1 it needs as small text. */
     linear-gradient(
       0deg,
-      rgba(6, 22, 14, 0.48),
-      rgba(6, 22, 14, 0.22) 46%,
+      rgba(6, 20, 26, 0.48),
+      rgba(6, 20, 26, 0.22) 46%,
       transparent 68%
     ),
     /* A short band under the header only.
@@ -1742,8 +1747,8 @@ footer[data-scroll-theme="pine"] .photo-frame--plate {
      * strip that needs it. */
     linear-gradient(
       180deg,
-      rgba(6, 22, 14, 0.62),
-      rgba(6, 22, 14, 0.28) 12%,
+      rgba(6, 20, 26, 0.62),
+      rgba(6, 20, 26, 0.28) 12%,
       transparent 22%
     );
 }
@@ -1837,7 +1842,7 @@ footer[data-scroll-theme="pine"] .photo-frame--plate {
      gutter rather than the ~14px hairline of inset this had, which read as a
      rendering artefact rather than a mount. */
   padding: var(--gutter);
-  background: var(--color-forest-deep);
+  background: var(--color-ground-deep);
 }
 
 .principle-band__frame {
@@ -1882,12 +1887,12 @@ footer[data-scroll-theme="pine"] .photo-frame--plate {
   background:
     linear-gradient(
       180deg,
-      rgba(7, 30, 17, 0.08) 0%,
-      rgba(6, 26, 15, 0.3) 40%,
-      rgba(5, 21, 13, 0.76) 72%,
-      rgba(4, 18, 11, 0.92) 100%
+      rgba(7, 24, 31, 0.08) 0%,
+      rgba(6, 21, 27, 0.3) 40%,
+      rgba(5, 18, 24, 0.76) 72%,
+      rgba(4, 15, 20, 0.92) 100%
     ),
-    linear-gradient(90deg, rgba(5, 22, 13, 0.5), transparent 58%);
+    linear-gradient(90deg, rgba(5, 19, 25, 0.5), transparent 58%);
 }
 
 .principle-band__content {
@@ -2204,7 +2209,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .founder-card__body blockquote p {
   max-width: 62ch;
-  color: rgba(238, 240, 234, 0.82);
+  color: rgba(226, 232, 235, 0.82);
   line-height: 1.68;
 }
 
@@ -2230,7 +2235,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 }
 
 .founder-card__attribution span {
-  color: rgba(238, 240, 234, 0.6);
+  color: rgba(226, 232, 235, 0.6);
   font-size: var(--type-meta);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
@@ -2296,7 +2301,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   margin-top: 1.75rem;
   /* Lightened from the muted ink used on the pale grounds: on forest that value
      measures under 4.5:1. This clears it. */
-  color: rgba(238, 240, 234, 0.82);
+  color: rgba(226, 232, 235, 0.82);
   font-size: var(--type-body-md);
   line-height: 1.68;
 }
@@ -2496,7 +2501,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   margin-top: 1.5rem;
   margin-bottom: 1.75rem;
   /* `--ink-muted` first: this band renders on the forest ground now, where the
-     light-ground #596159 is very nearly invisible. The theme sets `--ink-muted`
+     light-ground #44585f is very nearly invisible. The theme sets `--ink-muted`
      per ground, and the fallback keeps this correct if the band ever moves back
      onto cream. */
   color: var(--ink-muted, var(--color-text-muted));
@@ -2633,7 +2638,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .cinematic-footer__org {
   margin-top: 0.35rem;
-  color: rgba(238, 240, 234, 0.6);
+  color: rgba(226, 232, 235, 0.6);
   font-size: 0.82rem;
 }
 
@@ -2702,9 +2707,9 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   .lede-hero__scrim::after {
     background: linear-gradient(
       0deg,
-      rgba(6, 22, 14, 0.66),
-      rgba(6, 22, 14, 0.3) 58%,
-      rgba(6, 22, 14, 0.12)
+      rgba(6, 20, 26, 0.66),
+      rgba(6, 20, 26, 0.3) 58%,
+      rgba(6, 20, 26, 0.12)
     );
   }
 

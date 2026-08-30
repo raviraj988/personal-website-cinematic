@@ -55,7 +55,7 @@ export function EseLanding() {
         id="top"
         className="lede-hero"
         aria-labelledby="hero-title"
-        data-scroll-theme="cream"
+        data-scroll-theme="haze"
         /* The copy sits on a full-bleed photograph, not on the cream page tone,
            so this section sets its own light ink. See the note in globals.css. */
         data-ink="own"
@@ -96,8 +96,51 @@ export function EseLanding() {
         </div>
       </section>
 
+      {/* --------------------------------------------------------- pillars */}
+      {/*
+        ESE's three promises, as three cards.
+
+        The copy is `brand.tagline` — the same three clauses the footer sets and
+        every lockup in the kit uses. Nothing is written for this section.
+
+        Each card carries one of the three brand gradients, which were defined in
+        `tokens.css` when the logo work landed and had never been wired to
+        anything. They are the emblem's own protection bands.
+
+        ON THE PAIRING: the kit ties its three bands to plant life, water and
+        sunrise, and its seal wraps the same emblem in "Protect · Empower ·
+        Connect". Those are two different triads, so the gradient assigned to each
+        clause here is a VISUAL pairing and not a claim the kit makes. It is
+        decoration that belongs to the brand, not a statement about meaning.
+      */}
+      <section
+        className="pillars section-shell"
+        aria-labelledby="pillars-title"
+        data-scroll-theme="dusk"
+      >
+        <AmbientLayer blooms={1} />
+        <Reveal className="pillars__head" variant="rule">
+          <p className="section-label section-label--light">{ese.abbreviation}</p>
+          <h2 id="pillars-title">What we are here to do</h2>
+        </Reveal>
+
+        <Reveal className="pillar-cards">
+          <ol>
+            {brand.tagline.map((line, index) => (
+              <li key={line} style={{ "--i": index } as CSSProperties} data-band={index}>
+                <span className="pillar-card__band" aria-hidden="true" />
+                <span className="pillar-card__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <p className="pillar-card__line">{line}</p>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+      </section>
+
       {/* ------------------------------------------------------- what is ESE */}
-      <section id="about" className="org-intro section-shell" aria-labelledby="about-title" data-scroll-theme="forest">
+      <section id="about" className="org-intro section-shell" aria-labelledby="about-title" data-scroll-theme="dusk">
         <AmbientLayer blooms={1} marks vignette tone="dark" />
         <div className="org-intro__grid">
           <Reveal className="org-intro__copy">
@@ -146,7 +189,7 @@ export function EseLanding() {
       </section>
 
       {/* ------------------------------------------------- who we are */}
-      <section id="who-we-are" className="network-band" aria-labelledby="network-title" data-scroll-theme="forest">
+      <section id="who-we-are" className="network-band" aria-labelledby="network-title" data-scroll-theme="dusk">
         <AmbientLayer blooms={1} marks />
         <div className="network-band__inner">
           <Reveal className="network-band__copy">
@@ -197,7 +240,7 @@ export function EseLanding() {
       <section
         className="principle-band"
         aria-labelledby="mission-title"
-        data-scroll-theme="forest"
+        data-scroll-theme="dusk"
       >
         {/* The photograph sits inside a frame so the forest ground shows as a
             thin border around it, rather than bleeding to the viewport edge. */}
@@ -236,7 +279,7 @@ export function EseLanding() {
         id="people"
         className="people-band section-shell"
         aria-labelledby="people-title"
-        data-scroll-theme="cream"
+        data-scroll-theme="haze"
       >
         <AmbientLayer blooms={1} marks />
 
@@ -260,7 +303,7 @@ export function EseLanding() {
       </section>
 
       {/* --------------------------------------------------- who we serve */}
-      <section id="who-we-serve" className="serve-band section-shell" aria-labelledby="serve-title" data-scroll-theme="cream">
+      <section id="who-we-serve" className="serve-band section-shell" aria-labelledby="serve-title" data-scroll-theme="haze">
         <AmbientLayer blooms={1} />
         <Reveal className="serve-band__heading" variant="rule">
           <p className="section-label">04 — {ese.whoWeServe.eyebrow}</p>
@@ -306,7 +349,7 @@ export function EseLanding() {
       </section>
 
       {/* -------------------------------------------------------- services */}
-      <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="cream">
+      <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="haze">
         <AmbientLayer blooms={2} marks />
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">05 — {ese.services.eyebrow}</p>
@@ -351,7 +394,7 @@ export function EseLanding() {
       </section>
 
       {/* ------------------------------------------------------ case study */}
-      <section className="case-study" aria-labelledby="case-title" data-scroll-theme="forest">
+      <section className="case-study" aria-labelledby="case-title" data-scroll-theme="dusk">
         <AmbientLayer blooms={1} vignette tone="dark" />
         <div className="case-study__inner">
           <Reveal className="case-study__media" variant="fade">
@@ -393,7 +436,7 @@ export function EseLanding() {
         drop shadow for the light ring the dark grounds use — a shadow is invisible
         on forest, so separation has to come from light instead.
       */}
-      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="forest">
+      <section className="scholarship-band section-shell" aria-labelledby="scholarship-title" data-scroll-theme="dusk">
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid">
           <Reveal className="scholarship-band__inner">
@@ -427,7 +470,7 @@ export function EseLanding() {
         1227px tall — so the photograph beside it had to stretch to match and
         cropped down to a band of ceiling tiles.
       */}
-      <section className="scholarship-band section-shell" aria-labelledby="partner-title" data-scroll-theme="cream">
+      <section className="scholarship-band section-shell" aria-labelledby="partner-title" data-scroll-theme="haze">
         <AmbientLayer blooms={1} marks />
         <div className="scholarship-band__grid scholarship-band__grid--reverse">
           <Reveal className="scholarship-band__inner">
@@ -458,7 +501,7 @@ export function EseLanding() {
 
 
       {/* ----------------------------------------------------------- tools */}
-      <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="cream">
+      <section className="tools-index section-shell" aria-labelledby="tools-title" data-scroll-theme="haze">
         <AmbientLayer blooms={1} marks />
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">10 — {ese.tools.eyebrow}</p>
@@ -492,7 +535,7 @@ export function EseLanding() {
           same reason as the hero. */}
       {/* Composition restored to `main`: a contained panoramic image carrying one
           overlaid line, then a centred call to action. */}
-      <footer id="contact" className="cinematic-footer" data-scroll-theme="forest">
+      <footer id="contact" className="cinematic-footer" data-scroll-theme="dusk">
         <AmbientLayer blooms={2} marks vignette tone="dark" />
 
         <div className="cinematic-footer__visual">

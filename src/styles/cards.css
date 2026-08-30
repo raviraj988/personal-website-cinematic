@@ -110,7 +110,7 @@
 @media (hover: hover) {
   .audience-cards li:hover {
     transform: translateY(-0.35rem);
-    border-color: rgba(28, 48, 37, 0.34);
+    border-color: rgba(8, 27, 35, 0.34);
     box-shadow: var(--shadow-card-lift);
   }
   .audience-cards li:hover::before {
@@ -211,7 +211,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
 
 /* ------------------------------------------------------- prose on the green
  *
- * Sections 01 and 02, which sit on flat `--color-forest-deep`.
+ * Sections 01 and 02, which sit on flat `--color-ground-deep`.
  *
  * These were cards and are deliberately not any more. A bordered panel on a flat
  * dark ground has nothing to separate from — it has to be lit into existence with
@@ -237,7 +237,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   position: relative;
   max-width: 54ch;
   padding-left: clamp(1rem, 1.8vw, 1.5rem);
-  color: var(--ink-muted, rgba(238, 240, 234, 0.82));
+  color: var(--ink-muted, rgba(226, 232, 235, 0.82));
 }
 
 /* The hairline, as an element so it can be drawn from one end — a `border-left`
@@ -299,4 +299,134 @@ section.principle-band {
 
 .principle-band .principle-band__frame {
   width: min(100%, 84rem);
+}
+
+/* ---------------------------------------------------------- the pillar cards
+ *
+ * ESE's three promises on the deep ground, each carrying one of the brand's own
+ * gradients — the emblem's protection bands, defined in `tokens.css` with the
+ * logo work and never wired to anything until now.
+ *
+ * The gradient is the ONLY colour on the card. There is no tinted ground and no
+ * border on three sides: a bar across the head, the number, and the clause. On a
+ * dark ground that is enough to read as a card, and it lets the three sit as a
+ * set distinguished by hue rather than three identical boxes.
+ *
+ * The bar is what animates. It wipes across from the left as the card arrives and
+ * thickens on hover, so the gesture is the same one the rest of the page uses —
+ * a rule that draws itself — rather than a new vocabulary. */
+.pillar-cards ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pillar-cards li {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.25rem, 2.4vw, 1.9rem);
+  border: 1px solid var(--color-line-dark);
+  border-radius: var(--card-radius);
+  background: rgba(226, 232, 235, 0.04);
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    border-color var(--motion-ui) var(--ease-out-expo),
+    background-color var(--motion-ui) var(--ease-out-expo);
+}
+
+/* The band. One gradient per card, assigned by `data-band` — see the note in
+   `EseLanding.tsx` on why this pairing is visual rather than a claim. */
+.pillar-card__band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    transform 900ms var(--ease-out-expo),
+    height var(--motion-ui) var(--ease-out-expo);
+}
+
+.pillar-cards li[data-band="0"] .pillar-card__band { background: var(--grad-land); }
+.pillar-cards li[data-band="1"] .pillar-card__band { background: var(--grad-sunrise); }
+.pillar-cards li[data-band="2"] .pillar-card__band { background: var(--grad-water); }
+
+.reveal[data-visible="true"] .pillar-card__band {
+  transform: scaleX(1);
+  transition-delay: calc(var(--i) * 140ms + 120ms);
+}
+
+.pillar-card__num {
+  display: block;
+  color: var(--color-accent-light);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+.pillar-card__line {
+  margin-top: 0.8rem;
+  color: var(--color-paper);
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-weight: 300;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+@media (hover: hover) {
+  .pillar-cards li:hover {
+    transform: translateY(-0.4rem);
+    border-color: rgba(226, 232, 235, 0.32);
+    background: rgba(226, 232, 235, 0.07);
+  }
+  /* The band thickens rather than changing colour — the gradient is the card's
+     identity and recolouring it would break the set. */
+  .pillar-cards li:hover .pillar-card__band {
+    height: 6px;
+  }
+}
+
+/* Staggered arrival, off the one ancestor reveal like every other card family. */
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.reveal[data-visible="true"] .pillar-cards li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 620ms var(--ease-standard) calc(var(--i) * 140ms),
+    transform 760ms var(--ease-out-expo) calc(var(--i) * 140ms);
+}
+
+.pillars__head h2 {
+  margin-top: 1rem;
+  font-size: var(--type-h2);
+  font-weight: 300;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pillar-cards li,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  /* The band is shown drawn, not animated — it is the card's identity. */
+  .pillar-card__band {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
 }
