@@ -301,6 +301,26 @@ section.principle-band {
   width: min(100%, 84rem);
 }
 
+/* The angle the travelling edge is drawn from.
+ *
+ * Registered with `@property` because a bare custom property is a string to the
+ * animation engine — it would jump from 0deg to 360deg with nothing in between.
+ * Typing it as `<angle>` is what makes it interpolate, and is the whole reason
+ * the sweep moves rather than blinks.
+ *
+ * Where `@property` is unsupported the declaration is ignored, the angle stays
+ * at its fallback, and the arc simply sits still while the pointer glow carries
+ * on working. That is a static highlight, not a broken card. */
+@property --edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes edge-travel {
+  to { --edge-angle: 360deg; }
+}
+
 /* ============================================================ the glow cards
  *
  * A card whose border lights where the pointer is, fading up as the pointer
@@ -327,20 +347,36 @@ section.principle-band {
   isolation: isolate;
 }
 
-[data-glow-card]::before {
+[data-glow-card]::after {
   content: "";
   position: absolute;
   z-index: 3;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: radial-gradient(
-    /* Wider than the card so the falloff is gentle across it rather than a
-       tight dot tracking the cursor. */
-    16rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
-    var(--glow-colour, var(--color-accent-light)),
-    transparent 72%
-  );
+  /* TWO layers in one ring, because only one pseudo-element is free.
+   *
+   * The radial is the pointer glow. Beneath it the conic is a travelling arc
+   * that runs the perimeter — the border animation on the light grounds. They
+   * share the mask and the `--glow` opacity, so the sweep fades up with
+   * proximity exactly as the glow does rather than snapping in at `:hover`.
+   *
+   * `--edge-colour` is `transparent` by default, so the conic costs nothing and
+   * shows nothing until a ground opts in. */
+  background:
+    radial-gradient(
+      /* Wider than the card so the falloff is gentle across it rather than a
+         tight dot tracking the cursor. */
+      16rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      var(--glow-colour, var(--color-accent-light)),
+      transparent 72%
+    ),
+    conic-gradient(
+      from var(--edge-angle, 0deg),
+      transparent 0deg,
+      var(--edge-colour, transparent) 28deg,
+      transparent 74deg
+    );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -522,7 +558,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   .statement-card__band { transform: scaleX(1) !important; transition: none !important; }
   /* The ring is switched off entirely — it is pointer-driven light, which is
      exactly the kind of motion this preference is asking to stop. */
-  [data-glow-card]::before { display: none; }
+  [data-glow-card]::after { display: none; }
   .glow-card__desc { transition: none !important; }
 }
 
@@ -543,7 +579,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
    element. The service card draws its border, ground and radius on an inner
    `article`, so the ring has to be told the radius directly or it would trace a
    square around a rounded card. */
-.service-card[data-glow-card]::before {
+.service-card[data-glow-card]::after {
   border-radius: var(--card-radius);
 }
 
@@ -569,4 +605,32 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 .case-study__copy .statement-cards ol,
 .scholarship-band__inner .statement-cards ol {
   grid-template-columns: 1fr;
+}
+
+
+/* --------------------------------------------- the travelling edge, on light
+ *
+ * Only the light grounds opt in. The dark sections already have an animated
+ * edge — the gradient band that wipes across the head of every statement card —
+ * and running both would be two different things happening on one border.
+ *
+ * The arc runs on hover rather than continuously: thirteen cards each sweeping a
+ * gradient forever is a page that never settles, and it costs a composite every
+ * frame for animation nobody asked to watch. */
+[data-scroll-theme="haze"] [data-glow-card],
+[data-scroll-theme="paper"] [data-glow-card],
+[data-scroll-theme="sand"] [data-glow-card],
+[data-scroll-theme="clay"] [data-glow-card] {
+  --edge-colour: var(--color-accent);
+}
+
+[data-scroll-theme="haze"] [data-glow-card]:hover::after,
+[data-scroll-theme="paper"] [data-glow-card]:hover::after,
+[data-scroll-theme="sand"] [data-glow-card]:hover::after,
+[data-scroll-theme="clay"] [data-glow-card]:hover::after {
+  animation: edge-travel 2.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-glow-card]:hover::after { animation: none !important; }
 }
