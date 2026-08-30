@@ -503,29 +503,30 @@ section.principle-band {
   letter-spacing: var(--track-label);
 }
 
-/* BODY COPY, not display type.
+/* DISPLAY TYPE, and this has been both ways for a reason worth recording.
  *
- * This was set in the display face — light serif, up to 1.3rem, line-height 1.28,
- * `text-wrap: balance` — which was inherited from the pillar cards it grew out
- * of. That was right there, because those cards carried three-word clauses like
- * "Protect the environment". It is wrong here: every statement card carries a
- * full sentence, and the scholarship card runs to twenty words. A long sentence
- * in a thin display serif at 1.28 line-height reads as a mis-set heading.
+ * It was display type, then body copy, and is now display type again — because
+ * what the element HOLDS changed underneath it, not because the styling was
+ * being guessed at. It first carried a whole sentence, and a nineteen-word
+ * sentence in a thin display serif reads as a mis-set heading, so it was moved
+ * to the body treatment. The card now shows a two-or-three-word heading and
+ * holds its sentence behind hover, which is exactly what display type is for.
  *
- * So it takes the site's own body treatment, matching
- * `.case-study__copy > p` exactly: the sans face, `--type-body-md`, and the 1.68
- * leading every other paragraph on the page uses. Weight goes back to the
- * default — 300 is a display weight and looks washed out at body size.
+ * The rule to apply if this changes again: match the face to the content, not to
+ * the class name. Sentences take `--type-body-md` and 1.68 leading; headings take
+ * the serif.
  *
- * `text-wrap: pretty`, not `balance`. Balance is for headings of a few lines and
- * evens the ragged edge across all of them; on a paragraph it fights the
- * measure. Pretty only prevents orphans, which is what body copy wants. */
+ * `text-wrap: balance` is right here for the same reason it was wrong before —
+ * it evens the ragged edge of a heading across a few lines, which is what these
+ * are now. */
 .statement-card__line {
   margin-top: 0.75rem;
   color: var(--color-paper);
-  font-size: var(--type-body-md);
-  line-height: 1.68;
-  text-wrap: pretty;
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.18;
+  text-wrap: balance;
 }
 
 @media (hover: hover) {
@@ -652,4 +653,14 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 .audience-cards .glow-card__desc > span {
   border-top: 1px solid var(--color-line);
   padding-top: 0.6rem;
+}
+
+/* A section's lede — the line between its heading and its cards. One class for
+   every section that has one, so they cannot drift apart. */
+.section-lede {
+  max-width: 58ch;
+  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: var(--type-body-md);
+  line-height: 1.7;
 }

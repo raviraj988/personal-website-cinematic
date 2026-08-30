@@ -256,6 +256,16 @@ export const ese = {
      * photographs of identifiable people, which is a copy decision rather than a
      * layout one. Flagged here so it is not mistaken for intent.
      */
+    /**
+     * TODO(ese): DRAFTED HEADINGS, NOT TRANSCRIBED — need approval.
+     *
+     * The BODY of every card on this site is still the source document's own
+     * sentence, verbatim. These are only the short headings the cards show before
+     * you hover, paired positionally with the sentences above. Keeping them as a
+     * parallel list rather than duplicating the prose into card objects means the
+     * sentence has exactly one home and cannot drift from its heading.
+     */
+    cardHeadings: ["Expertise and experience", "The bridge"],
     image: wideImage(
       "ese/community-hopi-navajo-restoration.webp",
       "A still alpine lake below granite ridges, with pines along the near shore in late light.",
@@ -323,6 +333,24 @@ export const ese = {
       "We're a network of environmental engineers, consultants, sustainability organizers, and Tribal and community-focused advocates.",
       "Each person brings their specialized experience to a project to meet the needs of your community or Tribe.",
     ],
+    /**
+     * TODO(ese): DRAFTED HEADINGS, NOT TRANSCRIBED — need approval.
+     *
+     * The BODY of every card on this site is still the source document's own
+     * sentence, verbatim. These are only the short headings the cards show before
+     * you hover, paired positionally with the sentences above. Keeping them as a
+     * parallel list rather than duplicating the prose into card objects means the
+     * sentence has exactly one home and cannot drift from its heading.
+     */
+    /**
+     * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+     *
+     * A short line above this section's cards. The source document has no
+     * introductory sentence here; every sentence it does have is now the body of
+     * a card, so a lede could only be written or left absent.
+     */
+    lede: "ESE is assembled, not staffed. Who joins a project depends on what the project needs.",
+    cardHeadings: ["A network, not a firm", "Matched to the project"],
     image: image(
       "working-session",
       "A small working group around a conference table, reviewing material together.",
@@ -416,6 +444,24 @@ export const ese = {
       1800,
       921,
     ),
+    /**
+     * TODO(ese): DRAFTED HEADINGS, NOT TRANSCRIBED — need approval.
+     *
+     * The BODY of every card on this site is still the source document's own
+     * sentence, verbatim. These are only the short headings the cards show before
+     * you hover, paired positionally with the sentences above. Keeping them as a
+     * parallel list rather than duplicating the prose into card objects means the
+     * sentence has exactly one home and cannot drift from its heading.
+     */
+    /**
+     * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+     *
+     * A short line above this section's cards. The source document has no
+     * introductory sentence here; every sentence it does have is now the body of
+     * a card, so a lede could only be written or left absent.
+     */
+    lede: "Cost should not decide which communities get technical help.",
+    cardHeadings: ["Profits go back", "Ask about the program"],
     cta: { label: "Ask about the scholarship program", href: "#contact" },
   },
 
@@ -446,6 +492,14 @@ export const ese = {
     /** A count of what the document lists. The removed lede claimed "most
      *  projects draw on more than one", which the document does not say. */
     heading: "Five areas of support",
+    /**
+     * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+     *
+     * A short line above this section's cards. The source document has no
+     * introductory sentence here; every sentence it does have is now the body of
+     * a card, so a lede could only be written or left absent.
+     */
+    lede: "Five areas of support, offered singly or together depending on what a community is facing.",
     items: [
       {
         slug: "policy-support-and-sovereignty",
@@ -595,6 +649,16 @@ export const ese = {
     label: "PFAS Degradation",
     heading: "Developing a new process to degrade PFAS in water systems",
     body: "ESE is partnering with Bioremediation Resource Recovery Systems, LLC, to develop a new innovative process to degrade PFAS in water and wastewater systems. This process is covered by a provisional patent. Bench testing and field trials are underway; stay tuned for deployment opportunities.",
+    /**
+     * TODO(ese): DRAFTED HEADINGS, NOT TRANSCRIBED — need approval.
+     *
+     * The BODY of every card on this site is still the source document's own
+     * sentence, verbatim. These are only the short headings the cards show before
+     * you hover, paired positionally with the sentences above. Keeping them as a
+     * parallel list rather than duplicating the prose into card objects means the
+     * sentence has exactly one home and cannot drift from its heading.
+     */
+    cardHeadings: ["Provisional patent", "In field trials"],
     status: "Bench testing and field trials underway",
     /**
      * `case-study-water` was a soft snapshot of a river bank with ducks on it —
@@ -621,6 +685,14 @@ export const ese = {
     eyebrow: "Tools and resources",
     /** The document's own words for this section are exactly "Coming soon". */
     heading: "Coming soon",
+    /**
+     * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+     *
+     * A short line above this section's cards. The source document has no
+     * introductory sentence here; every sentence it does have is now the body of
+     * a card, so a lede could only be written or left absent.
+     */
+    lede: "Two resources in development, built to be used by communities directly.",
     items: [
       {
         title: "TAS for Tribes implementing the Clean Air Act (CAA)",

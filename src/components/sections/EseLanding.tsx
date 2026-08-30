@@ -62,44 +62,58 @@ function splitLead(paragraph: string): { lead: string; rest: string } {
   return { lead, rest: parts.slice(1).join(" ") };
 }
 
-/**
- * The dark sections' card set: one card per sentence, each revealing its own
- * remainder on hover. Shared by 01, 02, 06 and 07 so the four cannot drift.
- *
- * `offset` shifts which gradient band each card takes, so two adjacent sections
- * do not open with the same colour.
- */
 /** Every sentence of a paragraph, as its own line. */
 function splitSentences(paragraph: string): string[] {
   return paragraph.split(/(?<=\.)\s+/).filter(Boolean);
 }
 
-function StatementCards({ lines, offset = 0 }: { lines: string[]; offset?: number }) {
+/**
+ * The dark sections' card set: a short heading per card, with the source
+ * document's own sentence revealed on hover.
+ *
+ * The heading is the only drafted text — `cardHeadings` in `ese-content.ts`,
+ * marked for approval. The body is transcribed and unmodified.
+ *
+ * `zip` pairs them positionally and stops at the shorter list, so a missing
+ * heading drops that card rather than shifting every heading onto the wrong
+ * sentence — which is the failure that matters when two parallel arrays drift.
+ *
+ * `offset` shifts which gradient band each card takes, so two adjacent sections
+ * do not open on the same colour.
+ */
+function zip(headings: readonly string[], bodies: readonly string[]) {
+  return headings
+    .slice(0, bodies.length)
+    .map((heading, index) => ({ heading, body: bodies[index] as string }));
+}
+
+function StatementCards({
+  items,
+  offset = 0,
+}: {
+  items: { heading: string; body: string }[];
+  offset?: number;
+}) {
   return (
     <GlowCards className="statement-cards">
       <ol>
-        {lines.map((line, index) => {
-          const { lead, rest } = splitLead(line);
-          return (
-            <li
-              key={line}
-              style={{ "--i": index } as CSSProperties}
-              data-band={(index + offset) % 4}
-              data-glow-card
-            >
-              <span className="statement-card__band" aria-hidden="true" />
-              <span className="statement-card__num" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <p className="statement-card__line">{lead}</p>
-              {rest ? (
-                <span className="glow-card__desc">
-                  <span>{rest}</span>
-                </span>
-              ) : null}
-            </li>
-          );
-        })}
+        {items.map((item, index) => (
+          <li
+            key={item.heading}
+            style={{ "--i": index } as CSSProperties}
+            data-band={(index + offset) % 4}
+            data-glow-card
+          >
+            <span className="statement-card__band" aria-hidden="true" />
+            <span className="statement-card__num" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <p className="statement-card__line">{item.heading}</p>
+            <span className="glow-card__desc">
+              <span>{item.body}</span>
+            </span>
+          </li>
+        ))}
       </ol>
     </GlowCards>
   );
@@ -179,32 +193,12 @@ export function EseLanding() {
                 Each card shows the paragraph's opening sentence and reveals the
                 rest on hover. No copy is written: the split is at a full stop the
                 author already put there. */}
-            {/* Both paragraphs, not `slice(1)`. The separate lede that used to
-                sit here existed to keep the cards short — and the cards are short
-                now by construction, since each shows one sentence and holds the
-                rest behind hover. Using both paragraphs gives the section two
-                cards instead of one and loses no copy. */}
-            <GlowCards className="statement-cards">
-              <ol>
-                {ese.intro.paragraphs.map((paragraph, index) => {
-                  const { lead, rest } = splitLead(paragraph);
-                  return (
-                    <li key={paragraph} style={{ "--i": index } as CSSProperties} data-band={index} data-glow-card>
-                      <span className="statement-card__band" aria-hidden="true" />
-                      <span className="statement-card__num" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <p className="statement-card__line">{lead}</p>
-                      {rest ? (
-                        <span className="glow-card__desc">
-                          <span>{rest}</span>
-                        </span>
-                      ) : null}
-                    </li>
-                  );
-                })}
-              </ol>
-            </GlowCards>
+            {/* The first source paragraph is the lede; the second supplies the
+                cards, one per sentence. Only the headings are drafted. */}
+            <p className="org-intro__lede">{ese.intro.paragraphs[0]}</p>
+            <StatementCards
+              items={zip(ese.intro.cardHeadings, splitSentences(ese.intro.paragraphs[1] ?? ""))}
+            />
           </Reveal>
 
           {/* A real photograph of a real ESE session. People are visible, so it
@@ -230,31 +224,8 @@ export function EseLanding() {
           <Reveal className="network-band__copy">
             <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
-            {/* Same glow cards as 01. These two paragraphs are single
-                sentences in the source document, so they have no `rest` to
-                reveal — the cards carry the line and no hover panel. See
-                `splitLead`. */}
-            <GlowCards className="statement-cards">
-              <ol>
-                {ese.whoWeAre.body.map((paragraph, index) => {
-                  const { lead, rest } = splitLead(paragraph);
-                  return (
-                    <li key={paragraph} style={{ "--i": index } as CSSProperties} data-band={index + 1} data-glow-card>
-                      <span className="statement-card__band" aria-hidden="true" />
-                      <span className="statement-card__num" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <p className="statement-card__line">{lead}</p>
-                      {rest ? (
-                        <span className="glow-card__desc">
-                          <span>{rest}</span>
-                        </span>
-                      ) : null}
-                    </li>
-                  );
-                })}
-              </ol>
-            </GlowCards>
+            <p className="org-intro__lede">{ese.whoWeAre.lede}</p>
+            <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body)} offset={1} />
           </Reveal>
 
           {/* Another real photograph — an ESE session, people visible. */}
@@ -412,6 +383,7 @@ export function EseLanding() {
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">05 — {ese.services.eyebrow}</p>
           <ScrollWords as="h2" id="services-title" text={ese.services.heading} />
+          <p className="section-lede">{ese.services.lede}</p>
         </Reveal>
 
         <GlowCards>
@@ -435,7 +407,12 @@ export function EseLanding() {
                       <span className="mask-rise__inner">{service.title}</span>
                     </span>
                   </h3>
-                  <p>{service.description}</p>
+                  {/* Behind hover, like every other card on the site. These
+                      descriptions run to fifty words and were the reason the
+                      service cards read as long as they did. */}
+                  <span className="glow-card__desc">
+                    <span>{service.description}</span>
+                  </span>
 
                   {/* Pushed to the foot of the card by `margin-top: auto`, so the
                       five buttons sit on one line regardless of how much
@@ -481,7 +458,7 @@ export function EseLanding() {
                 schema or metadata reads it — so it is left in the content file
                 rather than deleted, in case the badge is ever wanted back. */}
             <p className="case-study__lede">{splitLead(ese.caseStudy.body).lead}</p>
-            <StatementCards lines={caseStudyFacts} offset={2} />
+            <StatementCards items={zip(ese.caseStudy.cardHeadings, caseStudyFacts)} offset={2} />
           </Reveal>
         </div>
       </section>
@@ -507,8 +484,11 @@ export function EseLanding() {
           <Reveal className="scholarship-band__inner">
             <p className="section-label">07 — {ese.scholarship.eyebrow}</p>
             <ScrollWords as="h2" id="scholarship-title" text={ese.scholarship.heading} />
-            {/* Both sentences as cards. The heading is the text above them. */}
-            <StatementCards lines={splitSentences(ese.scholarship.body)} offset={1} />
+            <p className="org-intro__lede">{ese.scholarship.lede}</p>
+            <StatementCards
+              items={zip(ese.scholarship.cardHeadings, splitSentences(ese.scholarship.body))}
+              offset={3}
+            />
             <a className="button" href={ese.scholarship.cta.href}>
               {ese.scholarship.cta.label} <Arrow />
             </a>
@@ -572,6 +552,7 @@ export function EseLanding() {
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">10 — {ese.tools.eyebrow}</p>
           <ScrollWords as="h2" id="tools-title" text={ese.tools.heading} />
+          <p className="section-lede">{ese.tools.lede}</p>
         </Reveal>
 
         {/*
@@ -585,7 +566,9 @@ export function EseLanding() {
             <Reveal as="li" key={tool.title} delay={index * 90} data-glow-card>
               <p className="tools-list__status">In development</p>
               <h3>{tool.title}</h3>
-              <p>{tool.description}</p>
+              <span className="glow-card__desc">
+                <span>{tool.description}</span>
+              </span>
             </Reveal>
           ))}
         </ol>
