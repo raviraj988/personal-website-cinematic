@@ -160,7 +160,10 @@ function buildEse(): RegisteredSite {
     role: brand.role,
     origin: SITE_ORIGIN,
     indexingEnabled: SEARCH_ENGINE_INDEXING,
-    audience: [...ese.whoWeServe.audiences],
+    /* Names only. `audiences` gained a `description` per entry for the site's
+       cards; this field is the flat list machine consumers already expect, so it
+       is mapped rather than spread. */
+    audience: ese.whoWeServe.audiences.map((audience) => audience.name),
     positioning: ese.intro.paragraphs[0] ?? "",
     mission: ese.mission.statement,
     services,

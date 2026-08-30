@@ -160,7 +160,20 @@ export const people = {
    */
   heading: "Decades of technical expertise",
   /** The document's own sentence about the network, used as this group's lede. */
-  lede: "Each person brings their specialized experience to a project to meet the needs of your community or Tribe.",
+  /**
+   * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs Laura's approval before launch.
+   *
+   * Everything else in this file comes from `ESE Website language_CM Notes1.docx`.
+   * This does not: it was written to replace a line that was a verbatim duplicate
+   * of `ese.whoWeAre.body[1]`, so the same sentence was appearing twice on the
+   * landing page, once at 02 and again at 03.
+   *
+   * It is deliberately conservative. It restates only what the source document
+   * already establishes — that ESE is a network, and that people are drawn onto a
+   * project by what it needs — and adds no claim about size, tenure, credentials
+   * or past engagements, none of which the source supports.
+   */
+  lede: "ESE is a network rather than a firm. Each project draws on the people whose expertise it actually calls for, so the team you work with is assembled around your community's questions — technical, regulatory and practical — rather than handed down from a fixed roster.",
   cta: { label: "Read full biographies", href: "/people" },
 
   /**
@@ -333,13 +346,53 @@ export const ese = {
       "conference-session",
       "A conference hall with attendees seated at round tables facing two projection screens.",
     ),
+    /**
+     * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval, as above.
+     *
+     * The source document lists these six audiences by name and says nothing
+     * further about any of them. `intro` and every `description` below were
+     * written for this site.
+     *
+     * They are deliberately DEFINITIONAL rather than promissory: each line says
+     * what that kind of body IS, not what ESE has done for one or will do for
+     * yours. That distinction matters — a description like "we secure funding for
+     * Tribal consortia" would be a claim about ESE's record that nothing in the
+     * source supports, while "groups of Tribes working together on shared
+     * environmental priorities" is just what the words mean.
+     */
+    intro:
+      "Environmental responsibility rarely sits with a single body. ESE works across the governments, agencies, enterprises and community organizations that share the same land, water and air — and with the communities living with the results.",
     audiences: [
-      "Native Nations governments",
-      "Tribal consortia",
-      "Tribal enterprises",
-      "Federal and state agencies and grant programs",
-      "Individual communities",
-      "Community-based organizations",
+      {
+        name: "Native Nations governments",
+        description:
+          "Tribal governments exercising environmental authority over their own lands.",
+      },
+      {
+        name: "Tribal consortia",
+        description:
+          "Groups of Tribes working together on shared environmental priorities.",
+      },
+      {
+        name: "Tribal enterprises",
+        description:
+          "Tribally owned operations balancing commercial activity with environmental responsibility.",
+      },
+      {
+        name: "Federal and state agencies and grant programs",
+        description:
+          "Public bodies administering environmental programs and the funding behind them.",
+      },
+      {
+        name: "Individual communities",
+        description:
+          "Neighborhoods and towns living with environmental conditions that affect daily life.",
+      },
+      {
+        name: "Community-based organizations",
+        description:
+          "Local organizations advocating for the places and people they belong to.",
+      },
     ],
   },
 

@@ -60,26 +60,6 @@ export function PersonCard({
       <span className="person-card__band" aria-hidden="true" />
       {person.portrait ? (
         <div className="person-card__media photo-frame">
-          {/* The summary, over the portrait.
-           *
-           * `person.summary` is real copy that has been in `ese-content.ts` all
-           * along and rendered nowhere once the card was cut back to a portrait,
-           * a name and a role. Hover is what lets the card stay small and still
-           * carry it.
-           *
-           * It overlays the PORTRAIT rather than expanding the card. These sit in
-           * a grid, and a grid row is as tall as its tallest item — growing one
-           * card inline would push every card beside it and the whole page below
-           * it, on hover. An overlay costs no layout at all.
-           *
-           * Joshua's summary is an empty string, because nothing in the source
-           * document describes him, so his card renders no panel rather than
-           * inventing a biography for a named person. */}
-          {person.summary ? (
-            <div className="person-card__summary">
-              <p>{person.summary}</p>
-            </div>
-          ) : null}
           <ParallaxImage
             src={person.portrait.src}
             alt={person.portrait.alt}
@@ -116,6 +96,27 @@ export function PersonCard({
         </Heading>
         {person.role ? <p className="person-card__role">{person.role}</p> : null}
 
+        {/* The summary, below the card's own text — the card expands to show it
+            rather than the panel covering the portrait.
+         *
+         * `person.summary` is real copy that has been in `ese-content.ts` all
+         * along and rendered nowhere once the card was cut back to a portrait, a
+         * name and a role.
+         *
+         * The layout cost is real and accepted: these sit in a grid, a grid row
+         * is as tall as its tallest item, so an expanding card grows its row.
+         * `.people-group__grid` sets `align-items: start` so the cards beside it
+         * are not stretched to match — the movement stays in the row rather than
+         * resizing every sibling.
+         *
+         * Joshua's summary is an empty string — nothing in the source document
+         * describes him — so his card renders no panel rather than inventing a
+         * biography for a named person. */}
+        {person.summary ? (
+          <span className="glow-card__desc">
+            <span>{person.summary}</span>
+          </span>
+        ) : null}
       </div>
     </article>
   );

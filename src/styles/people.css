@@ -196,7 +196,9 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 
 /* The description and the pending line both need clearance from the button
    beneath them; `margin-top: auto` on the CTA collapses that otherwise. */
-.person-card__summary,
+/* `.person-card__summary` is gone from the markup — the summary is now a
+   `.glow-card__desc` panel that expands the card. The pending line keeps the
+   clearance rule. */
 .person-card__pending {
   margin-bottom: 1.5rem;
 }
@@ -311,61 +313,6 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 /* No responsive overrides for the grid: `auto-fit` with a `min()` floor already
    collapses to one column when the viewport cannot hold two. */
 
-/* ------------------------------------------------- the summary, on the portrait
- *
- * Slides up over the photograph on hover or keyboard focus, leaving the name and
- * role below it visible the whole time.
- *
- * It overlays rather than expanding the card, and that is a layout decision, not
- * a stylistic one: these cards sit in a grid, a grid row is as tall as its
- * tallest item, so a card that grows on hover pushes every card beside it and
- * everything below. An overlay costs no layout.
- *
- * The ground is the page's own ink at 0.93, so paper text on it measures well
- * past 4.5:1 whatever the portrait underneath happens to be — the one thing a
- * scrim over an unknown photograph has to guarantee. */
-.person-card__summary {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  display: grid;
-  align-content: end;
-  padding: clamp(0.9rem, 2vw, 1.15rem);
-  background: linear-gradient(
-    to top,
-    rgba(8, 27, 35, 0.95) 0%,
-    rgba(8, 27, 35, 0.9) 55%,
-    rgba(8, 27, 35, 0.72) 100%
-  );
-  opacity: 0;
-  /* Held a little low and lifted in, rather than only fading — the same settle
-     the card families use, so it arrives instead of appearing. */
-  transform: translateY(0.6rem);
-  transition:
-    opacity 380ms var(--ease-standard),
-    transform 520ms var(--ease-out-expo);
-  pointer-events: none;
-}
-
-.person-card__summary p {
-  color: var(--color-paper);
-  font-size: 0.82rem;
-  line-height: 1.62;
-  /* The portrait is 2:3 and the summary runs to about thirty-five words, so on
-     the narrowest card it can overrun. Clamped rather than allowed to spill:
-     the full text is on the /people page, which the card links to. */
-  display: -webkit-box;
-  -webkit-line-clamp: 9;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.person-card:hover .person-card__summary,
-.person-card:focus-within .person-card__summary {
-  opacity: 1;
-  transform: none;
-}
-
 /* ------------------------------------------------------------ premium polish
  *
  * A gradient band across the head of the card, matching the statement cards on
@@ -390,11 +337,19 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .person-card__summary {
-    transition: none !important;
-  }
   .person-card__band {
     transform: scaleX(1) !important;
     transition: none !important;
   }
+}
+
+/* The grid does not stretch its cards.
+ *
+ * A card expanding on hover grows its row; with the default `stretch` every
+ * other card in that row would be pulled to the new height too, so one hover
+ * resized the whole row. `start` lets each card keep its own height and confines
+ * the movement to the row itself. */
+.people-group__grid,
+.people-page__grid {
+  align-items: start;
 }

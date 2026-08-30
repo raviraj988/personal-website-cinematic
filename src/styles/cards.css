@@ -634,3 +634,22 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 @media (prefers-reduced-motion: reduce) {
   [data-glow-card]:hover::after { animation: none !important; }
 }
+
+/* The paragraph above section 04's audience cards. Matches the body treatment
+   the rest of the page uses, and is held to a measure so it reads as a lede
+   rather than as a column of prose over the cards. */
+.serve-band__intro {
+  max-width: 58ch;
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+/* The audience card's hover panel needs a rule above it: the card is a compact
+   two-line tile, so the description arriving with no separation reads as a third
+   line of the name rather than as a different kind of text. */
+.audience-cards .glow-card__desc > span {
+  border-top: 1px solid var(--color-line);
+  padding-top: 0.6rem;
+}

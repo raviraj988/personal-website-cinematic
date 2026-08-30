@@ -80,7 +80,7 @@ export default async function ServicePage({ params }: PageProps) {
     provider: { "@id": `${SITE_ORIGIN}/#organization` },
     audience: ese.whoWeServe.audiences.map((audience) => ({
       "@type": "Audience",
-      audienceType: audience,
+      audienceType: audience.name,
     })),
   };
 
@@ -147,7 +147,7 @@ export default async function ServicePage({ params }: PageProps) {
               </h2>
               <ul className="service-page__audiences">
                 {ese.whoWeServe.audiences.map((audience) => (
-                  <li key={audience}>{audience}</li>
+                  <li key={audience.name}>{audience.name}</li>
                 ))}
               </ul>
             </section>

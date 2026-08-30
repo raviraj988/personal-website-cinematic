@@ -360,6 +360,7 @@ export function EseLanding() {
         <Reveal className="serve-band__heading" variant="rule">
           <p className="section-label">04 — {ese.whoWeServe.eyebrow}</p>
           <ScrollWords as="h2" id="serve-title" text={ese.whoWeServe.heading} />
+          <p className="serve-band__intro">{ese.whoWeServe.intro}</p>
         </Reveal>
         <div className="serve-band__body">
           {/*
@@ -379,11 +380,14 @@ export function EseLanding() {
             <GlowCards>
             <ol>
               {ese.whoWeServe.audiences.map((audience, index) => (
-                <li key={audience} style={{ "--i": index } as CSSProperties} data-glow-card>
+                <li key={audience.name} style={{ "--i": index } as CSSProperties} data-glow-card>
                   <span className="audience-card__num" aria-hidden="true">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="audience-card__name">{audience}</span>
+                  <span className="audience-card__name">{audience.name}</span>
+                  <span className="glow-card__desc">
+                    <span>{audience.description}</span>
+                  </span>
                 </li>
               ))}
             </ol>
