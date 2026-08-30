@@ -7,6 +7,7 @@ import { Arrow } from "@/components/ui/Arrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { VideoBackdrop } from "@/components/motion/VideoBackdrop";
+import { GlowCards } from "@/components/motion/GlowCards";
 import { ScrollDissolve } from "@/components/motion/ScrollDissolve";
 import { ScrollWords } from "@/components/motion/ScrollWords";
 import { NewsTeaser } from "@/components/news/NewsTeaser";
@@ -40,6 +41,21 @@ import {
  * Photographs render in their own colour. See the note on `photo-frame` in
  * `globals.css` for the treatment that used to be here and why it is gone.
  */
+/**
+ * Splits a paragraph into its opening sentence and whatever follows.
+ *
+ * The card shows the lead; the rest is revealed on hover. This is progressive
+ * disclosure of copy that is already in `ese-content.ts` — nothing is written,
+ * summarised or reworded, and the split is at a full stop the author put there.
+ *
+ * A single-sentence paragraph yields no `rest`, and its card simply has no hover
+ * panel. That is the honest outcome rather than padding it with invented text.
+ */
+function splitLead(paragraph: string): { lead: string; rest: string } {
+  const parts = paragraph.split(/(?<=\.)\s+/);
+  return { lead: parts[0] ?? paragraph, rest: parts.slice(1).join(" ") };
+}
+
 export function EseLanding() {
   return (
     <>
@@ -96,49 +112,6 @@ export function EseLanding() {
         </div>
       </section>
 
-      {/* --------------------------------------------------------- pillars */}
-      {/*
-        ESE's three promises, as three cards.
-
-        The copy is `brand.tagline` — the same three clauses the footer sets and
-        every lockup in the kit uses. Nothing is written for this section.
-
-        Each card carries one of the three brand gradients, which were defined in
-        `tokens.css` when the logo work landed and had never been wired to
-        anything. They are the emblem's own protection bands.
-
-        ON THE PAIRING: the kit ties its three bands to plant life, water and
-        sunrise, and its seal wraps the same emblem in "Protect · Empower ·
-        Connect". Those are two different triads, so the gradient assigned to each
-        clause here is a VISUAL pairing and not a claim the kit makes. It is
-        decoration that belongs to the brand, not a statement about meaning.
-      */}
-      <section
-        className="pillars section-shell"
-        aria-labelledby="pillars-title"
-        data-scroll-theme="dusk"
-      >
-        <AmbientLayer blooms={1} />
-        <Reveal className="pillars__head" variant="rule">
-          <p className="section-label section-label--light">{ese.abbreviation}</p>
-          <h2 id="pillars-title">What we are here to do</h2>
-        </Reveal>
-
-        <Reveal className="pillar-cards">
-          <ol>
-            {brand.tagline.map((line, index) => (
-              <li key={line} style={{ "--i": index } as CSSProperties} data-band={index}>
-                <span className="pillar-card__band" aria-hidden="true" />
-                <span className="pillar-card__num" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <p className="pillar-card__line">{line}</p>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-      </section>
-
       {/* ------------------------------------------------------- what is ESE */}
       <section id="about" className="org-intro section-shell" aria-labelledby="about-title" data-scroll-theme="dusk">
         <AmbientLayer blooms={1} marks vignette tone="dark" />
@@ -146,30 +119,39 @@ export function EseLanding() {
           <Reveal className="org-intro__copy">
             <p className="section-label section-label--light">01 — {ese.intro.eyebrow}</p>
             <ScrollWords as="h2" id="about-title" text={ese.intro.heading} />
-            {/* No cards on this ground.
-                A bordered panel on flat forest reads as a box drawn on the page —
-                it needs a lit edge to exist at all, and four of them stacked
-                fought the photograph beside them. What the section wants is the
-                same thing the audience index and the mission band already do:
-                type, and a rule that draws itself.
+            {/* Statement cards with a proximity glow — the border lights where
+                the pointer is, and fades up as it approaches rather than snapping
+                on at `:hover`. See `GlowCards`.
 
-                Each paragraph gets a hairline that wipes down from the top as it
-                arrives, staggered off `--i`. Nothing is boxed; the rule is the
-                only mark, which is what the rest of the editorial layout does. */}
-            <p className="org-intro__lede">{ese.intro.paragraphs[0]}</p>
-
-            <div className="prose-reveal">
-              {ese.intro.paragraphs
-                .slice(1)
-                .flatMap((paragraph) => paragraph.split(/(?<=\.)\s+/))
-                .filter(Boolean)
-                .map((sentence, index) => (
-                  <p key={sentence} style={{ "--i": index } as CSSProperties}>
-                    <span className="prose-reveal__rule" aria-hidden="true" />
-                    {sentence}
-                  </p>
-                ))}
-            </div>
+                Each card shows the paragraph's opening sentence and reveals the
+                rest on hover. No copy is written: the split is at a full stop the
+                author already put there. */}
+            {/* Both paragraphs, not `slice(1)`. The separate lede that used to
+                sit here existed to keep the cards short — and the cards are short
+                now by construction, since each shows one sentence and holds the
+                rest behind hover. Using both paragraphs gives the section two
+                cards instead of one and loses no copy. */}
+            <GlowCards className="statement-cards">
+              <ol>
+                {ese.intro.paragraphs.map((paragraph, index) => {
+                  const { lead, rest } = splitLead(paragraph);
+                  return (
+                    <li key={paragraph} style={{ "--i": index } as CSSProperties} data-band={index} data-glow-card>
+                      <span className="statement-card__band" aria-hidden="true" />
+                      <span className="statement-card__num" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <p className="statement-card__line">{lead}</p>
+                      {rest ? (
+                        <span className="glow-card__desc">
+                          <span>{rest}</span>
+                        </span>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ol>
+            </GlowCards>
           </Reveal>
 
           {/* A real photograph of a real ESE session. People are visible, so it
@@ -195,16 +177,31 @@ export function EseLanding() {
           <Reveal className="network-band__copy">
             <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
-            {/* Same treatment as 01 — a drawn hairline per paragraph rather
-                than a card. See the note there. */}
-            <div className="prose-reveal">
-              {ese.whoWeAre.body.map((paragraph, index) => (
-                <p key={paragraph} style={{ "--i": index } as CSSProperties}>
-                  <span className="prose-reveal__rule" aria-hidden="true" />
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            {/* Same glow cards as 01. These two paragraphs are single
+                sentences in the source document, so they have no `rest` to
+                reveal — the cards carry the line and no hover panel. See
+                `splitLead`. */}
+            <GlowCards className="statement-cards">
+              <ol>
+                {ese.whoWeAre.body.map((paragraph, index) => {
+                  const { lead, rest } = splitLead(paragraph);
+                  return (
+                    <li key={paragraph} style={{ "--i": index } as CSSProperties} data-band={index + 1} data-glow-card>
+                      <span className="statement-card__band" aria-hidden="true" />
+                      <span className="statement-card__num" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <p className="statement-card__line">{lead}</p>
+                      {rest ? (
+                        <span className="glow-card__desc">
+                          <span>{rest}</span>
+                        </span>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ol>
+            </GlowCards>
           </Reveal>
 
           {/* Another real photograph — an ESE session, people visible. */}
@@ -324,9 +321,10 @@ export function EseLanding() {
               that each audience now reads as its own constituency instead of a
               line to scan past. */}
           <Reveal className="audience-cards">
+            <GlowCards>
             <ol>
               {ese.whoWeServe.audiences.map((audience, index) => (
-                <li key={audience} style={{ "--i": index } as CSSProperties}>
+                <li key={audience} style={{ "--i": index } as CSSProperties} data-glow-card>
                   <span className="audience-card__num" aria-hidden="true">
                     {String(index + 1).padStart(2, "0")}
                   </span>
@@ -334,6 +332,7 @@ export function EseLanding() {
                 </li>
               ))}
             </ol>
+            </GlowCards>
           </Reveal>
           <Reveal className="serve-band__media" delay={120}>
             <figure className="photo-frame photo-frame--plate">
@@ -356,9 +355,10 @@ export function EseLanding() {
           <ScrollWords as="h2" id="services-title" text={ese.services.heading} />
         </Reveal>
 
+        <GlowCards>
         <ol className="service-card-grid">
           {ese.services.items.map((service, index) => (
-            <Reveal as="li" className="service-card" key={service.slug} delay={index * 80}>
+            <Reveal as="li" className="service-card" key={service.slug} delay={index * 80} data-glow-card>
               <article>
                 <div className="service-card__media photo-frame">
                   <ParallaxImage
@@ -391,6 +391,7 @@ export function EseLanding() {
             </Reveal>
           ))}
         </ol>
+        </GlowCards>
       </section>
 
       {/* ------------------------------------------------------ case study */}
@@ -513,15 +514,17 @@ export function EseLanding() {
           action. Neither tool exists yet, and a tile that looks clickable but
           is not costs more trust than an honest "in development" state.
         */}
+        <GlowCards>
         <ol className="tools-list">
           {ese.tools.items.map((tool, index) => (
-            <Reveal as="li" key={tool.title} delay={index * 90}>
+            <Reveal as="li" key={tool.title} delay={index * 90} data-glow-card>
               <p className="tools-list__status">In development</p>
               <h3>{tool.title}</h3>
               <p>{tool.description}</p>
             </Reveal>
           ))}
         </ol>
+        </GlowCards>
       </section>
 
       {/* --------------------------------------------------------- contact */}

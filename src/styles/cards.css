@@ -430,3 +430,240 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
     transition: none !important;
   }
 }
+
+/* ============================================================ the glow cards
+ *
+ * A card whose border lights where the pointer is, fading up as the pointer
+ * approaches rather than snapping on at `:hover`. `GlowCards` publishes three
+ * variables per card — `--glow-x`, `--glow-y` and `--glow` — and everything
+ * below is the paint.
+ *
+ * THE RING IS A MASKED PSEUDO-ELEMENT, not a border. A border cannot carry a
+ * gradient that follows a pointer. So `::before` is filled with a radial
+ * gradient centred on the cursor and then masked to its own 1px inset: two
+ * stacked masks, one clipped to the padding box and one to the border box,
+ * composited with `exclude`, which leaves exactly the ring between them.
+ *
+ * `-webkit-mask-composite: xor` is the same operation under the older prefixed
+ * syntax and is required for Safari — without it Safari paints the whole
+ * gradient rectangle rather than the ring, which is a filled card, not a border.
+ * Both properties are load-bearing; neither is a fallback for the other. */
+.glow-cards {
+  display: contents;
+}
+
+[data-glow-card] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-glow-card]::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    /* Wider than the card so the falloff is gentle across it rather than a
+       tight dot tracking the cursor. */
+    16rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    var(--glow-colour, var(--color-accent-light)),
+    transparent 72%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: var(--glow, 0);
+  /* No transition on opacity: `--glow` is already a continuous function of
+     distance written every frame, so easing it would lag the pointer. */
+  pointer-events: none;
+}
+
+/* The card the pointer is actually over also gets a soft outer bloom, so there
+   is a clear "this one" among several lit neighbours. */
+[data-glow-card]:hover {
+  box-shadow: 0 0 0 1px var(--glow-colour, var(--color-accent-light)) inset,
+    0 1.5rem 3rem -1.5rem rgba(8, 27, 35, 0.65);
+}
+
+/* ------------------------------------------------------- the hover description
+ *
+ * Collapsed to nothing and opened on hover or keyboard focus.
+ *
+ * `grid-template-rows: 0fr -> 1fr` rather than `max-height`, because a
+ * max-height animation has to guess a height: guess low and long text is cut,
+ * guess high and the easing is visibly wrong for short text. `0fr -> 1fr`
+ * animates to the content's real height with no number in the stylesheet.
+ *
+ * The inner element carries `overflow: hidden`; the grid row cannot clip on its
+ * own.
+ *
+ * NEVER put primary content in here. It is closed by default, so it is closed
+ * for touch, and it is secondary by construction. The card's own line stays
+ * visible at all times. */
+.glow-card__desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 420ms var(--ease-out-expo),
+    opacity 320ms var(--ease-standard);
+  opacity: 0;
+}
+
+.glow-card__desc > span {
+  overflow: hidden;
+  color: var(--ink-muted, var(--color-muted-light));
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+[data-glow-card]:hover .glow-card__desc,
+[data-glow-card]:focus-within .glow-card__desc {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* The description's own top margin has to live on the inner span, not the grid,
+   or it would hold the card open by that margin while collapsed. */
+[data-glow-card]:hover .glow-card__desc > span,
+[data-glow-card]:focus-within .glow-card__desc > span {
+  margin-top: 0.7rem;
+}
+
+/* ----------------------------------------------- the statement cards, on dark
+ *
+ * The card family the dark sections use. Same construction as the pillar cards
+ * that seeded it — a faint lift of the ground, a hairline, a gradient band at
+ * the head — with the glow ring on top. */
+.statement-cards ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.statement-cards li {
+  overflow: hidden;
+  padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.15rem, 2.2vw, 1.6rem);
+  border: 1px solid var(--color-line-dark);
+  border-radius: var(--card-radius);
+  background: rgba(226, 232, 235, 0.04);
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    background-color var(--motion-ui) var(--ease-out-expo);
+}
+
+.statement-cards li[data-band="0"] { --glow-colour: #dec26a; }
+.statement-cards li[data-band="1"] { --glow-colour: #b8d0d8; }
+.statement-cards li[data-band="2"] { --glow-colour: #c98150; }
+.statement-cards li[data-band="3"] { --glow-colour: #899163; }
+
+.statement-card__band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out-expo);
+}
+
+.statement-cards li[data-band="0"] .statement-card__band { background: var(--grad-land); }
+.statement-cards li[data-band="1"] .statement-card__band { background: var(--grad-water); }
+.statement-cards li[data-band="2"] .statement-card__band { background: var(--grad-sunrise); }
+.statement-cards li[data-band="3"] .statement-card__band { background: var(--grad-land); }
+
+.reveal[data-visible="true"] .statement-card__band {
+  transform: scaleX(1);
+  transition-delay: calc(var(--i) * 120ms + 120ms);
+}
+
+.statement-card__num {
+  display: block;
+  color: var(--color-accent-light);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+.statement-card__line {
+  margin-top: 0.75rem;
+  color: var(--color-paper);
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  font-weight: 300;
+  line-height: 1.28;
+  text-wrap: balance;
+}
+
+@media (hover: hover) {
+  .statement-cards li:hover {
+    transform: translateY(-0.35rem);
+    background: rgba(226, 232, 235, 0.07);
+  }
+}
+
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li {
+  opacity: 0;
+  transform: translateY(0.9rem);
+}
+
+.reveal[data-visible="true"] .statement-cards li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 600ms var(--ease-standard) calc(var(--i) * 120ms),
+    transform 720ms var(--ease-out-expo) calc(var(--i) * 120ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statement-cards li,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .statement-card__band { transform: scaleX(1) !important; transition: none !important; }
+  /* The ring is switched off entirely — it is pointer-driven light, which is
+     exactly the kind of motion this preference is asking to stop. */
+  [data-glow-card]::before { display: none; }
+  .glow-card__desc { transition: none !important; }
+}
+
+/* The glow colour follows the ground's polarity.
+ *
+ * Gold is the accent on the dark grounds and measures 1.42:1 on paper — a gold
+ * ring on a light card is invisible, which would silently disable the effect on
+ * four of the six grounds. The light grounds take navy instead, the same accent
+ * their text already uses. */
+[data-scroll-theme="haze"] [data-glow-card],
+[data-scroll-theme="paper"] [data-glow-card],
+[data-scroll-theme="sand"] [data-glow-card],
+[data-scroll-theme="clay"] [data-glow-card] {
+  --glow-colour: var(--color-accent);
+}
+
+/* `border-radius: inherit` on the ring only works when the radius is on the same
+   element. The service card draws its border, ground and radius on an inner
+   `article`, so the ring has to be told the radius directly or it would trace a
+   square around a rounded card. */
+.service-card[data-glow-card]::before {
+  border-radius: var(--card-radius);
+}
+
+/* The tools list is deliberately not interactive — see the note above — so it
+   takes the ring's light without the hover bloom that reads as pressable. */
+.tools-list li[data-glow-card]:hover {
+  box-shadow: var(--shadow-card);
+}
