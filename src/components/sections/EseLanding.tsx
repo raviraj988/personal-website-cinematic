@@ -340,11 +340,13 @@ export function EseLanding() {
             <p className="people-group__lede">{people.lede}</p>
           </div>
 
-          <div className="people-group__grid">
-            {people.members.map((person, index) => (
-              <PersonCard key={person.slug} person={person} index={index} />
-            ))}
-          </div>
+          <GlowCards>
+            <div className="people-group__grid">
+              {people.members.map((person, index) => (
+                <PersonCard key={person.slug} person={person} index={index} />
+              ))}
+            </div>
+          </GlowCards>
 
           <Link className="button" href={people.cta.href}>
             {people.cta.label} <Arrow />

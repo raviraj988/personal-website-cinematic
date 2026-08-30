@@ -54,9 +54,32 @@ export function PersonCard({
     .join("");
 
   return (
-    <article className="person-card" style={{ "--i": index } as CSSProperties}>
+    <article className="person-card" style={{ "--i": index } as CSSProperties} data-glow-card>
+      {/* The gradient band, matching the statement cards on the dark sections so
+          the two card families read as one system. */}
+      <span className="person-card__band" aria-hidden="true" />
       {person.portrait ? (
         <div className="person-card__media photo-frame">
+          {/* The summary, over the portrait.
+           *
+           * `person.summary` is real copy that has been in `ese-content.ts` all
+           * along and rendered nowhere once the card was cut back to a portrait,
+           * a name and a role. Hover is what lets the card stay small and still
+           * carry it.
+           *
+           * It overlays the PORTRAIT rather than expanding the card. These sit in
+           * a grid, and a grid row is as tall as its tallest item — growing one
+           * card inline would push every card beside it and the whole page below
+           * it, on hover. An overlay costs no layout at all.
+           *
+           * Joshua's summary is an empty string, because nothing in the source
+           * document describes him, so his card renders no panel rather than
+           * inventing a biography for a named person. */}
+          {person.summary ? (
+            <div className="person-card__summary">
+              <p>{person.summary}</p>
+            </div>
+          ) : null}
           <ParallaxImage
             src={person.portrait.src}
             alt={person.portrait.alt}
@@ -92,6 +115,7 @@ export function PersonCard({
           </Link>
         </Heading>
         {person.role ? <p className="person-card__role">{person.role}</p> : null}
+
       </div>
     </article>
   );
