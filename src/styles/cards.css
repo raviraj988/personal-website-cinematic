@@ -708,3 +708,227 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
    only the margins would still be a link. Whole-card click and selectable body
    copy are mutually exclusive in this pattern; the click is the one that was
    asked for. */
+
+/* ============================================================== page heroes
+ *
+ * The head of every standalone page. Deep ground, so it carries the same weight
+ * as the landing page's own dark sections and a page does not open lighter than
+ * the site it belongs to.
+ *
+ * `--header-height` of top padding clears the fixed navigation, which is
+ * `position: fixed` and would otherwise sit on the eyebrow. */
+.page-hero {
+  padding: calc(var(--header-height) + clamp(3rem, 8vw, 6rem)) var(--gutter)
+    clamp(3rem, 7vw, 5.5rem);
+  background: var(--color-ground-deep);
+  color: var(--color-paper);
+}
+
+.page-hero__inner {
+  width: min(100%, var(--container));
+  margin-inline: auto;
+}
+
+.page-hero h1 {
+  margin-top: 1.1rem;
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  font-weight: 300;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.page-hero__lede {
+  max-width: 56ch;
+  margin-top: clamp(1.1rem, 2vw, 1.6rem);
+  color: var(--color-muted-light);
+  font-size: var(--type-body-lg);
+  line-height: 1.62;
+}
+
+/* The body of a standalone page. */
+.page-body {
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter);
+}
+
+.page-body__inner {
+  width: min(100%, var(--container));
+  margin-inline: auto;
+}
+
+.page-section + .page-section {
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+.page-section__heading {
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 300;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+/* The index cards on /services — a photograph, a title, a summary, and the whole
+   card as the link. Built on the same glow card as everything else. */
+.index-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--card-radius);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    box-shadow var(--motion-ui) var(--ease-out-expo);
+}
+
+.index-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #1b333d;
+  border-radius: var(--card-radius-inner) var(--card-radius-inner) 0 0;
+}
+
+.index-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 900ms var(--ease-out-expo);
+}
+
+.index-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: clamp(1.2rem, 2.2vw, 1.6rem);
+}
+
+.index-card__num {
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-label);
+}
+
+.index-card__title {
+  margin-top: 0.7rem;
+  font-family: var(--font-serif);
+  font-size: 1.24rem;
+  font-weight: 400;
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.index-card__summary {
+  margin-top: 0.65rem;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.index-card__cta {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  color: var(--color-accent);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+@media (hover: hover) {
+  .index-card:hover {
+    transform: translateY(-0.4rem);
+    box-shadow: var(--shadow-card-lift);
+  }
+  .index-card:hover .index-card__media img {
+    transform: scale(1.05);
+  }
+}
+
+/* The whole card is the link — one anchor, stretched, for the reasons given on
+   `.service-card__cta--stretched`. */
+.index-card__link::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border-radius: var(--card-radius);
+}
+
+.index-card__link {
+  position: static;
+  color: inherit;
+  text-decoration: none;
+}
+
+html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.reveal[data-visible="true"] .index-card {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 620ms var(--ease-standard) calc(var(--i) * 110ms),
+    transform 740ms var(--ease-out-expo) calc(var(--i) * 110ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .index-card,
+  html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .index-card__media img { transition: none !important; }
+}
+
+/* Prose on a standalone page. */
+.page-lede {
+  max-width: 54ch;
+  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
+  font-size: var(--type-body-lg);
+  line-height: 1.55;
+}
+
+.page-prose {
+  max-width: 58ch;
+  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
+  color: var(--color-text-muted);
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
+.page-section .button,
+.page-section .people-group__grid {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.contact-page__email {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+/* The footer's secondary route, beside the mailto. Ghosted so the email stays
+   the primary action — two solid buttons side by side give neither priority. */
+.footer-button--ghost {
+  margin-left: 0.75rem;
+  border-color: rgba(226, 232, 235, 0.34);
+}

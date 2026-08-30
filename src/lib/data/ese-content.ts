@@ -102,13 +102,26 @@ export const brand = {
   tagline: ["Protect the environment", "Empower people", "Connect resources"],
 } as const;
 
+/**
+ * Every item is a ROUTE, not an anchor.
+ *
+ * Three of these used to be `/#about`, `/#services` and `/#who-we-are` — links
+ * that scrolled the landing page rather than going anywhere. That made the
+ * navigation a table of contents for one page: nothing could be linked to,
+ * shared, or found by a search engine as its own thing, and returning to a
+ * section meant loading the whole landing page and jumping.
+ *
+ * The landing page keeps those sections and now carries a button from each into
+ * its full page, so the two are a summary and a destination rather than a
+ * duplicate.
+ */
 export const navigation = [
-  { label: "About", href: "/#about" },
-  { label: "Services", href: "/#services" },
-  { label: "Who we are", href: "/#who-we-are" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Who we are", href: "/who-we-are" },
   { label: "News", href: "/news" },
   { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 /* ------------------------------------------------------------ hero */

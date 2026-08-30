@@ -5,7 +5,9 @@ import { onScrollFrame, watchReducedMotion } from "@/lib/scroll";
 
 type ScrollWordsProps = {
   text: string;
-  as?: "p" | "h2" | "h3";
+  /** `h1` was added for the standalone pages, whose main heading is scrubbed in
+   *  exactly like a section heading but must be the page's only h1. */
+  as?: "p" | "h1" | "h2" | "h3";
   className?: string;
   id?: string;
 };

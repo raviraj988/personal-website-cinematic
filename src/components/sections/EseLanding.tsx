@@ -199,6 +199,11 @@ export function EseLanding() {
             <StatementCards
               items={zip(ese.intro.cardHeadings, splitSentences(ese.intro.paragraphs[1] ?? ""))}
             />
+            {/* Each landing section is a summary; the button is the way through
+                to the full page the navigation also points at. */}
+            <Link className="button button--light" href="/about">
+              More about ESE <Arrow />
+            </Link>
           </Reveal>
 
           {/* A real photograph of a real ESE session. People are visible, so it
@@ -226,6 +231,9 @@ export function EseLanding() {
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
             <p className="org-intro__lede">{ese.whoWeAre.lede}</p>
             <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body)} offset={1} />
+            <Link className="button button--light" href="/who-we-are">
+              Who we are <Arrow />
+            </Link>
           </Reveal>
 
           {/* Another real photograph — an ESE session, people visible. */}
@@ -429,6 +437,12 @@ export function EseLanding() {
           ))}
         </ol>
         </GlowCards>
+
+        <Reveal>
+          <Link className="button" href="/services">
+            All service areas <Arrow />
+          </Link>
+        </Reveal>
       </section>
 
       {/* ------------------------------------------------------ case study */}
@@ -606,6 +620,12 @@ export function EseLanding() {
           <a className="footer-button" href={`mailto:${contact.email}`}>
             Start a conversation <Arrow />
           </a>
+          {/* The sixth navigation destination reached from the landing page, so
+              every nav item has a route AND a button into it. Secondary to the
+              mailto above, which is still the fastest path. */}
+          <Link className="footer-button footer-button--ghost" href="/contact">
+            All the ways to reach us <Arrow />
+          </Link>
           {/* TODO(ese): replace with the real contact address before launch. */}
           <small>Placeholder address — replace with ESE&apos;s approved contact method.</small>
         </div>
