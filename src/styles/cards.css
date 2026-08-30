@@ -301,136 +301,6 @@ section.principle-band {
   width: min(100%, 84rem);
 }
 
-/* ---------------------------------------------------------- the pillar cards
- *
- * ESE's three promises on the deep ground, each carrying one of the brand's own
- * gradients — the emblem's protection bands, defined in `tokens.css` with the
- * logo work and never wired to anything until now.
- *
- * The gradient is the ONLY colour on the card. There is no tinted ground and no
- * border on three sides: a bar across the head, the number, and the clause. On a
- * dark ground that is enough to read as a card, and it lets the three sit as a
- * set distinguished by hue rather than three identical boxes.
- *
- * The bar is what animates. It wipes across from the left as the card arrives and
- * thickens on hover, so the gesture is the same one the rest of the page uses —
- * a rule that draws itself — rather than a new vocabulary. */
-.pillar-cards ol {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-  gap: clamp(1rem, 2.2vw, 1.75rem);
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.pillar-cards li {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.25rem, 2.4vw, 1.9rem);
-  border: 1px solid var(--color-line-dark);
-  border-radius: var(--card-radius);
-  background: rgba(226, 232, 235, 0.04);
-  transition:
-    transform var(--motion-ui) var(--ease-out-expo),
-    border-color var(--motion-ui) var(--ease-out-expo),
-    background-color var(--motion-ui) var(--ease-out-expo);
-}
-
-/* The band. One gradient per card, assigned by `data-band` — see the note in
-   `EseLanding.tsx` on why this pairing is visual rather than a claim. */
-.pillar-card__band {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition:
-    transform 900ms var(--ease-out-expo),
-    height var(--motion-ui) var(--ease-out-expo);
-}
-
-.pillar-cards li[data-band="0"] .pillar-card__band { background: var(--grad-land); }
-.pillar-cards li[data-band="1"] .pillar-card__band { background: var(--grad-sunrise); }
-.pillar-cards li[data-band="2"] .pillar-card__band { background: var(--grad-water); }
-
-.reveal[data-visible="true"] .pillar-card__band {
-  transform: scaleX(1);
-  transition-delay: calc(var(--i) * 140ms + 120ms);
-}
-
-.pillar-card__num {
-  display: block;
-  color: var(--color-accent-light);
-  font-family: var(--font-sans);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-label);
-}
-
-.pillar-card__line {
-  margin-top: 0.8rem;
-  color: var(--color-paper);
-  font-family: var(--font-serif);
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
-  font-weight: 300;
-  line-height: 1.16;
-  text-wrap: balance;
-}
-
-@media (hover: hover) {
-  .pillar-cards li:hover {
-    transform: translateY(-0.4rem);
-    border-color: rgba(226, 232, 235, 0.32);
-    background: rgba(226, 232, 235, 0.07);
-  }
-  /* The band thickens rather than changing colour — the gradient is the card's
-     identity and recolouring it would break the set. */
-  .pillar-cards li:hover .pillar-card__band {
-    height: 6px;
-  }
-}
-
-/* Staggered arrival, off the one ancestor reveal like every other card family. */
-html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
-  opacity: 0;
-  transform: translateY(1rem);
-}
-
-.reveal[data-visible="true"] .pillar-cards li {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 620ms var(--ease-standard) calc(var(--i) * 140ms),
-    transform 760ms var(--ease-out-expo) calc(var(--i) * 140ms);
-}
-
-.pillars__head h2 {
-  margin-top: 1rem;
-  font-size: var(--type-h2);
-  font-weight: 300;
-  line-height: 1.08;
-  text-wrap: balance;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pillar-cards li,
-  html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-  /* The band is shown drawn, not animated — it is the card's identity. */
-  .pillar-card__band {
-    transform: scaleX(1) !important;
-    transition: none !important;
-  }
-}
-
 /* ============================================================ the glow cards
  *
  * A card whose border lights where the pointer is, fading up as the pointer
@@ -597,14 +467,29 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .pillar-cards li {
   letter-spacing: var(--track-label);
 }
 
+/* BODY COPY, not display type.
+ *
+ * This was set in the display face — light serif, up to 1.3rem, line-height 1.28,
+ * `text-wrap: balance` — which was inherited from the pillar cards it grew out
+ * of. That was right there, because those cards carried three-word clauses like
+ * "Protect the environment". It is wrong here: every statement card carries a
+ * full sentence, and the scholarship card runs to twenty words. A long sentence
+ * in a thin display serif at 1.28 line-height reads as a mis-set heading.
+ *
+ * So it takes the site's own body treatment, matching
+ * `.case-study__copy > p` exactly: the sans face, `--type-body-md`, and the 1.68
+ * leading every other paragraph on the page uses. Weight goes back to the
+ * default — 300 is a display weight and looks washed out at body size.
+ *
+ * `text-wrap: pretty`, not `balance`. Balance is for headings of a few lines and
+ * evens the ragged edge across all of them; on a paragraph it fights the
+ * measure. Pretty only prevents orphans, which is what body copy wants. */
 .statement-card__line {
   margin-top: 0.75rem;
   color: var(--color-paper);
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-  font-weight: 300;
-  line-height: 1.28;
-  text-wrap: balance;
+  font-size: var(--type-body-md);
+  line-height: 1.68;
+  text-wrap: pretty;
 }
 
 @media (hover: hover) {
