@@ -511,6 +511,19 @@ export const ese = {
           "Building a plan to work within those systems",
         ],
         title: "Policy Support & Sovereignty Services",
+        /**
+         * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+         *
+         * The one line the card shows before you hover; the full `description`
+         * below is transcribed and appears on hover and on the service's own
+         * page. Each summary is compressed from this service's own `covers`
+         * list, so it names only work the source document already lists.
+         *
+         * Written rather than taken as `description`'s first sentence, because
+         * those run from 26 to 222 characters across the five and would give the
+         * row five cards of wildly different heights.
+         */
+        summary: "Federal and state rules, environmental policy, and enforcing sovereignty.",
         description:
           "We help Native Nations and underserved communities understand federal and state rules, craft environmental policy, and enforce sovereignty. We cut through the legalese to help you understand how the law works in your area and its impact on your community. Then we'll help you craft a plan to work within those systems and solve problems effectively.",
         image: wideImage(
@@ -530,6 +543,19 @@ export const ese = {
           "Grant implementation, as needed",
         ],
         title: "Grant Development",
+        /**
+         * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+         *
+         * The one line the card shows before you hover; the full `description`
+         * below is transcribed and appears on hover and on the service's own
+         * page. Each summary is compressed from this service's own `covers`
+         * list, so it names only work the source document already lists.
+         *
+         * Written rather than taken as `description`'s first sentence, because
+         * those run from 26 to 222 characters across the five and would give the
+         * row five cards of wildly different heights.
+         */
+        summary: "Identifying funding, writing proposals, and developing budgets.",
         description:
           "Need money? Not a problem. We can help you identify funding, write proposals, develop budgets, and work plans. As needed, we can even help with grant implementation.",
         image: wideImage(
@@ -551,6 +577,19 @@ export const ese = {
           "Cumulative impacts assessments for affected communities",
         ],
         title: "Project Implementation (Technical)",
+        /**
+         * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+         *
+         * The one line the card shows before you hover; the full `description`
+         * below is transcribed and appears on hover and on the service's own
+         * page. Each summary is compressed from this service's own `covers`
+         * list, so it names only work the source document already lists.
+         *
+         * Written rather than taken as `description`'s first sentence, because
+         * those run from 26 to 222 characters across the five and would give the
+         * row five cards of wildly different heights.
+         */
+        summary: "Technical support from environmental cleanup to renewable energy and water systems.",
         description:
           "ESE partners can help with a wide array of technical support, including environmental cleanup, renewable energy, water systems, carbon offset work, air quality program development and implementation, and reviewing permits. We can also help conduct cumulative impacts assessments for affected communities.",
         image: wideImage(
@@ -570,6 +609,19 @@ export const ese = {
           "Climate mitigation plans",
         ],
         title: "Sustainability & Climate Resilience Planning",
+        /**
+         * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+         *
+         * The one line the card shows before you hover; the full `description`
+         * below is transcribed and appears on hover and on the service's own
+         * page. Each summary is compressed from this service's own `covers`
+         * list, so it names only work the source document already lists.
+         *
+         * Written rather than taken as `description`'s first sentence, because
+         * those run from 26 to 222 characters across the five and would give the
+         * row five cards of wildly different heights.
+         */
+        summary: "Strategic plans, vulnerability assessments, and energy audits.",
         description:
           "We can help you develop strategic plans, conduct vulnerability assessments, energy audits, and climate adaptation and mitigation plans.",
         /**
@@ -606,6 +658,19 @@ export const ese = {
           "Other outreach strategies",
         ],
         title: "Communications Support",
+        /**
+         * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
+         *
+         * The one line the card shows before you hover; the full `description`
+         * below is transcribed and appears on hover and on the service's own
+         * page. Each summary is compressed from this service's own `covers`
+         * list, so it names only work the source document already lists.
+         *
+         * Written rather than taken as `description`'s first sentence, because
+         * those run from 26 to 222 characters across the five and would give the
+         * row five cards of wildly different heights.
+         */
+        summary: "Reaching Tribal members, youth, and elected leaders.",
         description:
           "Good work needs a good message. We help tribal programs communicate initiatives to members, youth, and elected leaders. Through PR support, advertising, marketing, and other outreach strategies, we can help you get the word out.",
         image: wideImage(

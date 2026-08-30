@@ -664,3 +664,47 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   font-size: var(--type-body-md);
   line-height: 1.7;
 }
+
+/* The service card's one visible line. */
+.service-card__summary {
+  margin-top: 0.75rem;
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* THE WHOLE CARD IS THE LINK.
+ *
+ * A stretched pseudo-element on the existing anchor, rather than wrapping the
+ * card in a second `<a>`. That matters for more than tidiness: nesting the
+ * heading, the image and the button inside one anchor gives a screen reader a
+ * single link whose name is every word on the card, and puts interactive content
+ * inside a link, which is invalid. This keeps exactly one link with the name it
+ * already had, and the card merely becomes its hit area.
+ *
+ * `z-index: 4` clears the glow ring at 3. The ring is `pointer-events: none`, so
+ * it never swallowed the click — but a stacking order that only works because of
+ * a second property is the kind of thing that breaks when the other property
+ * moves. */
+.service-card__cta--stretched::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border-radius: var(--card-radius);
+}
+
+/* `position: static` on the anchor itself, so the stretched pseudo-element
+   escapes it and resolves against the card — the nearest positioned ancestor,
+   which `[data-glow-card]` already made `relative`. Without this the overlay
+   would size to the button. */
+.service-card__cta--stretched {
+  position: static;
+}
+
+/* NOTE, because the obvious "fix" is a regression: raising the body above this
+   overlay would make its text selectable again, and would also take the click
+   with it — the heading, the summary and the button are most of the card, so
+   only the margins would still be a link. Whole-card click and selectable body
+   copy are mutually exclusive in this pattern; the click is the one that was
+   asked for. */

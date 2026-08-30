@@ -407,9 +407,10 @@ export function EseLanding() {
                       <span className="mask-rise__inner">{service.title}</span>
                     </span>
                   </h3>
-                  {/* Behind hover, like every other card on the site. These
-                      descriptions run to fifty words and were the reason the
-                      service cards read as long as they did. */}
+                  {/* The short summary stays visible; the full description —
+                      fifty words, and the reason these cards used to read so
+                      long — is behind hover and on the service's own page. */}
+                  <p className="service-card__summary">{service.summary}</p>
                   <span className="glow-card__desc">
                     <span>{service.description}</span>
                   </span>
@@ -417,7 +418,7 @@ export function EseLanding() {
                   {/* Pushed to the foot of the card by `margin-top: auto`, so the
                       five buttons sit on one line regardless of how much
                       description each service has. */}
-                  <Link className="button service-card__cta" href={`/services/${service.slug}`}>
+                  <Link className="button service-card__cta service-card__cta--stretched" href={`/services/${service.slug}`}>
                     Learn more
                     <span className="visually-hidden">{` about ${service.title}`}</span>
                     <Arrow />
