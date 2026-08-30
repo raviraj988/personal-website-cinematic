@@ -55,6 +55,22 @@
   --color-muted-light: #a9bcc4;
   --color-slate: #6f8791;
   --color-stone: #44585f;
+  /* Card shading.
+   *
+   * Every card surface is a gradient rather than a flat fill — a very shallow
+   * one, running the same 160deg across all of them so a grid of cards reads as
+   * lit from one direction instead of each card being its own flat panel.
+   *
+   * The range is deliberately tiny. `--card-sheen` moves #f4f7f8 to #e5e8eb,
+   * which is about 4% of luminance; anything wider and the cards start to look
+   * like buttons. On the dark grounds the same idea is a 7%-to-2% wash of the
+   * paper neutral, which is what gives a near-black card an edge to catch. */
+  --card-sheen: linear-gradient(160deg, #f4f7f8 0%, #e5e8eb 100%);
+  --card-sheen-dark: linear-gradient(
+    160deg,
+    rgba(226, 232, 235, 0.075) 0%,
+    rgba(226, 232, 235, 0.02) 100%
+  );
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 

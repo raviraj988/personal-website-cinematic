@@ -72,6 +72,9 @@
 }
 
 .audience-cards li {
+  /* See the note on `.statement-cards li` — grid items default to a min-content
+     minimum, which lets an opening hover panel widen its own track. */
+  min-width: 0;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -81,7 +84,7 @@
   padding: clamp(1rem, 1.8vw, 1.35rem);
   border: 1px solid var(--color-line);
   border-radius: var(--card-radius);
-  background: var(--color-paper);
+  background: var(--card-sheen);
   box-shadow: var(--shadow-card);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
@@ -172,7 +175,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   padding: clamp(1.5rem, 2.6vw, 2rem);
   border: 1px solid var(--color-line);
   border-radius: var(--card-radius);
-  background: var(--color-paper);
+  background: var(--card-sheen);
   box-shadow: var(--shadow-card);
 }
 
@@ -457,11 +460,22 @@ section.principle-band {
 }
 
 .statement-cards li {
+  /* `min-width: 0`, and it is load-bearing.
+   *
+   * A grid item's default `min-width` is `auto`, which resolves to its
+   * MIN-CONTENT width. The hover panel's text is in the DOM the whole time, so
+   * when it opens the item's min-content grows — and a `1fr` track is
+   * `minmax(auto, 1fr)` at heart, so the track grows with it and the card
+   * visibly widens mid-hover, taking its neighbour's width with it.
+   *
+   * Zeroing the minimum decouples the track from the content: the columns stay
+   * the size the grid gave them and only the height responds. */
+  min-width: 0;
   overflow: hidden;
   padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.15rem, 2.2vw, 1.6rem);
   border: 1px solid var(--color-line);
   border-radius: var(--card-radius);
-  background: var(--color-paper);
+  background: var(--card-sheen);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
     background-color var(--motion-ui) var(--ease-out-expo);
@@ -596,7 +610,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 [data-scroll-theme="dusk"] .statement-cards li,
 [data-scroll-theme="navy"] .statement-cards li {
   border-color: var(--color-line-dark);
-  background: rgba(226, 232, 235, 0.04);
+  background: var(--card-sheen-dark);
 }
 
 /* `border-radius: inherit` on the ring only works when the radius is on the same
@@ -803,12 +817,13 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 }
 
 .index-card {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--color-line);
   border-radius: var(--card-radius);
-  background: var(--color-paper);
+  background: var(--card-sheen);
   box-shadow: var(--shadow-card);
   transition:
     transform var(--motion-ui) var(--ease-out-expo),
@@ -978,4 +993,16 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
 .section-shell > .reveal > .button,
 .section-shell > .button {
   margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+/* The remaining two families draw their surface in `globals.css` and
+   `people.css`, which are emitted after this file — so these need the extra
+   class to win on specificity rather than order. */
+.service-card article,
+.service-card > article {
+  background: var(--card-sheen);
+}
+
+.person-card.person-card {
+  background: var(--card-ground, var(--card-sheen));
 }

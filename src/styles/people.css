@@ -17,6 +17,9 @@
  * once at different speeds. That coordination is most of what separates this
  * from a card that merely has effects on it. */
 .person-card {
+  /* See `.statement-cards li` in `cards.css`: without this the summary opening
+     on hover widens the card's own grid track. */
+  min-width: 0;
   position: relative;
   isolation: isolate;
   display: flex;
