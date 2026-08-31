@@ -599,8 +599,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   --rule: var(--color-line);
   --label-color: var(--color-accent);
   --glow-colour: var(--color-accent);
-  border-color: var(--color-line);
-  background: var(--card-sheen);
+  border-color: rgba(43, 69, 82, 0.16);
+  background: var(--card-sheen-warm);
   box-shadow: var(--shadow-card);
   color: var(--ink);
 }
@@ -609,6 +609,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   [data-scroll-theme="dusk"] .statement-cards li:hover,
   [data-scroll-theme="navy"] .statement-cards li:hover {
     border-color: rgba(43, 69, 82, 0.34);
+    background: var(--card-sheen-warm-hover);
     box-shadow: var(--shadow-card-lift);
   }
 }

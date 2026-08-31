@@ -90,6 +90,25 @@
      measurement in the set at 4.9:1 for muted copy, so do not brighten it
      further without re-checking that number. */
   --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
+  /* The warm card, for cards sitting ON the deep grounds.
+   *
+   * This is the brand's own duality made literal — "the deep navy the sector
+   * already trusts, paired with sunset tones most of the sector won't touch".
+   * A warm card on the deep navy IS Magic Hour; the cool near-white it replaces
+   * was merely the brightest thing available.
+   *
+   * It is also softer. Measured against `--color-ground-deep`:
+   *
+   *              vs ground     ink      muted     navy
+   *   paper        14.3x      14.3:1    6.1:1    8.2:1   (what this replaces)
+   *   warm top     13.6x      13.6:1    5.8:1    7.8:1
+   *   warm bottom  12.2x      12.2:1    5.2:1    7.0:1
+   *
+   * Everything keeps generous headroom over 4.5:1, and the card stops hitting
+   * the ground at maximum contrast. Sky was softer still at 11.0x but takes muted
+   * copy to 4.6:1, and a blue card on a blue-black ground goes tonal. */
+  --card-sheen-warm: linear-gradient(160deg, #ece0d2 0%, #e3d5c4 100%);
+  --card-sheen-warm-hover: linear-gradient(160deg, #f4ebe0 0%, #ece0d2 100%);
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 
