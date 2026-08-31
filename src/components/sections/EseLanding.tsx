@@ -628,15 +628,25 @@ export function EseLanding() {
           <p className="section-label section-label--light">11 — {contact.eyebrow}</p>
           <h2>{contact.heading}</h2>
           <p>{contact.copy}</p>
-          <a className="footer-button" href={`mailto:${contact.email}`}>
-            Start a conversation <Arrow />
-          </a>
-          {/* The sixth navigation destination reached from the landing page, so
-              every nav item has a route AND a button into it. Secondary to the
-              mailto above, which is still the fastest path. */}
-          <Link className="footer-button footer-button--ghost" href="/contact">
-            All the ways to reach us <Arrow />
-          </Link>
+          {/* Both buttons are `inline-flex`, and JSX drops the newline between
+              two sibling elements, so laid out inline they render edge to edge
+              with no space at all. They need a flex row that owns the gap — and
+              one that wraps, because side by side these two labels are wider
+              than a phone. */}
+          <div className="cinematic-footer__actions">
+            <a className="footer-button" href={`mailto:${contact.email}`}>
+              Start a conversation <Arrow />
+            </a>
+            {/* The sixth navigation destination reached from the landing page, so
+                every nav item has a route AND a button into it. Secondary to the
+                mailto above, which is still the fastest path — and it now looks
+                secondary, which `--ghost` promised but never delivered: the
+                modifier was written here and never given a rule, so the two
+                buttons rendered identically. */}
+            <Link className="footer-button footer-button--ghost" href="/contact">
+              All the ways to reach us <Arrow />
+            </Link>
+          </div>
           {/* TODO(ese): replace with the real contact address before launch. */}
           <small>Placeholder address — replace with ESE&apos;s approved contact method.</small>
         </div>

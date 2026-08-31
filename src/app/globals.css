@@ -1246,8 +1246,40 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    -4rem top and bottom so its parallax travel never reveals an edge, and clipping
    only the horizontal axis would let it spill into the section above. */
 .cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-ground-deep); color: var(--color-paper); }
-.footer-button { display: inline-flex; align-items: center; gap: 2rem; margin-top: 2.5rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
+.footer-button { display: inline-flex; align-items: center; gap: 2rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
 .footer-button:hover { background: var(--color-paper); color: var(--color-ground-deep); }
+
+/* The row that carries the two calls to action. The 2.5rem that used to sit on
+   `.footer-button` itself lives here instead: with two buttons, a per-button
+   top margin spaces them from the paragraph but does nothing between them.
+   It wraps because side by side the two labels are wider than a phone. */
+.cinematic-footer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.25rem;
+  margin-top: 2.5rem;
+}
+
+/* The secondary route. `--ghost` was written on the markup from the start and
+   never given a rule, so both buttons drew the same 0.65-white border and read
+   as one block of chrome; the mailto is the faster path and should be the one
+   that carries weight.
+   0.38 white over `--color-ground-deep` composites to #666E77 — 3.53:1 against
+   the ground, so the border still clears the 3:1 that WCAG asks of a control's
+   boundary. It is dimmer than the primary's, not invisible. */
+.footer-button--ghost {
+  border-color: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Hover lifts it toward the primary rather than flipping to a white fill, which
+   would make the secondary the loudest thing in the footer. */
+.footer-button--ghost:hover {
+  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-paper);
+}
 .cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.22); font-size: 0.72rem; }
 /* Wider than the header's mark, because this one is the footer's masthead rather
    than a fixture in a 4.5rem bar, and it is the only place the logo gets to be
