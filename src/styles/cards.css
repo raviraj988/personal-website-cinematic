@@ -579,505 +579,55 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   --glow-colour: var(--color-accent-light);
 }
 
-/* Inside a dark section the statement cards are LIGHT — the same surface as the
- * tools cards on `/`. A pale card on the deep ground separates by sheer
- * luminance, so none of the lit-edge and bloom machinery a dark card needed
- * applies any more; it was deleted rather than left dormant.
+/* Inside a dark section the statement cards are DARK GREEN — they sit into the
+ * ground rather than on it.
  *
- * RE-THEMED, NOT RECOLOURED. The section sets `--ink: var(--color-paper)` for the
- * copy sitting directly on it, and a card that flips its surface without flipping
- * those variables gets near-white text on a near-white card — the 1.00:1 failure
- * `/about` shipped with earlier. Redefining the four theme variables on the card
- * makes its heading, hover copy and glow all follow at once.
+ * RE-THEMED, NOT RECOLOURED. The four theme variables are set on the card so its
+ * heading, hover copy, rules and glow all follow the surface at once. Setting
+ * only `background` here is what produced the 1.00:1 invisible text on /about
+ * earlier in this branch.
  *
- * `--glow-colour` goes back to navy for the same reason: gold measures 1.42:1 on
- * paper, so the ring would be invisible on these now-light cards. */
+ * `--glow-colour` is gold: on a dark card navy would be invisible, and gold is
+ * the accent these grounds already use. */
 [data-scroll-theme="dusk"] .statement-cards li,
 [data-scroll-theme="navy"] .statement-cards li {
-  --ink: var(--color-ink);
+  --ink: var(--color-paper);
   --ink-muted: var(--ink-muted-sage);
-  --rule: rgba(51, 63, 49, 0.28);
-  --label-color: var(--color-accent);
-  --glow-colour: var(--color-accent);
-  border-color: rgba(51, 63, 49, 0.3);
+  --rule: rgba(226, 232, 235, 0.18);
+  --label-color: var(--color-accent-light);
+  --glow-colour: var(--color-accent-light);
+  border-color: rgba(226, 232, 235, 0.14);
   background: var(--card-sheen-sage);
-  box-shadow: var(--shadow-card);
   color: var(--ink);
+  /* The lit top edge. A shadow under a dark card on a dark ground contributes
+     nothing — there is nothing darker for it to fall on — so the card is given an
+     edge that catches light instead. `globals.css` reaches the same conclusion
+     for `.photo-frame`, which swaps its shadow for a ring on these grounds. */
+  box-shadow: inset 0 1px 0 rgba(226, 232, 235, 0.1);
 }
 
 @media (hover: hover) {
   [data-scroll-theme="dusk"] .statement-cards li:hover,
   [data-scroll-theme="navy"] .statement-cards li:hover {
-    border-color: rgba(51, 63, 49, 0.46);
+    border-color: rgba(226, 232, 235, 0.26);
     background: var(--card-sheen-sage-hover);
-    box-shadow: var(--shadow-card-lift);
+    box-shadow: inset 0 1px 0 rgba(226, 232, 235, 0.18);
   }
 }
 
-/* `border-radius: inherit` on the ring only works when the radius is on the same
-   element. The service card draws its border, ground and radius on an inner
-   `article`, so the ring has to be told the radius directly or it would trace a
-   square around a rounded card. */
-.service-card[data-glow-card]::after {
-  border-radius: var(--card-radius);
-}
-
-/* The tools list is deliberately not interactive — see the note above — so it
-   takes the ring's light without the hover bloom that reads as pressable. */
-.tools-list li[data-glow-card]:hover {
-  box-shadow: var(--shadow-card);
-}
-
-/* The case study's opening sentence, set as prose above its cards. Matches the
-   muted body copy the section already used, so lifting the sentence out of the
-   paragraph changed its role without changing its appearance. */
-.case-study__lede {
-  max-width: 52ch;
-  margin-top: 1.5rem;
-  color: var(--ink-muted, var(--color-text-muted));
-  font-size: var(--type-body-md);
-  line-height: 1.68;
-}
-
-/* Cards inside a two-column copy column are narrower than a full-width grid, so
-   they stack rather than sitting two abreast and squeezing the line length. */
-.case-study__copy .statement-cards ol,
-.scholarship-band__inner .statement-cards ol {
-  grid-template-columns: 1fr;
-}
-
-
-/* --------------------------------------------- the travelling edge, on light
- *
- * Only the light grounds opt in. The dark sections already have an animated
- * edge — the gradient band that wipes across the head of every statement card —
- * and running both would be two different things happening on one border.
- *
- * The arc runs on hover rather than continuously: thirteen cards each sweeping a
- * gradient forever is a page that never settles, and it costs a composite every
- * frame for animation nobody asked to watch. */
-[data-scroll-theme="haze"] [data-glow-card],
-[data-scroll-theme="paper"] [data-glow-card],
-[data-scroll-theme="sand"] [data-glow-card],
-[data-scroll-theme="clay"] [data-glow-card] {
-  --edge-colour: var(--color-accent);
-}
-
-[data-scroll-theme="haze"] [data-glow-card]:hover::after,
-[data-scroll-theme="paper"] [data-glow-card]:hover::after,
-[data-scroll-theme="sand"] [data-glow-card]:hover::after,
-[data-scroll-theme="clay"] [data-glow-card]:hover::after {
-  animation: edge-travel 2.6s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-glow-card]:hover::after { animation: none !important; }
-}
-
-/* The paragraph above section 04's audience cards. Matches the body treatment
-   the rest of the page uses, and is held to a measure so it reads as a lede
-   rather than as a column of prose over the cards. */
-.serve-band__intro {
-  max-width: 58ch;
-  margin-top: clamp(1rem, 1.8vw, 1.4rem);
-  color: var(--ink-muted, var(--color-text-muted));
-  font-size: var(--type-body-md);
-  line-height: 1.7;
-}
-
-/* The audience card's hover panel needs a rule above it: the card is a compact
-   two-line tile, so the description arriving with no separation reads as a third
-   line of the name rather than as a different kind of text. */
-.audience-cards .glow-card__desc > span {
-  border-top: 1px solid var(--color-line);
-  padding-top: 0.6rem;
-}
-
-/* A section's lede — the line between its heading and its cards. One class for
-   every section that has one, so they cannot drift apart. */
-.section-lede {
-  max-width: 58ch;
-  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
-  color: var(--ink-muted, var(--color-text-muted));
-  font-size: var(--type-body-md);
-  line-height: 1.7;
-}
-
-/* The service card's one visible line. */
-.service-card__summary {
-  margin-top: 0.75rem;
-  color: var(--ink-muted, var(--color-text-muted));
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-/* THE WHOLE CARD IS THE LINK.
- *
- * A stretched pseudo-element on the existing anchor, rather than wrapping the
- * card in a second `<a>`. That matters for more than tidiness: nesting the
- * heading, the image and the button inside one anchor gives a screen reader a
- * single link whose name is every word on the card, and puts interactive content
- * inside a link, which is invalid. This keeps exactly one link with the name it
- * already had, and the card merely becomes its hit area.
- *
- * `z-index: 4` clears the glow ring at 3. The ring is `pointer-events: none`, so
- * it never swallowed the click — but a stacking order that only works because of
- * a second property is the kind of thing that breaks when the other property
- * moves. */
-.service-card__cta--stretched::after {
-  content: "";
-  position: absolute;
-  z-index: 4;
-  inset: 0;
-  border-radius: var(--card-radius);
-}
-
-/* `position: static` on the anchor itself, so the stretched pseudo-element
-   escapes it and resolves against the card — the nearest positioned ancestor,
-   which `[data-glow-card]` already made `relative`. Without this the overlay
-   would size to the button. */
-.service-card__cta--stretched {
-  position: static;
-}
-
-/* NOTE, because the obvious "fix" is a regression: raising the body above this
-   overlay would make its text selectable again, and would also take the click
-   with it — the heading, the summary and the button are most of the card, so
-   only the margins would still be a link. Whole-card click and selectable body
-   copy are mutually exclusive in this pattern; the click is the one that was
-   asked for. */
-
-/* ============================================================== page heroes
- *
- * The head of every standalone page. Deep ground, so it carries the same weight
- * as the landing page's own dark sections and a page does not open lighter than
- * the site it belongs to.
- *
- * `--header-height` of top padding clears the fixed navigation, which is
- * `position: fixed` and would otherwise sit on the eyebrow. */
-.page-hero {
-  padding: calc(var(--header-height) + clamp(3rem, 8vw, 6rem)) var(--gutter)
-    clamp(3rem, 7vw, 5.5rem);
-  background: var(--color-ground-deep);
-  color: var(--color-paper);
-}
-
-.page-hero__inner {
-  width: min(100%, var(--container));
-  margin-inline: auto;
-}
-
-.page-hero h1 {
-  margin-top: 1.1rem;
-  font-family: var(--font-serif);
-  font-size: var(--type-h2);
-  font-weight: 300;
-  line-height: 1.06;
-  text-wrap: balance;
-}
-
-.page-hero__lede {
-  max-width: 56ch;
-  margin-top: clamp(1.1rem, 2vw, 1.6rem);
-  color: var(--color-muted-light);
-  font-size: var(--type-body-lg);
-  line-height: 1.62;
-}
-
-/* The body of a standalone page. */
-.page-body {
-  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter);
-}
-
-.page-body__inner {
-  width: min(100%, var(--container));
-  margin-inline: auto;
-}
-
-.page-section + .page-section {
-  margin-top: clamp(3.5rem, 8vw, 6rem);
-}
-
-.page-section__heading {
-  font-family: var(--font-serif);
-  font-size: var(--type-h3);
-  font-weight: 300;
-  line-height: 1.12;
-  text-wrap: balance;
-}
-
-/* The index cards on /services — a photograph, a title, a summary, and the whole
-   card as the link. Built on the same glow card as everything else. */
-.index-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  gap: clamp(1.25rem, 2.4vw, 2rem);
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.index-card {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--color-line);
-  border-radius: var(--card-radius);
-  background: var(--card-sheen);
-  box-shadow: var(--shadow-card);
-  transition:
-    transform var(--motion-ui) var(--ease-out-expo),
-    box-shadow var(--motion-ui) var(--ease-out-expo);
-}
-
-.index-card__media {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: #1b333d;
-  border-radius: var(--card-radius-inner) var(--card-radius-inner) 0 0;
-}
-
-.index-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 900ms var(--ease-out-expo);
-}
-
-.index-card__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: clamp(1.2rem, 2.2vw, 1.6rem);
-}
-
-.index-card__num {
-  color: var(--color-accent);
-  font-family: var(--font-sans);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-label);
-}
-
-.index-card__title {
-  margin-top: 0.7rem;
-  font-family: var(--font-serif);
-  font-size: 1.24rem;
-  font-weight: 400;
-  line-height: 1.18;
-  text-wrap: balance;
-}
-
-.index-card__summary {
-  margin-top: 0.65rem;
-  color: var(--color-text-muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-.index-card__cta {
-  margin-top: auto;
-  padding-top: 1.25rem;
-  color: var(--color-accent);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
+/* The icon tile inverts with the card: a light wash instead of a navy one, and
+   the glyph in gold, which reads at 7.4:1 on the card's lightest stop. */
+[data-scroll-theme="dusk"] .statement-card__tile,
+[data-scroll-theme="navy"] .statement-card__tile {
+  background: rgba(226, 232, 235, 0.1);
+  color: var(--color-accent-light);
 }
 
 @media (hover: hover) {
-  .index-card:hover {
-    transform: translateY(-0.4rem);
-    box-shadow: var(--shadow-card-lift);
+  [data-scroll-theme="dusk"] .statement-cards li:hover .statement-card__tile,
+  [data-scroll-theme="navy"] .statement-cards li:hover .statement-card__tile {
+    background: rgba(226, 232, 235, 0.17);
   }
-  .index-card:hover .index-card__media img {
-    transform: scale(1.05);
-  }
-}
-
-/* The whole card is the link — one anchor, stretched, for the reasons given on
-   `.service-card__cta--stretched`. */
-.index-card__link::after {
-  content: "";
-  position: absolute;
-  z-index: 4;
-  inset: 0;
-  border-radius: var(--card-radius);
-}
-
-.index-card__link {
-  position: static;
-  color: inherit;
-  text-decoration: none;
-}
-
-html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
-  opacity: 0;
-  transform: translateY(1rem);
-}
-
-.reveal[data-visible="true"] .index-card {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 620ms var(--ease-standard) calc(var(--i) * 110ms),
-    transform 740ms var(--ease-out-expo) calc(var(--i) * 110ms);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .index-card,
-  html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-  .index-card__media img { transition: none !important; }
-}
-
-/* Prose on a standalone page. */
-.page-lede {
-  max-width: 54ch;
-  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
-  font-size: var(--type-body-lg);
-  line-height: 1.55;
-}
-
-.page-prose {
-  max-width: 58ch;
-  margin-top: clamp(0.9rem, 1.6vw, 1.3rem);
-  color: var(--color-text-muted);
-  font-size: var(--type-body-md);
-  line-height: 1.7;
-}
-
-.page-section .button,
-.page-section .people-group__grid {
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
-}
-
-.contact-page__email {
-  color: var(--color-accent);
-  font-family: var(--font-serif);
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-}
-
-/* The footer's secondary route, beside the mailto. Ghosted so the email stays
-   the primary action — two solid buttons side by side give neither priority. */
-.footer-button--ghost {
-  margin-left: 0.75rem;
-  border-color: rgba(226, 232, 235, 0.34);
-}
-
-/* Clearance between a card group and the button that follows it.
- *
- * The card grids set no bottom margin — they are usually the last thing in their
- * section — so a button placed after one sat directly against the final row.
- *
- * The adjacent-sibling selector still applies even though `.glow-cards` and
- * `.statement-cards` are `display: contents`: the combinator matches DOM
- * siblings, and display has no bearing on it. */
-.statement-cards + .button,
-.glow-cards + .button,
-.audience-cards + .button,
-.index-cards + .button,
-.people-group__grid + .button,
-.glow-cards + .reveal > .button {
-  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
-}
-
-/* On the landing page the button follows the grid inside a `Reveal`, so the
-   group and the button are not siblings — the wrapper is. */
-.section-shell > .reveal > .button,
-.section-shell > .button {
-  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
-}
-
-/* The remaining two families draw their surface in `globals.css` and
-   `people.css`, which are emitted after this file — so these need the extra
-   class to win on specificity rather than order. */
-.service-card article,
-.service-card > article {
-  background: var(--card-sheen);
-}
-
-.person-card.person-card {
-  background: var(--card-ground, var(--card-sheen));
-}
-
-/* ------------------------------------ pinning the copy columns that hold cards
- *
- * THE HOVER-WIDENS-THE-CARD BUG, properly this time.
- *
- * A previous pass put `min-width: 0` on the card grid ITEMS, which was the wrong
- * level: the cards were never the problem. `.org-intro__copy` and
- * `.network-band__copy` have no base rule of their own, so as grid items of
- * `1fr 0.85fr` and `1.1fr 0.9fr` they default to `min-width: auto` — min-content.
- *
- * A `1.1fr` track is `minmax(auto, 1.1fr)` underneath. Its MINIMUM is therefore
- * the copy column's min-content width, so when the hover panel opens and that
- * min-content grows, the track grows past its fair share and takes the width out
- * of the photograph beside it. The card appears to expand sideways because its
- * whole column does.
- *
- * `min-width: 0` makes the track `minmax(0, 1.1fr)` — a pure fraction of the
- * container, immune to whatever the content does. */
-.org-intro__copy,
-.network-band__copy,
-.case-study__copy,
-.scholarship-band__inner {
-  min-width: 0;
-}
-
-/* And the card grid inside those columns is given an explicit single track.
- *
- * `repeat(auto-fit, minmax(min(100%, 17rem), 1fr))` derives its track COUNT from
- * the available width, so a column that changes width mid-hover can change how
- * many cards sit per row — which is the "pushed the other cards below" half of
- * the report. One explicit track cannot do that, and these columns are around
- * 500px anyway, which only ever fitted one card. */
-.org-intro__copy .statement-cards ol,
-.network-band__copy .statement-cards ol {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-/* ------------------------------------ pinning the copy columns that hold cards
- *
- * THE HOVER-WIDENS-THE-CARD BUG, properly this time.
- *
- * A previous pass put `min-width: 0` on the card grid ITEMS, which was the wrong
- * level: the cards were never the problem. `.org-intro__copy` and
- * `.network-band__copy` have no base rule of their own, so as grid items of
- * `1fr 0.85fr` and `1.1fr 0.9fr` they default to `min-width: auto` — min-content.
- *
- * A `1.1fr` track is `minmax(auto, 1.1fr)` underneath. Its MINIMUM is therefore
- * the copy column's min-content width, so when the hover panel opens and that
- * min-content grows, the track grows past its fair share and takes the width out
- * of the photograph beside it. The card appears to expand sideways because its
- * whole column does.
- *
- * `min-width: 0` makes the track `minmax(0, 1.1fr)` — a pure fraction of the
- * container, immune to whatever the content does. */
-.org-intro__copy,
-.network-band__copy,
-.case-study__copy,
-.scholarship-band__inner {
-  min-width: 0;
-}
-
-/* And the card grid inside those columns is given an explicit single track.
- *
- * `repeat(auto-fit, minmax(min(100%, 17rem), 1fr))` derives its track COUNT from
- * the available width, so a column that changes width mid-hover can change how
- * many cards sit per row — which is the "pushed the other cards below" half of
- * the report. One explicit track cannot do that, and these columns are around
- * 500px anyway, which only ever fitted one card. */
-.org-intro__copy .statement-cards ol,
-.network-band__copy .statement-cards ol {
-  grid-template-columns: minmax(0, 1fr);
 }
 
 /* -------------------------------------------------------- the icon tile

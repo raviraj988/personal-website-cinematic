@@ -92,31 +92,33 @@
   --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
   /* The sage card, for cards sitting ON the deep grounds.
    *
-   * A grey-green in the hue of `--brand-olive` (#899163), the emblem's own "land"
+   * A deep green in the hue of `--brand-olive` (#899163), the emblem's own "land"
    * band — so the green belongs to the kit rather than being borrowed back from
    * the forest palette this theme replaced.
    *
-   * WHAT SETS THE FLOOR IS THE MUTED COPY, NOT THE HEADING. Ink on this card has
-   * huge headroom (9:1 at the darkest stop), but `--color-text-muted` fails two
-   * steps down from the pale version this started as. Darkening the card
-   * therefore means darkening the muted token with it — which is why the card's
-   * re-theme block sets its own `--ink-muted` rather than inheriting the page's.
+   * THIS IS A DARK CARD, and that is a polarity flip rather than a shade change:
+   * it carries PAPER text, not ink. Pale versions of this card were tried and
+   * read as bright panels laid on the page; the brief was for it to sit into the
+   * ground instead.
    *
-   *              vs ground     ink      muted     tile     sat
-   *   top          10.4x      10.4:1    6.6:1    6.0:1     15%
-   *   bottom        9.0x       9.0:1    5.6:1    5.1:1     17%
+   * HOW FAR IT CAN BLEND IS BOUNDED BELOW, NOT ABOVE. A card that matches its
+   * ground stops being a card: an earlier navy version separated by only 1.11x
+   * and effectively vanished. The light cards elsewhere manage 1.26x, which is
+   * the working floor.
    *
-   * Saturation is what keeps it premium rather than merely dark: at this
-   * lightness a vivid green reads as moss, and the same hue held near 15% reads
-   * as stone. Every value clears 4.5:1 with room.
+   *              vs ground     paper     muted     gold
+   *   top          1.37x       10.5:1    6.5:1    7.4:1
+   *   bottom       1.19x       12.1:1    7.5:1    8.5:1
    *
-   * Hover lifts one step within the family — enough to register, not enough to
-   * become a different colour. */
-  --card-sheen-sage: linear-gradient(160deg, #c2cbac 0%, #b3bd9c 100%);
-  --card-sheen-sage-hover: linear-gradient(160deg, #cbd3b7 0%, #c2cbac 100%);
-  /* Secondary copy on the sage card. The page's own muted token is tuned for the
-     pale grounds and drops to 3.8:1 here. */
-  --ink-muted-sage: #333f31;
+   * The gradient straddles that floor deliberately — the head of the card lifts
+   * clear of the ground while its foot settles into it, which is what reads as
+   * blending rather than as a flat panel at low contrast. The lit top edge in
+   * `cards.css` does the rest: on a dark ground a shadow is invisible, so the
+   * card has to be defined by light. */
+  --card-sheen-sage: linear-gradient(160deg, #1d3729 0%, #162c20 100%);
+  --card-sheen-sage-hover: linear-gradient(160deg, #25422f 0%, #1d3729 100%);
+  /* Secondary copy on the dark sage card. */
+  --ink-muted-sage: #a9bcc4;
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 
