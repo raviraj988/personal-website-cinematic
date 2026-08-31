@@ -90,25 +90,31 @@
      measurement in the set at 4.9:1 for muted copy, so do not brighten it
      further without re-checking that number. */
   --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
-  /* The warm card, for cards sitting ON the deep grounds.
+  /* The sage card, for cards sitting ON the deep grounds.
    *
-   * This is the brand's own duality made literal — "the deep navy the sector
-   * already trusts, paired with sunset tones most of the sector won't touch".
-   * A warm card on the deep navy IS Magic Hour; the cool near-white it replaces
-   * was merely the brightest thing available.
+   * A desaturated grey-green in the hue of `--brand-olive` (#899163), the
+   * emblem's own "land" band — so the green belongs to the kit rather than being
+   * borrowed from the forest palette this theme replaced.
    *
-   * It is also softer. Measured against `--color-ground-deep`:
+   * SATURATION IS THE LEVER, not lightness. A vivid green at this brightness
+   * reads as mint; the same hue at 8-12% saturation reads as stone, which is what
+   * makes it look expensive next to a deep navy. Every candidate was measured for
+   * both, and these two stops are the least saturated pair that still reads as
+   * green rather than as grey.
    *
-   *              vs ground     ink      muted     navy
-   *   paper        14.3x      14.3:1    6.1:1    8.2:1   (what this replaces)
-   *   warm top     13.6x      13.6:1    5.8:1    7.8:1
-   *   warm bottom  12.2x      12.2:1    5.2:1    7.0:1
+   *              vs ground     ink      muted     navy    sat
+   *   top          13.5x      13.5:1    5.7:1    7.7:1     8%
+   *   bottom       11.9x      11.9:1    5.0:1    6.8:1    12%
    *
-   * Everything keeps generous headroom over 4.5:1, and the card stops hitting
-   * the ground at maximum contrast. Sky was softer still at 11.0x but takes muted
-   * copy to 4.6:1, and a blue card on a blue-black ground goes tonal. */
-  --card-sheen-warm: linear-gradient(160deg, #ece0d2 0%, #e3d5c4 100%);
-  --card-sheen-warm-hover: linear-gradient(160deg, #f4ebe0 0%, #ece0d2 100%);
+   * It is also softer than what came before it: the near-white first used here
+   * met the ground at 14.3x, which is maximum contrast and reads as hard. The
+   * foot of this gradient is 11.9x, with every text value still well clear of
+   * 4.5:1.
+   *
+   * Hover lifts 1.07x within the same family — enough to register, not enough to
+   * become a different colour. */
+  --card-sheen-sage: linear-gradient(160deg, #dfe3d0 0%, #d1d7bd 100%);
+  --card-sheen-sage-hover: linear-gradient(160deg, #e7ead9 0%, #dfe3d0 100%);
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 
