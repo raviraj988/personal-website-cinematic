@@ -670,3 +670,53 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 @media (prefers-reduced-motion: reduce) {
   .statement-card__tile { transition: none !important; transform: none !important; }
 }
+
+/* ------------------------------ clearance between a card group and its button
+ *
+ * RESTORED. This block existed, and was deleted by accident along with a stale
+ * dark-card section — the shipped CSS was left with no `margin-top` on any button
+ * except `.people-group`'s, so every card group sat flush against the button
+ * under it.
+ *
+ * The card grids set no bottom margin, being usually the last thing in their
+ * section, so the spacing has to come from the button.
+ *
+ * The adjacent-sibling combinator works even though `.glow-cards` and
+ * `.statement-cards` are `display: contents` — it matches DOM siblings, and
+ * display has no bearing on it. */
+.statement-cards + .button,
+.glow-cards + .button,
+.audience-cards + .button,
+.index-cards + .button,
+.people-group__grid + .button,
+.section-shell > .reveal > .button,
+.section-shell > .button,
+.page-section > .button {
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+/* --------------------------- the statement card's description is always shown
+ *
+ * NOT revealed on hover, and that is the fix for a layout bug rather than a
+ * style preference.
+ *
+ * These cards sit in a one-column grid, so a card that grows on hover pushes the
+ * card beneath it down the page — the reveal moved the layout every time the
+ * pointer crossed a card. Reserving the space by keeping the panel open costs
+ * nothing: the text is in the DOM either way, and the card was already tall
+ * enough to be read at a glance.
+ *
+ * It also matches the reference this card set was modelled on, where the icon,
+ * the heading and the body are all visible at once and nothing is behind a
+ * pointer. That is better for touch and for search, neither of which hovers.
+ *
+ * The hover rules on `.glow-card__desc` still exist for the other families, and
+ * are simply inert here — this sets the open state as the resting one. */
+.statement-cards .glow-card__desc {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.statement-cards .glow-card__desc > span {
+  margin-top: 0.7rem;
+}
