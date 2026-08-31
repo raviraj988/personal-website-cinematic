@@ -2449,6 +2449,27 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   aspect-ratio: 4 / 5;
 }
 
+/* Re-stated after the ratio above, exactly as `.case-study__media figure` already
+ * does, and for the same reason.
+ *
+ * The "media columns that fit" block earlier in this file sets these figures to
+ * `height: 100%; aspect-ratio: auto` above 60rem. That rule and the one directly
+ * above are both (0,1,1), and this one is later — so `aspect-ratio: 4 / 5` was
+ * winning while `height: 100%` still applied.
+ *
+ * A figure with BOTH an explicit height and a ratio uses the ratio to derive its
+ * WIDTH. So the taller the copy column grew, the wider this figure became:
+ * making the statement cards' descriptions always-visible grew that column, the
+ * row grew with it, and the photograph widened out of its track and over the
+ * button beside it. `org-intro` is unaffected only because its ratio happens to
+ * be declared before the stretch block rather than after. */
+@media (min-width: 60rem) {
+  .network-band__media figure {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
 .network-band__media .parallax-media {
   position: absolute;
   inset: 0;

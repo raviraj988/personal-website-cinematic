@@ -512,7 +512,10 @@ export function EseLanding() {
               items={zip(ese.scholarship.cardHeadings, splitSentences(ese.scholarship.body), ese.scholarship.cardIcons)}
               offset={3}
             />
-            <a className="button" href={ese.scholarship.cta.href}>
+            {/* `--light`, like 01 and 02. The default variant draws itself in
+                `--color-accent` (navy), which measures 1.74:1 on this section's
+                deep ground — the button was there, just invisible. */}
+            <a className="button button--light" href={ese.scholarship.cta.href}>
               {ese.scholarship.cta.label} <Arrow />
             </a>
           </Reveal>
