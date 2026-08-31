@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AmbientLayer } from "@/components/motion/AmbientLayer";
 import { EseLogo } from "@/components/brand/EseMark";
 import { Arrow } from "@/components/ui/Arrow";
+import { CardIcon, type IconName } from "@/components/ui/CardIcon";
 import { Reveal } from "@/components/motion/Reveal";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { VideoBackdrop } from "@/components/motion/VideoBackdrop";
@@ -81,17 +82,23 @@ function splitSentences(paragraph: string): string[] {
  * `offset` shifts which gradient band each card takes, so two adjacent sections
  * do not open on the same colour.
  */
-function zip(headings: readonly string[], bodies: readonly string[]) {
-  return headings
-    .slice(0, bodies.length)
-    .map((heading, index) => ({ heading, body: bodies[index] as string }));
+function zip(
+  headings: readonly string[],
+  bodies: readonly string[],
+  icons: readonly IconName[],
+) {
+  return headings.slice(0, bodies.length).map((heading, index) => ({
+    heading,
+    body: bodies[index] as string,
+    icon: icons[index] as IconName,
+  }));
 }
 
 function StatementCards({
   items,
   offset = 0,
 }: {
-  items: { heading: string; body: string }[];
+  items: { heading: string; body: string; icon: IconName }[];
   offset?: number;
 }) {
   return (
@@ -104,9 +111,10 @@ function StatementCards({
             data-band={(index + offset) % 4}
             data-glow-card
           >
-            <span className="statement-card__band" aria-hidden="true" />
-            <span className="statement-card__num" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
+            {/* The tinted tile carries the per-card colour the gradient band
+                used to. One mark instead of two. */}
+            <span className="statement-card__tile" aria-hidden="true">
+              <CardIcon name={item.icon} />
             </span>
             <p className="statement-card__line">{item.heading}</p>
             <span className="glow-card__desc">
@@ -197,7 +205,7 @@ export function EseLanding() {
                 cards, one per sentence. Only the headings are drafted. */}
             <p className="org-intro__lede">{ese.intro.paragraphs[0]}</p>
             <StatementCards
-              items={zip(ese.intro.cardHeadings, splitSentences(ese.intro.paragraphs[1] ?? ""))}
+              items={zip(ese.intro.cardHeadings, splitSentences(ese.intro.paragraphs[1] ?? ""), ese.intro.cardIcons)}
             />
             {/* Each landing section is a summary; the button is the way through
                 to the full page the navigation also points at. */}
@@ -230,7 +238,7 @@ export function EseLanding() {
             <p className="section-label">02 — {ese.whoWeAre.eyebrow}</p>
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
             <p className="org-intro__lede">{ese.whoWeAre.lede}</p>
-            <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body)} offset={1} />
+            <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body, ese.whoWeAre.cardIcons)} offset={1} />
             <Link className="button button--light" href="/about">
               Who we are <Arrow />
             </Link>
@@ -473,7 +481,7 @@ export function EseLanding() {
                 schema or metadata reads it — so it is left in the content file
                 rather than deleted, in case the badge is ever wanted back. */}
             <p className="case-study__lede">{splitLead(ese.caseStudy.body).lead}</p>
-            <StatementCards items={zip(ese.caseStudy.cardHeadings, caseStudyFacts)} offset={2} />
+            <StatementCards items={zip(ese.caseStudy.cardHeadings, caseStudyFacts, ese.caseStudy.cardIcons)} offset={2} />
           </Reveal>
         </div>
       </section>
@@ -501,7 +509,7 @@ export function EseLanding() {
             <ScrollWords as="h2" id="scholarship-title" text={ese.scholarship.heading} />
             <p className="org-intro__lede">{ese.scholarship.lede}</p>
             <StatementCards
-              items={zip(ese.scholarship.cardHeadings, splitSentences(ese.scholarship.body))}
+              items={zip(ese.scholarship.cardHeadings, splitSentences(ese.scholarship.body), ese.scholarship.cardIcons)}
               offset={3}
             />
             <a className="button" href={ese.scholarship.cta.href}>

@@ -8,6 +8,7 @@ import { GlowCards } from "@/components/motion/GlowCards";
 import { PersonCard } from "@/components/people/PersonCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { Arrow } from "@/components/ui/Arrow";
+import { CardIcon, type IconName } from "@/components/ui/CardIcon";
 import { brand, ese, people } from "@/lib/data/ese-content";
 import { pageMetadata } from "@/lib/page-meta";
 import "@/styles/blog.css";
@@ -34,10 +35,12 @@ export const metadata = pageMetadata({
 function Cards({
   headings,
   bodies,
+  icons,
   offset = 0,
 }: {
   headings: readonly string[];
   bodies: readonly string[];
+  icons: readonly IconName[];
   offset?: number;
 }) {
   return (
@@ -50,9 +53,8 @@ function Cards({
             data-band={(index + offset) % 4}
             data-glow-card
           >
-            <span className="statement-card__band" aria-hidden="true" />
-            <span className="statement-card__num" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
+            <span className="statement-card__tile" aria-hidden="true">
+              <CardIcon name={icons[index] as IconName} />
             </span>
             <p className="statement-card__line">{heading}</p>
             <span className="glow-card__desc">
@@ -85,7 +87,7 @@ export default function AboutPage() {
           <div className="page-body__inner">
             <Reveal className="page-section">
               <h2 className="page-section__heading">What we do</h2>
-              <Cards headings={ese.intro.cardHeadings} bodies={introBodies} />
+              <Cards headings={ese.intro.cardHeadings} bodies={introBodies} icons={ese.intro.cardIcons} />
             </Reveal>
 
             <Reveal className="page-section">
@@ -100,7 +102,12 @@ export default function AboutPage() {
                 {ese.whoWeAre.eyebrow}
               </h2>
               <p className="page-prose">{ese.whoWeAre.lede}</p>
-              <Cards headings={ese.whoWeAre.cardHeadings} bodies={ese.whoWeAre.body} offset={1} />
+              <Cards
+                headings={ese.whoWeAre.cardHeadings}
+                bodies={ese.whoWeAre.body}
+                icons={ese.whoWeAre.cardIcons}
+                offset={1}
+              />
             </Reveal>
 
             <Reveal className="page-section">
@@ -129,9 +136,8 @@ export default function AboutPage() {
                       data-band={index % 4}
                       data-glow-card
                     >
-                      <span className="statement-card__band" aria-hidden="true" />
-                      <span className="statement-card__num" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
+                      <span className="statement-card__tile" aria-hidden="true">
+                        <CardIcon name={(["target", "network", "bridge"] as const)[index] ?? "target"} />
                       </span>
                       <p className="statement-card__line">{line}</p>
                     </li>

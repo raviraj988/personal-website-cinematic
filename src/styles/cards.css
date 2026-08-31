@@ -497,36 +497,10 @@ section.principle-band {
 [data-scroll-theme="dusk"] .statement-cards li[data-band="3"],
 [data-scroll-theme="navy"] .statement-cards li[data-band="3"] { --glow-colour: #899163; }
 
-.statement-card__band {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 900ms var(--ease-out-expo);
-}
 
-.statement-cards li[data-band="0"] .statement-card__band { background: var(--grad-land); }
-.statement-cards li[data-band="1"] .statement-card__band { background: var(--grad-water); }
-.statement-cards li[data-band="2"] .statement-card__band { background: var(--grad-sunrise); }
-.statement-cards li[data-band="3"] .statement-card__band { background: var(--grad-land); }
 
-.reveal[data-visible="true"] .statement-card__band {
-  transform: scaleX(1);
-  transition-delay: calc(var(--i) * 120ms + 120ms);
-}
 
-.statement-card__num {
-  display: block;
-  color: var(--label-color, var(--color-accent));
-  font-family: var(--font-sans);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-label);
-}
+
 
 /* DISPLAY TYPE, and this has been both ways for a reason worth recording.
  *
@@ -580,7 +554,6 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
     transform: none !important;
     transition: none !important;
   }
-  .statement-card__band { transform: scaleX(1) !important; transition: none !important; }
   /* The ring is switched off entirely — it is pointer-driven light, which is
      exactly the kind of motion this preference is asking to stop. */
   [data-glow-card]::after { display: none; }
@@ -606,10 +579,38 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   --glow-colour: var(--color-accent-light);
 }
 
+/* Inside a dark section the statement cards are LIGHT — the same surface as the
+ * tools cards on `/`. A pale card on the deep ground separates by sheer
+ * luminance, so none of the lit-edge and bloom machinery a dark card needed
+ * applies any more; it was deleted rather than left dormant.
+ *
+ * RE-THEMED, NOT RECOLOURED. The section sets `--ink: var(--color-paper)` for the
+ * copy sitting directly on it, and a card that flips its surface without flipping
+ * those variables gets near-white text on a near-white card — the 1.00:1 failure
+ * `/about` shipped with earlier. Redefining the four theme variables on the card
+ * makes its heading, hover copy and glow all follow at once.
+ *
+ * `--glow-colour` goes back to navy for the same reason: gold measures 1.42:1 on
+ * paper, so the ring would be invisible on these now-light cards. */
 [data-scroll-theme="dusk"] .statement-cards li,
 [data-scroll-theme="navy"] .statement-cards li {
-  border-color: var(--color-line-dark);
-  background: var(--card-sheen-dark);
+  --ink: var(--color-ink);
+  --ink-muted: var(--color-text-muted);
+  --rule: var(--color-line);
+  --label-color: var(--color-accent);
+  --glow-colour: var(--color-accent);
+  border-color: var(--color-line);
+  background: var(--card-sheen);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  [data-scroll-theme="dusk"] .statement-cards li:hover,
+  [data-scroll-theme="navy"] .statement-cards li:hover {
+    border-color: rgba(43, 69, 82, 0.34);
+    box-shadow: var(--shadow-card-lift);
+  }
 }
 
 /* `border-radius: inherit` on the ring only works when the radius is on the same
@@ -1042,75 +1043,79 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .index-card {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* ================================================ the dark cards, lit not shaded
+/* ------------------------------------ pinning the copy columns that hold cards
  *
- * What actually works on the deep grounds, and why the usual card toolkit does
- * not.
+ * THE HOVER-WIDENS-THE-CARD BUG, properly this time.
  *
- * A card on a light page is separated by a SHADOW. On `--color-ground-deep`
- * there is nothing darker for a shadow to fall on, so it contributes nothing —
- * `globals.css` reaches the same conclusion for `.photo-frame`, which drops its
- * shadow for a light ring on these grounds. Everything below therefore separates
- * the card by LIGHT:
+ * A previous pass put `min-width: 0` on the card grid ITEMS, which was the wrong
+ * level: the cards were never the problem. `.org-intro__copy` and
+ * `.network-band__copy` have no base rule of their own, so as grid items of
+ * `1fr 0.85fr` and `1.1fr 0.9fr` they default to `min-width: auto` — min-content.
  *
- *   1. a lit top edge      the card catches light from above
- *   2. a sheen             already present, a 7%-to-2% wash down the surface
- *   3. a gradient band     already present, the emblem's own bands
- *   4. a coloured bloom     on hover, in the card's own band colour
+ * A `1.1fr` track is `minmax(auto, 1.1fr)` underneath. Its MINIMUM is therefore
+ * the copy column's min-content width, so when the hover panel opens and that
+ * min-content grows, the track grows past its fair share and takes the width out
+ * of the photograph beside it. The card appears to expand sideways because its
+ * whole column does.
  *
- * The bloom is the one that replaces a drop shadow. A black shadow under a card
- * on near-black is invisible; a soft wash of the card's OWN accent reads as the
- * card lifting off a dark surface, and it ties the depth cue to the identity
- * colour the band already established rather than introducing a fifth thing. */
-[data-scroll-theme="dusk"] .statement-cards li,
-[data-scroll-theme="navy"] .statement-cards li {
-  /* The lit top edge. 1px, inset, and brighter than the border — a real edge
-     catches more light than the sides it turns into. */
-  box-shadow: inset 0 1px 0 rgba(226, 232, 235, 0.11);
+ * `min-width: 0` makes the track `minmax(0, 1.1fr)` — a pure fraction of the
+ * container, immune to whatever the content does. */
+.org-intro__copy,
+.network-band__copy,
+.case-study__copy,
+.scholarship-band__inner {
+  min-width: 0;
+}
+
+/* And the card grid inside those columns is given an explicit single track.
+ *
+ * `repeat(auto-fit, minmax(min(100%, 17rem), 1fr))` derives its track COUNT from
+ * the available width, so a column that changes width mid-hover can change how
+ * many cards sit per row — which is the "pushed the other cards below" half of
+ * the report. One explicit track cannot do that, and these columns are around
+ * 500px anyway, which only ever fitted one card. */
+.org-intro__copy .statement-cards ol,
+.network-band__copy .statement-cards ol {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* -------------------------------------------------------- the icon tile
+ *
+ * Replaces the 01/02 counter in the card's top corner. A number told you the
+ * card's position in a list you can already see; the glyph says what the card is
+ * about, which is the job that corner was doing nothing with.
+ *
+ * One colour for every tile rather than the per-card hues the gradient band used.
+ * Those were the emblem's own — gold, sky, olive — and they are chosen to glow on
+ * the deep ink: on a pale card gold measures 1.42:1 and olive 2.71:1, both under
+ * the 3:1 a non-text mark needs. Navy is the only one of the kit's colours that
+ * reads on this surface, which is why it is also the accent and the ring. */
+.statement-card__tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.8rem;
+  background: rgba(43, 69, 82, 0.09);
+  color: var(--color-accent);
   transition:
-    transform var(--motion-ui) var(--ease-out-expo),
-    background-color var(--motion-ui) var(--ease-out-expo),
-    border-color var(--motion-ui) var(--ease-out-expo),
-    box-shadow 420ms var(--ease-out-expo);
+    background-color var(--motion-ui) var(--ease-standard),
+    transform 620ms var(--ease-out-expo);
+}
+
+.card-icon {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 @media (hover: hover) {
-  [data-scroll-theme="dusk"] .statement-cards li:hover,
-  [data-scroll-theme="navy"] .statement-cards li:hover {
-    border-color: rgba(226, 232, 235, 0.3);
-    background: var(--card-sheen-dark-hover);
-    /* Fallback first for anything without `color-mix`: a neutral bloom, which is
-       the effect minus the identity colour rather than nothing at all. */
-    box-shadow:
-      inset 0 1px 0 rgba(226, 232, 235, 0.2),
-      0 1.1rem 2.6rem -1rem rgba(226, 232, 235, 0.16);
-    box-shadow:
-      inset 0 1px 0 rgba(226, 232, 235, 0.2),
-      0 1.1rem 2.6rem -1rem
-        color-mix(in srgb, var(--glow-colour, #dec26a) 42%, transparent);
+  .statement-cards li:hover .statement-card__tile {
+    background: rgba(43, 69, 82, 0.16);
+    transform: translateY(-0.1rem);
   }
-
-  /* The band is the card's identity, so hover thickens it rather than
-     recolouring it — the same decision the pillar cards made. */
-  [data-scroll-theme="dusk"] .statement-cards li:hover .statement-card__band,
-  [data-scroll-theme="navy"] .statement-cards li:hover .statement-card__band {
-    height: 5px;
-  }
-}
-
-/* The band needs its height animated for the hover above to read as a move. */
-[data-scroll-theme="dusk"] .statement-card__band,
-[data-scroll-theme="navy"] .statement-card__band {
-  transition:
-    transform 900ms var(--ease-out-expo),
-    height var(--motion-ui) var(--ease-out-expo);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-scroll-theme="dusk"] .statement-cards li,
-  [data-scroll-theme="navy"] .statement-cards li,
-  [data-scroll-theme="dusk"] .statement-card__band,
-  [data-scroll-theme="navy"] .statement-card__band {
-    transition: none !important;
-  }
+  .statement-card__tile { transition: none !important; transform: none !important; }
 }

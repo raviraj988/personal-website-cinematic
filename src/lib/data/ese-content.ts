@@ -282,6 +282,10 @@ export const ese = {
      * sentence has exactly one home and cannot drift from its heading.
      */
     cardHeadings: ["Expertise and experience", "The bridge"],
+    /* The glyph each card shows in place of a number — see `CardIcon`. Paired
+       positionally with `cardHeadings` above, and chosen to restate the heading
+       rather than decorate it. */
+    cardIcons: ["layers", "bridge"] as const,
     image: wideImage(
       "ese/community-hopi-navajo-restoration.webp",
       "A still alpine lake below granite ridges, with pines along the near shore in late light.",
@@ -367,6 +371,10 @@ export const ese = {
      */
     lede: "ESE is assembled, not staffed. Who joins a project depends on what the project needs.",
     cardHeadings: ["A network, not a firm", "Matched to the project"],
+    /* The glyph each card shows in place of a number — see `CardIcon`. Paired
+       positionally with `cardHeadings` above, and chosen to restate the heading
+       rather than decorate it. */
+    cardIcons: ["network", "target"] as const,
     image: image(
       "working-session",
       "A small working group around a conference table, reviewing material together.",
@@ -478,6 +486,10 @@ export const ese = {
      */
     lede: "Cost should not decide which communities get technical help.",
     cardHeadings: ["Profits go back", "Ask about the program"],
+    /* The glyph each card shows in place of a number — see `CardIcon`. Paired
+       positionally with `cardHeadings` above, and chosen to restate the heading
+       rather than decorate it. */
+    cardIcons: ["return", "ask"] as const,
     cta: { label: "Ask about the scholarship program", href: "#contact" },
   },
 
@@ -740,6 +752,10 @@ export const ese = {
      * sentence has exactly one home and cannot drift from its heading.
      */
     cardHeadings: ["Provisional patent", "In field trials"],
+    /* The glyph each card shows in place of a number — see `CardIcon`. Paired
+       positionally with `cardHeadings` above, and chosen to restate the heading
+       rather than decorate it. */
+    cardIcons: ["seal", "flask"] as const,
     status: "Bench testing and field trials underway",
     /**
      * `case-study-water` was a soft snapshot of a river bank with ducks on it —
