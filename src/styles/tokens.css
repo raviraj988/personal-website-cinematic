@@ -92,29 +92,31 @@
   --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
   /* The sage card, for cards sitting ON the deep grounds.
    *
-   * A desaturated grey-green in the hue of `--brand-olive` (#899163), the
-   * emblem's own "land" band — so the green belongs to the kit rather than being
-   * borrowed from the forest palette this theme replaced.
+   * A grey-green in the hue of `--brand-olive` (#899163), the emblem's own "land"
+   * band — so the green belongs to the kit rather than being borrowed back from
+   * the forest palette this theme replaced.
    *
-   * SATURATION IS THE LEVER, not lightness. A vivid green at this brightness
-   * reads as mint; the same hue at 8-12% saturation reads as stone, which is what
-   * makes it look expensive next to a deep navy. Every candidate was measured for
-   * both, and these two stops are the least saturated pair that still reads as
-   * green rather than as grey.
+   * WHAT SETS THE FLOOR IS THE MUTED COPY, NOT THE HEADING. Ink on this card has
+   * huge headroom (9:1 at the darkest stop), but `--color-text-muted` fails two
+   * steps down from the pale version this started as. Darkening the card
+   * therefore means darkening the muted token with it — which is why the card's
+   * re-theme block sets its own `--ink-muted` rather than inheriting the page's.
    *
-   *              vs ground     ink      muted     navy    sat
-   *   top          13.5x      13.5:1    5.7:1    7.7:1     8%
-   *   bottom       11.9x      11.9:1    5.0:1    6.8:1    12%
+   *              vs ground     ink      muted     tile     sat
+   *   top          10.4x      10.4:1    6.6:1    6.0:1     15%
+   *   bottom        9.0x       9.0:1    5.6:1    5.1:1     17%
    *
-   * It is also softer than what came before it: the near-white first used here
-   * met the ground at 14.3x, which is maximum contrast and reads as hard. The
-   * foot of this gradient is 11.9x, with every text value still well clear of
-   * 4.5:1.
+   * Saturation is what keeps it premium rather than merely dark: at this
+   * lightness a vivid green reads as moss, and the same hue held near 15% reads
+   * as stone. Every value clears 4.5:1 with room.
    *
-   * Hover lifts 1.07x within the same family — enough to register, not enough to
+   * Hover lifts one step within the family — enough to register, not enough to
    * become a different colour. */
-  --card-sheen-sage: linear-gradient(160deg, #dfe3d0 0%, #d1d7bd 100%);
-  --card-sheen-sage-hover: linear-gradient(160deg, #e7ead9 0%, #dfe3d0 100%);
+  --card-sheen-sage: linear-gradient(160deg, #c2cbac 0%, #b3bd9c 100%);
+  --card-sheen-sage-hover: linear-gradient(160deg, #cbd3b7 0%, #c2cbac 100%);
+  /* Secondary copy on the sage card. The page's own muted token is tuned for the
+     pale grounds and drops to 3.8:1 here. */
+  --ink-muted-sage: #333f31;
   --color-line: #cdd6da;
   --color-line-dark: rgba(226, 232, 235, 0.18);
 
