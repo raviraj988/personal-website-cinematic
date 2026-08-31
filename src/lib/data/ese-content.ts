@@ -523,11 +523,17 @@ export const ese = {
     /**
      * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
      *
-     * A short line above this section's cards. The source document has no
-     * introductory sentence here; every sentence it does have is now the body of
-     * a card, so a lede could only be written or left absent.
+     * `.section-heading-row` is a three-column grid, so this renders BESIDE the
+     * heading, not above the cards. That slot wants the heading's complement,
+     * and what was here restated it: "Five areas of support" sat 1.5rem from
+     * "Five areas of support, offered singly or together…". It also carried a
+     * claim the source does not make — the same "projects draw on more than
+     * one" idea already struck from `heading` above.
+     *
+     * So: the heading says how many, this says which. Nothing but the five
+     * `items` titles, in their order, which adds no claim at all.
      */
-    lede: "Five areas of support, offered singly or together depending on what a community is facing.",
+    lede: "Policy and sovereignty, grant development, technical implementation, climate resilience planning, and communications.",
     items: [
       {
         slug: "policy-support-and-sovereignty",
@@ -785,11 +791,17 @@ export const ese = {
     /**
      * TODO(ese): DRAFTED, NOT TRANSCRIBED — needs approval.
      *
-     * A short line above this section's cards. The source document has no
-     * introductory sentence here; every sentence it does have is now the body of
-     * a card, so a lede could only be written or left absent.
+     * Renders beside the heading, as in `services` above. What was here said
+     * "in development" next to a heading reading "Coming soon", above two cards
+     * each carrying an "In development" status — the same fact three times and
+     * nothing else.
+     *
+     * Naming the two tools instead. "For communities to use themselves" is the
+     * one characterisation, and both descriptions support it: Tribes "develop
+     * language … independently, with guidance provided by the tool", and
+     * communities "develop their own cumulative impact analysis".
      */
-    lede: "Two resources in development, built to be used by communities directly.",
+    lede: "A Treatment as a State guide for the Clean Air Act, and a cumulative impact tool — both designed for communities to use themselves.",
     items: [
       {
         title: "TAS for Tribes implementing the Clean Air Act (CAA)",

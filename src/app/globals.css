@@ -1088,7 +1088,13 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .section-heading-row h2 { font-size: var(--type-h2); }
-.section-heading-row > p:last-child {
+/* The lede in the third column. `.section-lede` is on the markup and had no rule
+   at all — every declaration below reached it only through `> p:last-child`, so
+   adding any fourth child to the row would have silently stripped its styling.
+   Both selectors, so naming the class is enough and the positional one still
+   covers anything that predates it. */
+.section-heading-row > p:last-child,
+.section-heading-row .section-lede {
   max-width: 40ch;
   color: var(--color-text-muted);
 }
@@ -1319,7 +1325,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .about-editorial__portrait { grid-column: 15 / -1; }
   .about-editorial__copy { grid-column: 2 / span 10; }
   .section-heading-row { grid-template-columns: 1fr 2fr; }
-  .section-heading-row > p:last-child { grid-column: 2; }
+  .section-heading-row > p:last-child,
+  .section-heading-row .section-lede { grid-column: 2; }
   .approach-editorial { grid-template-columns: 1fr; }
   .approach-editorial__media { position: relative; height: 58vh; min-height: 29rem; }
   .approach-editorial__content { padding: var(--section-space) var(--gutter); }
@@ -1337,7 +1344,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .about-editorial__copy { margin-top: 3rem; }
   .about-editorial__portrait figure { aspect-ratio: 4 / 5.25; }
   .section-heading-row h2 { margin-top: 1.2rem; }
-  .section-heading-row > p:last-child { margin-top: 1.5rem; }
+  .section-heading-row > p:last-child,
+  .section-heading-row .section-lede { margin-top: 1.5rem; }
   .approach-editorial__content h2 { max-width: none; }
   .selected-work-grid { grid-template-columns: 1fr; }
   .work-card:last-child { grid-column: auto; width: auto; }
