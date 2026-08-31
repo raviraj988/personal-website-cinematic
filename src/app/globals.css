@@ -6,6 +6,9 @@
 /* Card surfaces for content that was plain text or a plain list. Global, since
    the landing page and /people both use them. */
 @import "../styles/cards.css";
+/* Standalone page chrome — /about, /services, /contact. Its own file so that
+   editing a card can never delete it again. */
+@import "../styles/pages.css";
 
 *,
 *::before,
