@@ -50,7 +50,7 @@
   opacity: 0;
   padding: 0 var(--gutter);
   color: var(--color-paper);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -132,7 +132,7 @@
 .pinned-stack__number {
   display: block;
   color: var(--color-accent);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -141,7 +141,7 @@
 
 .pinned-stack__body h3 {
   margin-top: 0.9rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.14;

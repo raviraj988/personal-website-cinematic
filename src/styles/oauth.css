@@ -108,6 +108,7 @@
 }
 
 .drop__eyebrow {
+  font-family: var(--font-label);
   margin: 0;
   font-size: 0.72rem;
   font-weight: 600;

@@ -31,8 +31,14 @@
   --color-navy: #2b4552;         /* brand navy — the mid ground */
   --color-canvas: #eef1f2;       /* the light default */
   --color-paper: #e5e8eb;        /* brand paper, the kit's light neutral */
-  --color-sand: #f0e7db;         /* warm light */
-  --color-clay: #e3d5c4;         /* deeper warm light */
+  /* THE CREAM REGISTER IS GONE. `--color-sand: #f0e7db` and
+     `--color-clay: #e3d5c4` sat at hue 33-34 deg, ~10 deg off terracotta but at
+     a lightness and saturation the kit has no colour at. The brand walkthrough
+     names that register as the thing ESE is NOT: "in a category built on
+     institutional blue and forest green, personal is the disruption" — and
+     cream-plus-forest-green was precisely what the page still had. Both are
+     replaced by `--color-paper`, which is an actual kit colour and measures
+     better under the body ink anyway (6.08:1 against clay's 5.19:1). */
 
   /* Ink. `--color-ink` is the brand neutral and doubles as the deepest ground;
      the kit is explicit that these two replace #000/#fff "whenever possible,
@@ -49,7 +55,7 @@
   --color-accent-light: #dec26a;
 
   /* Secondary UI text. `--color-text-muted` is measured against the tightest
-     light ground it sits on — 4.87:1 on clay, 5.75:1 on canvas — and
+     light ground it sits on — 6.08:1 on paper, 6.59:1 on haze — and
      `--color-muted-light` against the darkest, 8.96:1 on ink. */
   --color-text-muted: #44585f;
   --color-muted-light: #a9bcc4;
@@ -90,37 +96,49 @@
      measurement in the set at 4.9:1 for muted copy, so do not brighten it
      further without re-checking that number. */
   --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
-  /* The sage card, for cards sitting ON the deep grounds.
+  /* The olive card, for cards sitting ON the deep grounds.
    *
-   * A deep green in the hue of `--brand-olive` (#899163), the emblem's own "land"
-   * band — so the green belongs to the kit rather than being borrowed back from
-   * the forest palette this theme replaced.
+   * THIS WAS THE PALETTE'S ONE REAL VIOLATION. The block that used to be here
+   * claimed the card was "a deep green in the hue of `--brand-olive` (#899163)".
+   * It was not, and the numbers are not close:
    *
-   * THIS IS A DARK CARD, and that is a polarity flip rather than a shade change:
-   * it carries PAPER text, not ink. Pale versions of this card were tried and
-   * read as bright panels laid on the page; the brief was for it to sit into the
-   * ground instead.
+   *                    hue      the kit's olive is hue 70
+   *     #1d3729        148 deg        +78 deg off
+   *     #162c20        147 deg        +77 deg off
+   *     #25422f        141 deg        +71 deg off
    *
-   * HOW FAR IT CAN BLEND IS BOUNDED BELOW, NOT ABOVE. A card that matches its
-   * ground stops being a card: an earlier navy version separated by only 1.11x
-   * and effectively vanished. The light cards elsewhere manage 1.26x, which is
-   * the working floor.
+   * Hue 148 is blue-green — forest green, the category default the brand
+   * walkthrough explicitly disowns. The kit's olive is a yellow-green. So the
+   * card was not a shade of the brand colour it named; it was a different colour
+   * wearing its label.
    *
-   *              vs ground     paper     muted     gold
-   *   top          1.37x       10.5:1    6.5:1    7.4:1
-   *   bottom       1.19x       12.1:1    7.5:1    8.5:1
+   * These stops ARE hue 70, the olive's own, darkened to the same lightness the
+   * card had before so nothing else about the design shifts.
    *
-   * The gradient straddles that floor deliberately — the head of the card lifts
+   * HOW FAR IT CAN BLEND IS BOUNDED BELOW, NOT ABOVE — a card that matches its
+   * ground stops being a card. 1.26x is the working floor the light cards hold.
+   *
+   *              vs ground     paper     gold
+   *   top          1.47x       9.8:1    6.9:1
+   *   bottom       1.24x      11.5:1    8.1:1
+   *
+   * The gradient straddles that floor on purpose: the head of the card lifts
    * clear of the ground while its foot settles into it, which is what reads as
-   * blending rather than as a flat panel at low contrast. The lit top edge in
-   * `cards.css` does the rest: on a dark ground a shadow is invisible, so the
-   * card has to be defined by light. */
-  --card-sheen-sage: linear-gradient(160deg, #1d3729 0%, #162c20 100%);
-  --card-sheen-sage-hover: linear-gradient(160deg, #25422f 0%, #1d3729 100%);
-  /* Secondary copy on the dark sage card. */
-  --ink-muted-sage: #a9bcc4;
+   * blending rather than as a flat panel at uniform low contrast. Both ends are
+   * a clear improvement on the old card, which ran 1.37x to 1.19x. The lit top
+   * edge in `cards.css` does the rest — on a dark ground a shadow is invisible,
+   * so the card has to be defined by light. */
+  --card-sheen-olive: linear-gradient(160deg, #34391e 0%, #292d18 100%);
+  /* Hover lifts 1.16x within the same hue: hover's foot is resting's head, the
+     same relationship the dark navy card uses. */
+  --card-sheen-olive-hover: linear-gradient(160deg, #3d4323 0%, #34391e 100%);
+  /* Secondary copy on the dark olive card. */
+  /* Was #a9bcc4 — a BLUE-grey at hue 198 sitting on a hue-70 card, which is the
+     same mismatch as the card itself. This is the olive's own hue desaturated:
+     6.2:1 on the card's head, 7.4:1 on its foot. */
+  --ink-muted-olive: #b9bda8;
   --color-line: #cdd6da;
-  --color-line-dark: rgba(226, 232, 235, 0.18);
+  --color-line-dark: rgba(229, 232, 235, 0.18);
 
   /* ------------------------------------------------------------ photographs
    *
@@ -295,8 +313,40 @@
   --ese-band-water: #b8d0d8;
   --ese-band-sunrise: #dec26a;
 
-  --font-serif: var(--font-newsreader), Georgia, serif;
-  --font-sans: var(--font-inter), Arial, sans-serif;
+  /* TYPE — the kit's four roles.
+   *
+   * `ref_docs/brand/colors-and-fonts.jpg` assigns one face per role, and the
+   * site did not follow any of them: it ran a serif for headlines and a sans for
+   * body, which is the kit's arrangement exactly inverted.
+   *
+   *   Headline        Morvi           all caps
+   *   Sub-heading     Gotham Book     all caps, tracking +25
+   *   Body            Marion Regular
+   *   Accent / quote  Dongra Script
+   *
+   * Every stack NAMES THE KIT FACE FIRST. All four are licensed retail faces and
+   * none was supplied with the kit, so none is self-hosted here — but a visitor
+   * or a design machine that has one installed gets the real thing, and dropping
+   * a licensed `@font-face` into the app switches the site over with no other
+   * change. See `layout.tsx` for why each stand-in was picked.
+   *
+   * The trade-off in naming the kit faces first is that the page renders in the
+   * real face for anyone who owns it and the stand-in for everyone else. That is
+   * the correct behaviour for a brand implementation and the wrong behaviour for
+   * pixel-identical rendering; if the latter matters more, drop the quoted names
+   * and leave only the `var()` stand-ins. */
+  --font-display: "Morvi", var(--font-anton), "Haettenschweiler", "Arial Narrow", sans-serif;
+  --font-label: "Gotham Book", "Gotham", var(--font-montserrat), Arial, sans-serif;
+  --font-body: "Marion", var(--font-newsreader), Georgia, serif;
+  --font-accent: "Dongra Script", var(--font-caveat), cursive;
+
+  /* Deprecated role-blind aliases. Kept so no stylesheet is ever left pointing
+     at an undefined variable, and mapped to the role each name actually served:
+     `--font-serif` was prose, `--font-sans` was UI chrome. Prefer the four
+     above — these say what a face LOOKS like, not what it is FOR, which is how
+     the display face ended up being a serif in the first place. */
+  --font-serif: var(--font-body);
+  --font-sans: var(--font-label);
 
   /* Type scale.
    *
@@ -317,7 +367,10 @@
      reference every small uppercase label on the site is now set against —
      previously they ranged from 0.6rem to 0.95rem with six different trackings. */
   --type-meta: 0.72rem;
-  --track-label: 0.06em;
+  /* The kit's own number: "use all-caps, set tracking to +25". Adobe tracking is
+     in 1/1000 em, so +25 is 0.025em. This was 0.06em (+60), more than twice the
+     kit's spec. */
+  --track-label: 0.025em;
 
   --container: 75rem;
   --gutter: clamp(1.5rem, 4.3vw, 3.5rem);

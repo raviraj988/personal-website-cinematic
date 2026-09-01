@@ -66,15 +66,28 @@ and snapped to the palette at each end:
 
 ## Type
 
-Not used by the site, which is set in Newsreader and Inter. Recorded because the
-kit specifies it and print work should match.
+Wired into the site as four role tokens in `src/styles/tokens.css`. Every stack
+names the kit face first, so a licensed `@font-face` drops in with no other
+change; until then a free stand-in carries the role.
 
-| Role | Face | Note |
-| --- | --- | --- |
-| Headline | Morvi | all caps |
-| Sub-heading | Gotham Book | all caps, tracking +25 |
-| Body | Marion Regular | |
-| Accent / quote | Dongra Script | |
+| Role | Face | Note | Stand-in |
+| --- | --- | --- | --- |
+| Headline | Morvi | all caps | Anton |
+| Sub-heading | Gotham Book | all caps, tracking +25 | Montserrat |
+| Body | Marion Regular | | Newsreader |
+| Accent / quote | Dongra Script | | Caveat |
+
+None of the four was supplied with the kit and all are licensed retail faces, so
+none is self-hosted here. **Buying web licences for Morvi, Gotham Book, Marion
+and Dongra Script is the one outstanding thing between this and a faithful
+implementation.**
+
+The site used to set headlines in a serif and body in a sans — the kit's
+arrangement exactly inverted. That is fixed. One deliberate departure remains:
+seven landing-page headings are whole sentences (the mission statement is 218
+characters), and those take the Body role at heading scale rather than caps,
+because capitals destroy the word-shape cue long text is read by. See the
+comment on `#hero-title` in `globals.css`; the real fix is shorter headings.
 
 ## The walkthrough
 

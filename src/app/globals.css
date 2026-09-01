@@ -31,7 +31,9 @@ body {
   overflow-x: hidden;
   background: var(--page-background, var(--color-canvas));
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  /* The kit sets body copy in Marion Regular, a serif. The site set it in Inter
+     and its headlines in a serif — the kit's arrangement exactly inverted. */
+  font-family: var(--font-body);
   font-size: var(--type-body);
   line-height: 1.65;
   text-rendering: optimizeLegibility;
@@ -52,12 +54,13 @@ body {
  * `dusk` and `navy` sit 1.74:1 apart. That is deliberately the same separation
  * the forest/pine pair had before this repaint (1.72:1) — proven to be enough for
  * two dark sections to read as two rather than as one long one, without either
- * losing its own identity. `sand` and `clay` are the warm light pair, carrying
- * the sunset half of the palette at low saturation. */
+ * losing its own identity.
+ *
+ * `sand` and `clay` used to sit here as "the warm light pair". They were not in
+ * the kit — see the note in `tokens.css` — and both are gone. Four grounds
+ * remain and every one of them is a kit colour or a tint of one. */
 html[data-scroll-theme="haze"] { --page-background: #eef1f2; }
 html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
-html[data-scroll-theme="sand"] { --page-background: #f0e7db; }
-html[data-scroll-theme="clay"] { --page-background: #e3d5c4; }
 html[data-scroll-theme="dusk"] { --page-background: #081b23; }
 html[data-scroll-theme="navy"] { --page-background: #2b4552; }
 
@@ -78,11 +81,15 @@ video {
   max-width: 100%;
 }
 
+/* `font: inherit` used to mean the sans body face. Body is the kit's serif now,
+   and a serif is wrong for a control — the kit's sub-heading face is the UI face.
+   `font: inherit` stays for size and line-height; the family is named after it. */
 button,
 input,
 textarea,
 select {
   font: inherit;
+  font-family: var(--font-label);
 }
 
 button,
@@ -102,14 +109,76 @@ ol {
   list-style: none;
 }
 
+/* HEADLINE — Morvi, all caps, per the kit.
+ *
+ * `text-transform` is here rather than on each heading because the kit states it
+ * as a property of the face's role, not of any one component.
+ *
+ * The tracking flips sign. -0.025em suited a serif at display size; a heavy
+ * condensed face set in caps needs air between the stems instead, or the counters
+ * close up at 7rem. +0.01em is the smallest amount that reads as deliberate.
+ *
+ * Line-height stays at 0.98: caps have no descenders, so the optical gap between
+ * two lines is larger than the number suggests. */
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 400;
   line-height: 0.98;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   text-wrap: balance;
+}
+
+/* Article structure is not a brand headline. In-post subheads stay sentence case
+   — a 40-word `<h3>` set in caps inside running prose is a different thing from
+   a section headline, and the kit's "Headline" role is the latter. */
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* STATEMENTS ARE NOT HEADLINES EITHER, and this is the one place the kit cannot
+   be applied literally.
+ *
+ * The kit's specimen for the headline role is the word "HEADLINE" — one word.
+ * Seven of the landing page's headings are whole sentences:
+ *
+ *     mission-title        218 characters
+ *     hero-title            94
+ *     serve-title           76
+ *     about-title           74
+ *     network-title         70
+ *     scholarship-title     59
+ *     case-title            57
+ *
+ * A 218-character sentence set in a heavy condensed face in capitals is not a
+ * more faithful reading of the kit, it is a misreading of what "headline" means:
+ * caps destroy word-shape, which is exactly the cue long text is read by. So
+ * these take the kit's BODY role at heading scale instead — still one of the
+ * four faces, still the section's visual weight, and readable.
+ *
+ * Every other heading on the site IS short — the four remaining landing
+ * headings run 11 to 48 characters, and every standalone page's `h1` is 48 or
+ * under — so they all take the caps treatment above with nothing to correct.
+ *
+ * The real fix is shorter headings; this rule is what to do until there are
+ * some. Delete an id from the list as its heading is rewritten. */
+#hero-title,
+#about-title,
+#network-title,
+#mission-title,
+#serve-title,
+#case-title,
+#scholarship-title {
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-transform: none;
 }
 
 p {
@@ -193,9 +262,7 @@ footer[data-scroll-theme="navy"]:not([data-ink="own"]) {
 }
 
 section[data-scroll-theme="haze"]:not([data-ink="own"]),
-section[data-scroll-theme="paper"]:not([data-ink="own"]),
-section[data-scroll-theme="sand"]:not([data-ink="own"]),
-section[data-scroll-theme="clay"]:not([data-ink="own"]) {
+section[data-scroll-theme="paper"]:not([data-ink="own"]) {
   --ink: var(--color-ink);
   --ink-muted: var(--color-text-muted);
   --rule: var(--color-line);
@@ -204,6 +271,7 @@ section[data-scroll-theme="clay"]:not([data-ink="own"]) {
 }
 
 .section-label {
+  font-family: var(--font-label);
   color: var(--label-color, var(--color-accent));
   font-size: var(--type-meta);
   font-weight: 500;
@@ -213,24 +281,20 @@ section[data-scroll-theme="clay"]:not([data-ink="own"]) {
 }
 
 /* No per-ground label override is needed. The accent is navy and it is the only
-   one of the kit's colours that clears 4.5:1 on a light ground — 8.23:1 on
-   paper, 8.91:1 on haze, 8.27:1 on sand, 7.02:1 on clay. It cannot fail on any
-   of the four.
+   one of the kit's colours that clears 4.5:1 on a light ground — 8.91:1 on haze,
+   8.23:1 on paper. It cannot fail on either.
 
-   `clay` is the tightest light ground on the page, so muted copy is checked
-   against it: the default token measures 4.87:1 there. That clears 4.5:1, but
-   only just, and an ambient bloom drifting across takes it under — so the two
-   warm grounds darken the token, exactly as the two light greens used to. */
-html[data-scroll-theme="sand"],
-html[data-scroll-theme="clay"] {
-  --color-text-muted: #37484e;
-}
+   The per-ground muted darkening that used to live here existed only for `sand`
+   and `clay`, whose 4.87:1 was tight enough that a drifting ambient bloom took
+   it under 4.5:1. Both grounds are gone; muted copy now measures 6.59:1 on haze
+   and 6.08:1 on paper, so there is nothing left to correct for. */
 
 .section-label--light {
   color: var(--color-accent-light);
 }
 
 .text-link {
+  font-family: var(--font-label);
   --line-color: var(--color-ink);
   position: relative;
   display: inline-flex;
@@ -298,6 +362,7 @@ html[data-scroll-theme="clay"] {
  * rule, which is what made the button read as a boxed link rather than a
  * control. */
 .button {
+  font-family: var(--font-label);
   display: inline-flex;
   align-items: center;
   gap: 1.25rem;
@@ -322,7 +387,7 @@ html[data-scroll-theme="clay"] {
 
 /* On a dark or photographic ground. */
 .button--light {
-  --button-border: rgba(255, 253, 248, 0.7);
+  --button-border: rgba(229, 232, 235, 0.7);
   --button-ink: var(--color-paper);
   --button-hover-ground: var(--color-paper);
   --button-hover-ink: var(--color-ground-deep);
@@ -330,14 +395,14 @@ html[data-scroll-theme="clay"] {
 
 /* The quieter of two adjacent actions on a dark ground. */
 .button--ghost-light {
-  --button-border: rgba(255, 253, 248, 0.34);
-  --button-ink: rgba(255, 253, 248, 0.86);
+  --button-border: rgba(229, 232, 235, 0.34);
+  --button-ink: rgba(229, 232, 235, 0.86);
   --button-hover-ground: transparent;
   --button-hover-ink: var(--color-paper);
 }
 
 .button--ghost-light:hover {
-  border-color: rgba(255, 253, 248, 0.8);
+  border-color: rgba(229, 232, 235, 0.8);
 }
 
 .button .arrow {
@@ -408,7 +473,7 @@ html[data-scroll-theme="clay"] {
 }
 
 .page-intro p {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: 1.45rem;
   letter-spacing: 0.02em;
   opacity: 0;
@@ -515,7 +580,7 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 .ambient--light {
-  --ambient-bloom: rgba(120, 138, 106, 0.2);
+  --ambient-bloom: rgba(137, 145, 99, 0.2);
   --ambient-bloom-alt: rgba(186, 121, 82, 0.13);
   --ambient-mark: rgba(8, 27, 35, 0.1);
   --ambient-vignette: rgba(8, 27, 35, 0.05);
@@ -524,8 +589,8 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 .ambient--dark {
   --ambient-bloom: rgba(150, 108, 72, 0.26);
   --ambient-bloom-alt: rgba(214, 160, 136, 0.14);
-  --ambient-mark: rgba(255, 255, 255, 0.1);
-  --ambient-vignette: rgba(3, 14, 8, 0.5);
+  --ambient-mark: rgba(229, 232, 235, 0.1);
+  --ambient-vignette: rgba(8, 27, 35, 0.5);
 }
 
 /* Slow soft light fields. Radial gradients only — no blur filter, so these stay
@@ -717,7 +782,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
     border-color var(--motion-ui) ease;
   /* A hairline of light, so the bar has a bottom edge over the photograph. It
      becomes `--color-line` in the solid state, so the edge never disappears. */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(229, 232, 235, 0.14);
 }
 
 /* Both states now blur, so the hero-to-solid transition is a colour crossfade
@@ -736,7 +801,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .cinematic-header--solid {
-  background: rgba(248, 245, 236, 0.96);
+  background: rgba(229, 232, 235, 0.96);
   color: var(--color-ink);
   border-color: var(--color-line);
   -webkit-backdrop-filter: blur(10px);
@@ -786,6 +851,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .cinematic-header__desktop a {
+  font-family: var(--font-label);
   position: relative;
   padding-block: 0.6rem;
   font-size: 0.72rem;
@@ -827,6 +893,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .header-auth__link {
+  font-family: var(--font-label);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -837,6 +904,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .header-auth__link:hover { text-decoration: underline; text-underline-offset: 0.35em; }
 
 .header-auth__button {
+  font-family: var(--font-label);
   padding: 0.55rem 1.05rem;
   border: 1px solid currentColor;
   font-size: 0.72rem;
@@ -869,10 +937,11 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   gap: 0.75rem 1.5rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(229, 232, 235, 0.25);
 }
 
 .fullscreen-menu__auth a {
+  font-family: var(--font-label);
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -897,6 +966,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .menu-trigger__label {
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -958,6 +1028,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .fullscreen-menu__inner > p:first-child {
+  font-family: var(--font-label);
   align-self: start;
   color: #d6a088;
   font-size: var(--type-meta);
@@ -975,7 +1046,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   align-items: baseline;
   gap: 1.25rem;
   padding-block: 0.5rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(2.2rem, 4vw, 3.25rem);
   line-height: 1;
   opacity: 0;
@@ -995,14 +1066,14 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .fullscreen-menu nav a span {
   min-width: 2rem;
   color: var(--color-accent-light);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: 0.68rem;
   letter-spacing: 0.08em;
 }
 
 .fullscreen-menu__foot {
   max-width: 24ch;
-  font-family: var(--font-serif);
+  font-family: var(--font-label);
   font-size: 1.2rem;
 }
 
@@ -1106,7 +1177,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   min-height: 60rem;
-  /* Matches the `sage` page tone. This section paints its own full-bleed
+  /* Matches the olive card tone. This section paints its own full-bleed
      background, so it would otherwise drift away from the scroll palette. */
   background: #f0e7db;
 }
@@ -1127,7 +1198,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   border-bottom: 1px solid rgba(8, 27, 35, 0.24);
 }
 .approach-editorial li > span { color: var(--color-accent); font-size: 0.72rem; letter-spacing: 0.08em; }
-.approach-editorial li h3 { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.2; }
+.approach-editorial li h3 { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; }
 .approach-editorial li p { max-width: 45ch; margin-top: 0.55rem; color: var(--color-text-muted); font-size: 0.92rem; }
 
 .selected-work-grid {
@@ -1242,7 +1313,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   transform: translate(3px, -3px);
 }
 .work-card__body { display: flex; flex: 1; flex-direction: column; padding: clamp(1.35rem, 2.4vw, 2rem); }
-.work-card__meta { color: var(--color-accent); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; }
+.work-card__meta {
+  font-family: var(--font-label); color: var(--color-accent); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; }
 .work-card h3 { margin-top: 0.9rem; font-size: var(--type-h3); line-height: 1.12; }
 .work-card__body > p:not(.work-card__meta) { margin-top: 1.15rem; color: var(--color-text-muted); }
 .work-card .text-link { margin-top: auto; padding-top: 1.5rem; font-size: 0.75rem; }
@@ -1252,7 +1324,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    -4rem top and bottom so its parallax travel never reveals an edge, and clipping
    only the horizontal axis would let it spill into the section above. */
 .cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-ground-deep); color: var(--color-paper); }
-.footer-button { display: inline-flex; align-items: center; gap: 2rem; padding: 1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
+.footer-button {
+  font-family: var(--font-label); display: inline-flex; align-items: center; gap: 2rem; padding: 1rem 1.4rem; border: 1px solid rgba(229, 232, 235, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
 .footer-button:hover { background: var(--color-paper); color: var(--color-ground-deep); }
 
 /* The row that carries the two calls to action. The 2.5rem that used to sit on
@@ -1271,22 +1344,24 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    never given a rule, so both buttons drew the same 0.65-white border and read
    as one block of chrome; the mailto is the faster path and should be the one
    that carries weight.
-   0.38 white over `--color-ground-deep` composites to #666E77 — 3.53:1 against
-   the ground, so the border still clears the 3:1 that WCAG asks of a control's
-   boundary. It is dimmer than the primary's, not invisible. */
+   The alpha rose from 0.38 to 0.40 when the neutral changed. Paper is darker
+   than the pure white this used to composite against, and 0.38 paper measures
+   3.11:1 — still over the 3:1 WCAG asks of a control's boundary, but with no
+   margin left. 0.40 gives #606D73 and 3.30:1. It is dimmer than the primary's,
+   not invisible. */
 .footer-button--ghost {
-  border-color: rgba(255, 255, 255, 0.38);
-  color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(229, 232, 235, 0.4);
+  color: rgba(229, 232, 235, 0.78);
 }
 
 /* Hover lifts it toward the primary rather than flipping to a white fill, which
    would make the secondary the loudest thing in the footer. */
 .footer-button--ghost:hover {
-  border-color: rgba(255, 255, 255, 0.65);
-  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(229, 232, 235, 0.65);
+  background: rgba(229, 232, 235, 0.1);
   color: var(--color-paper);
 }
-.cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.22); font-size: 0.72rem; }
+.cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(229, 232, 235, 0.22); font-size: 0.72rem; }
 /* Wider than the header's mark, because this one is the footer's masthead rather
    than a fixture in a 4.5rem bar, and it is the only place the logo gets to be
    read rather than glanced at. */
@@ -1294,19 +1369,21 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 /* The mission, one clause per line. Set at the footer's own small size and
    spaced like a list of claims, not a paragraph that wrapped. */
 .cinematic-footer__tagline {
+  font-family: var(--font-label);
   margin-top: 1.1rem;
   list-style: none;
   display: grid;
   gap: 0.3rem;
   text-transform: uppercase;
   letter-spacing: var(--track-label);
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(229, 232, 235, 0.78);
 }
-.cinematic-footer__bottom > div:first-child > p:last-child { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.65); }
-.cinematic-footer__bottom nav { display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem 2rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.cinematic-footer__bottom > div:first-child > p:last-child { margin-top: 0.5rem; color: rgba(229, 232, 235, 0.65); }
+.cinematic-footer__bottom nav {
+  font-family: var(--font-label); display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem 2rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .cinematic-footer__bottom nav a:hover { color: var(--color-accent-light); }
-.cinematic-footer__legal { justify-self: end; text-align: right; color: rgba(255, 255, 255, 0.55); }
-.cinematic-footer__legal a { display: inline-block; margin-top: 0.75rem; color: white; }
+.cinematic-footer__legal { justify-self: end; text-align: right; color: rgba(229, 232, 235, 0.55); }
+.cinematic-footer__legal a { display: inline-block; margin-top: 0.75rem; color: var(--color-paper); }
 
 @media (max-width: 959px) {
   :root { --header-height: 4.5rem; --section-space: clamp(5rem, 16vw, 7rem); }
@@ -1533,8 +1610,8 @@ section[data-scroll-theme="navy"] .photo-frame,
 footer[data-scroll-theme="dusk"] .photo-frame,
 footer[data-scroll-theme="navy"] .photo-frame {
   box-shadow:
-    0 0 0 1px rgba(255, 253, 248, 0.09),
-    0 1rem 2.25rem -0.85rem rgba(0, 0, 0, 0.5);
+    0 0 0 1px rgba(229, 232, 235, 0.09),
+    0 1rem 2.25rem -0.85rem rgba(8, 27, 35, 0.5);
 }
 
 section[data-scroll-theme="dusk"] .photo-frame--plate,
@@ -1542,8 +1619,8 @@ section[data-scroll-theme="navy"] .photo-frame--plate,
 footer[data-scroll-theme="dusk"] .photo-frame--plate,
 footer[data-scroll-theme="navy"] .photo-frame--plate {
   box-shadow:
-    0 0 0 1px rgba(255, 253, 248, 0.11),
-    0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.6);
+    0 0 0 1px rgba(229, 232, 235, 0.11),
+    0 1.5rem 3rem -1rem rgba(8, 27, 35, 0.6);
 }
 
 /* --------------------------------------------------------------- card edges
@@ -1720,7 +1797,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 }
 
 .text-link--light {
-  --line-color: rgba(252, 252, 250, 0.5);
+  --line-color: rgba(229, 232, 235, 0.5);
   color: var(--color-white);
 }
 
@@ -1743,7 +1820,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
      rendered photograph, peach reached only 4.22:1 where 4.5:1 is required — the
      eyebrow is the topmost line of copy and sits over the brightest part of the
      frame. This is also what the hero did before the redesign. */
-  --label-color: rgba(255, 255, 255, 0.94);
+  --label-color: rgba(229, 232, 235, 0.94);
 }
 
 .lede-hero__media {
@@ -1774,7 +1851,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: rgba(8, 26, 17, 0.36);
+  background: rgba(8, 27, 35, 0.36);
 }
 
 .lede-hero__scrim::after {
@@ -1826,12 +1903,12 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 .lede-hero__copy h1 {
   max-width: 24ch;
   margin-top: 1.5rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(2.6rem, 5.4vw, 5.5rem);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 2px 30px rgba(8, 27, 35, 0.18);
   text-wrap: balance;
 }
 
@@ -1840,7 +1917,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   margin-top: 2rem;
   /* Not `--color-text-muted`: that is a dark green tuned for light grounds and
      is unreadable here. */
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(229, 232, 235, 0.92);
   font-size: var(--type-body-md);
   line-height: 1.62;
 }
@@ -1861,7 +1938,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 
 .org-intro__copy h2 {
   margin-top: 1.25rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
 }
@@ -1962,7 +2039,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 
 .principle-band__rule {
   padding-left: clamp(0.9rem, 1.8vw, 1.4rem);
-  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px solid rgba(229, 232, 235, 0.6);
 }
 
 /* Smaller than the page's h2 scale. The mission is a 200-character sentence
@@ -1981,7 +2058,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 .principle-band__rule > p:last-child {
   max-width: 54ch;
   margin-top: 1.15rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(229, 232, 235, 0.78);
   font-size: 0.88rem;
   line-height: 1.58;
 }
@@ -2033,7 +2110,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   bottom: 0.75rem;
   z-index: 4;
   color: var(--color-white);
-  font-family: var(--font-serif);
+  font-family: var(--font-label);
   font-size: 1.5rem;
   opacity: 0.85;
 }
@@ -2057,7 +2134,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 }
 
 .service-card__body h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.12;
@@ -2129,7 +2206,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .serve-index__num {
   color: var(--color-text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -2138,7 +2215,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 }
 
 .serve-index__name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(1.15rem, 1.9vw, 1.6rem);
   font-weight: 400;
   line-height: 1.2;
@@ -2248,7 +2325,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   width: min(100%, calc(var(--container) + var(--gutter) * 2));
   margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
   padding: clamp(2rem, 4vw, 3rem) var(--gutter) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  border-top: 1px solid rgba(229, 232, 235, 0.22);
 }
 
 .founder-card__portrait {
@@ -2268,7 +2345,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .founder-card__body blockquote p {
   max-width: 62ch;
-  color: rgba(226, 232, 235, 0.82);
+  color: rgba(229, 232, 235, 0.82);
   line-height: 1.68;
 }
 
@@ -2283,18 +2360,19 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   gap: 0.4rem 1rem;
   margin-top: 1.75rem;
   padding-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 1px solid rgba(229, 232, 235, 0.18);
 }
 
 .founder-card__attribution cite {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.45rem;
   font-style: normal;
   line-height: 1.1;
 }
 
 .founder-card__attribution span {
-  color: rgba(226, 232, 235, 0.6);
+  font-family: var(--font-label);
+  color: rgba(229, 232, 235, 0.6);
   font-size: var(--type-meta);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
@@ -2347,7 +2425,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .case-study__copy h2 {
   margin-top: 1.25rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
 }
@@ -2360,19 +2438,20 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   margin-top: 1.75rem;
   /* Lightened from the muted ink used on the pale grounds: on forest that value
      measures under 4.5:1. This clears it. */
-  color: rgba(226, 232, 235, 0.82);
+  color: rgba(229, 232, 235, 0.82);
   font-size: var(--type-body-md);
   line-height: 1.68;
 }
 
 .case-study__status {
+  font-family: var(--font-label);
   font-weight: 500;
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
   margin-top: 2rem;
   padding: 0.55rem 1.1rem;
-  border: 1px solid rgba(252, 252, 250, 0.28);
+  border: 1px solid rgba(229, 232, 235, 0.28);
   border-radius: 999px;
   font-size: var(--type-meta);
   letter-spacing: var(--track-label);
@@ -2402,6 +2481,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 }
 
 .tools-list__status {
+  font-family: var(--font-label);
   color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -2412,7 +2492,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 .tools-list li h3 {
   max-width: 34ch;
   margin-top: 0.85rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.15;
@@ -2450,7 +2530,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .network-band__copy h2 {
   margin-top: 1.25rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h2);
 }
 
@@ -2474,7 +2554,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 .network-band__partner h3 {
   max-width: 30ch;
   margin-top: 1rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.15;
@@ -2572,7 +2652,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .scholarship-band__inner h2 {
   margin-top: 1.25rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
 }
@@ -2623,6 +2703,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 }
 
 .news-teaser__meta {
+  font-family: var(--font-label);
   color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -2632,7 +2713,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .news-teaser__list h3 {
   margin-top: 0.9rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.32rem;
   font-weight: 300;
   line-height: 1.18;
@@ -2675,7 +2756,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 48%, rgba(5, 20, 12, 0.7));
+  background: linear-gradient(180deg, transparent 48%, rgba(8, 27, 35, 0.7));
 }
 
 .cinematic-footer__visual > p {
@@ -2685,8 +2766,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   bottom: clamp(1.5rem, 4vw, 4rem);
   max-width: 30ch;
   padding-left: 1rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.7);
-  font-family: var(--font-serif);
+  border-left: 1px solid rgba(229, 232, 235, 0.7);
+  font-family: var(--font-body);
   font-size: clamp(1.3rem, 2.2vw, 2rem);
   line-height: 1.25;
 }
@@ -2706,19 +2787,22 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 .cinematic-footer__cta > p:not(.section-label) {
   max-width: 47ch;
   margin: 2rem auto 0;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(229, 232, 235, 0.72);
 }
 
+/* 0.55, not the 0.45 that was here. This line failed 4.5:1 before the neutral
+   changed — 0.45 white measured 4.47:1 — and swapping white for the darker paper
+   took it to 3.83:1. 0.55 paper is #828C91, 5.13:1, which clears it properly. */
 .cinematic-footer__cta small {
   display: block;
   margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(229, 232, 235, 0.55);
   font-size: 0.65rem;
 }
 
 .cinematic-footer__org {
   margin-top: 0.35rem;
-  color: rgba(226, 232, 235, 0.6);
+  color: rgba(229, 232, 235, 0.6);
   font-size: 0.82rem;
 }
 

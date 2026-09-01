@@ -13,7 +13,7 @@
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-line);
   color: var(--color-text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -47,6 +47,7 @@
 }
 
 .newsletter-card__meta {
+  font-family: var(--font-label);
   color: var(--color-accent);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -56,7 +57,7 @@
 
 .newsletter-card h3 {
   margin-top: 0.9rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 300;
   line-height: 1.16;
@@ -77,12 +78,12 @@
   padding: clamp(1.75rem, 3.5vw, 2.75rem);
   border: 1px solid var(--color-line);
   border-left: 3px solid var(--color-accent);
-  background: rgba(255, 253, 248, 0.6);
+  background: rgba(229, 232, 235, 0.6);
 }
 
 .newsletter-signup h2 {
   margin-top: 0.9rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.6vw, 2.05rem);
   font-weight: 300;
   line-height: 1.12;

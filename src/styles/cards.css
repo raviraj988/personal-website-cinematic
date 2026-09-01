@@ -123,7 +123,7 @@
 
 .audience-card__num {
   color: var(--color-accent);
-  font-family: var(--font-sans);
+  font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -131,7 +131,7 @@
 }
 
 .audience-card__name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   line-height: 1.24;
   text-wrap: balance;
@@ -240,7 +240,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
   position: relative;
   max-width: 54ch;
   padding-left: clamp(1rem, 1.8vw, 1.5rem);
-  color: var(--ink-muted, rgba(226, 232, 235, 0.82));
+  color: var(--ink-muted, rgba(229, 232, 235, 0.82));
 }
 
 /* The hairline, as an element so it can be drawn from one end — a `border-left`
@@ -521,7 +521,7 @@ section.principle-band {
 .statement-card__line {
   margin-top: 0.75rem;
   color: var(--ink, var(--color-ink));
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(1.15rem, 1.7vw, 1.5rem);
   font-weight: 300;
   line-height: 1.18;
@@ -592,26 +592,26 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 [data-scroll-theme="dusk"] .statement-cards li,
 [data-scroll-theme="navy"] .statement-cards li {
   --ink: var(--color-paper);
-  --ink-muted: var(--ink-muted-sage);
-  --rule: rgba(226, 232, 235, 0.18);
+  --ink-muted: var(--ink-muted-olive);
+  --rule: rgba(229, 232, 235, 0.18);
   --label-color: var(--color-accent-light);
   --glow-colour: var(--color-accent-light);
-  border-color: rgba(226, 232, 235, 0.14);
-  background: var(--card-sheen-sage);
+  border-color: rgba(229, 232, 235, 0.14);
+  background: var(--card-sheen-olive);
   color: var(--ink);
   /* The lit top edge. A shadow under a dark card on a dark ground contributes
      nothing — there is nothing darker for it to fall on — so the card is given an
      edge that catches light instead. `globals.css` reaches the same conclusion
      for `.photo-frame`, which swaps its shadow for a ring on these grounds. */
-  box-shadow: inset 0 1px 0 rgba(226, 232, 235, 0.1);
+  box-shadow: inset 0 1px 0 rgba(229, 232, 235, 0.1);
 }
 
 @media (hover: hover) {
   [data-scroll-theme="dusk"] .statement-cards li:hover,
   [data-scroll-theme="navy"] .statement-cards li:hover {
-    border-color: rgba(226, 232, 235, 0.26);
-    background: var(--card-sheen-sage-hover);
-    box-shadow: inset 0 1px 0 rgba(226, 232, 235, 0.18);
+    border-color: rgba(229, 232, 235, 0.26);
+    background: var(--card-sheen-olive-hover);
+    box-shadow: inset 0 1px 0 rgba(229, 232, 235, 0.18);
   }
 }
 
@@ -619,14 +619,14 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
    the glyph in gold, which reads at 7.4:1 on the card's lightest stop. */
 [data-scroll-theme="dusk"] .statement-card__tile,
 [data-scroll-theme="navy"] .statement-card__tile {
-  background: rgba(226, 232, 235, 0.1);
+  background: rgba(229, 232, 235, 0.1);
   color: var(--color-accent-light);
 }
 
 @media (hover: hover) {
   [data-scroll-theme="dusk"] .statement-cards li:hover .statement-card__tile,
   [data-scroll-theme="navy"] .statement-cards li:hover .statement-card__tile {
-    background: rgba(226, 232, 235, 0.17);
+    background: rgba(229, 232, 235, 0.17);
   }
 }
 

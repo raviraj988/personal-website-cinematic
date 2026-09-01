@@ -123,7 +123,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 }
 
 .person-card__media--monogram span {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   letter-spacing: 0.02em;
   color: var(--monogram-ink, var(--color-slate));
@@ -140,7 +140,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 
 .person-card__body h2,
 .person-card__body h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   /* 300 is the display weight used for large headings, where the thin stroke
      reads as elegance. At card size it reads as faint, so this steps up. */
@@ -150,6 +150,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 }
 
 .person-card__role {
+  font-family: var(--font-label);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -232,7 +233,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 
 .people-group__title {
   margin-top: 1rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h3);
   line-height: 1.15;
 }
@@ -241,7 +242,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
    Services and Who we serve rather than the h3 it was as a nested block. */
 .people-group--standalone .people-group__head h2 {
   margin-top: 1.25rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--type-h2);
   line-height: 1.05;
   text-wrap: balance;
@@ -304,6 +305,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 }
 
 .people-page__note {
+  font-family: var(--font-label);
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
   padding-top: 1.5rem;
   border-top: 1px solid var(--color-line);
