@@ -2069,11 +2069,18 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 
 .principle-band .scroll-words__word { color: var(--color-paper); }
 
+/* The line under the mission statement. It ran at 0.88rem — 17% under body
+   copy — which is fine print, and it is not fine print: it is the sentence that
+   says what the mission means. `--type-body-md` is what every other section's
+   supporting copy uses, so it matches them now instead of undercutting them.
+
+   Kept at 54ch. This sits over moving video, where a short measure is doing
+   real work; the reported problem here was the size, not the width. */
 .principle-band__rule > p:last-child {
   max-width: 54ch;
   margin-top: 1.15rem;
   color: rgba(229, 232, 235, 0.78);
-  font-size: 0.88rem;
+  font-size: var(--type-body-md);
   line-height: 1.58;
 }
 

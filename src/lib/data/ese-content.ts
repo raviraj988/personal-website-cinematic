@@ -79,8 +79,20 @@ export const site = {
     "Environment Sovereignty & Equity | Environmental Consulting for Native Nations",
   metaDescription:
     "Environment Sovereignty & Equity (ESE) supports Native Nations and marginalized communities through a network of environmental engineers, consultants, and Tribal advocates — policy, grants, technical implementation, resilience planning, and communications.",
-  /** TODO(ese): set to the production domain before launch. */
-  canonicalBase: "https://example.com",
+  /**
+   * THE REAL DOMAIN. This was `https://example.com`, and it was not a harmless
+   * placeholder: every absolute URL on the site is built from it, so production
+   * was serving a canonical link, a sitemap, structured data, a robots.txt
+   * sitemap pointer and an `og:image` that all pointed at a domain ESE does not
+   * own. The og:image 404s, which is why link previews fell back to scraping
+   * whatever image they found on the page instead of the card.
+   *
+   * Set `NEXT_PUBLIC_SITE_URL` to move the site to a custom domain without
+   * touching this file; the fallback is the current production alias.
+   */
+  canonicalBase:
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") ??
+    "https://personal-website-cinematic.vercel.app",
   footerDescription:
     "The bridge between underserved communities and the government agencies, non-profits, and resources that can help them solve real environmental problems.",
 } as const;

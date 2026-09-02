@@ -11,7 +11,8 @@ import { site } from "@/lib/data/ese-content";
  * Sourced from `site.canonicalBase`, which is already a hardcoded constant, so
  * the blog and the rest of the site can never disagree about their own address.
  *
- * NOTE: `site.canonicalBase` is still the placeholder `https://example.com`.
+ * NOTE: `site.canonicalBase` is the production domain, overridable with
+ * `NEXT_PUBLIC_SITE_URL`.
  * Set it to the real domain before launch — canonicals, JSON-LD, and the
  * sitemap all resolve against it.
  */

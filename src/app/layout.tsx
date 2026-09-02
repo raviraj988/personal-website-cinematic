@@ -78,14 +78,21 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     /**
-     * The emblem on brand navy, composited by `scripts/prepare-brand.mjs`.
+     * THE HERO, not the emblem. This was `/brand/og-default.png` — the mark on
+     * brand navy — which is correct branding and a poor link preview: a logo on
+     * a flat ground tells someone who sent it, not what it is.
+     *
+     * `og-hero.jpg` is the hero video's own poster frame, cropped from 2560x1440
+     * to the 1.905:1 a card wants and carrying the same vignette the hero does,
+     * so the preview is the first thing a visitor will actually see. Built by
+     * the `og:hero` script in package.json; re-run it if the hero clip changes.
      *
      * Inherited by every route that does not set its own — which is all of them
      * except blog posts, whose `generateMetadata` supplies the post's cover.
      */
     images: [
       {
-        url: "/brand/og-default.png",
+        url: "/brand/og-hero.jpg",
         width: 1200,
         height: 630,
         alt: site.name,

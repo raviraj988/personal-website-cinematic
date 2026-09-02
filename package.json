@@ -24,7 +24,8 @@
     "test:mcp-e2e": "node --import ./scripts/register-ts.mjs scripts/test-mcp-e2e.mjs",
     "sql:bundle": "node scripts/bundle-sql.mjs",
     "check:schema": "node scripts/check-schema.mjs",
-    "db:migrate": "node scripts/apply-migrations.mjs"
+    "db:migrate": "node scripts/apply-migrations.mjs",
+    "og:hero": "ffmpeg -y -loglevel error -i public/video/hero-1-poster.jpg -vf \"crop=2560:1344:0:48,scale=1200:630:flags=lanczos,vignette=angle=PI/5,eq=brightness=-0.015:saturation=0.97\" -frames:v 1 -q:v 3 public/brand/og-hero.jpg"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
