@@ -436,7 +436,11 @@ section.principle-band {
 .glow-card__desc > span {
   overflow: hidden;
   color: var(--ink-muted, var(--color-text-muted));
-  font-size: 0.86rem;
+  /* 0.98rem, up from 0.86. This is the description on every statement,
+     audience, service and tools card, and at 0.86 it sat 19% under body copy —
+     small enough to read as fine print rather than as the card's content. One
+     step under body is the relationship a card wants, not two. */
+  font-size: 0.98rem;
   line-height: 1.6;
 }
 
