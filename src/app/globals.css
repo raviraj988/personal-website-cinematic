@@ -932,18 +932,30 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 
 .ese-mark__art--on-light { display: none; }
 
-/* Light grounds: the dark-ink version of the mark. */
-.cinematic-header--solid .ese-mark__art--on-dark,
-.admin .ese-mark__art--on-dark,
-.admin-gate .ese-mark__art--on-dark,
-[data-scroll-theme="haze"] .ese-mark__art--on-dark,
-[data-scroll-theme="paper"] .ese-mark__art--on-dark { display: none; }
+/* WHICH TONE SHOWS.
+ *
+ * The header decides from ITS OWN STATE and nothing else. This used to key off
+ * `[data-scroll-theme]`, which is written on `<html>` — and `<html>` contains
+ * the header, so the bar's logo followed the PAGE's scroll theme instead of the
+ * bar's. The hero is tagged `haze` (its copy sits on a photograph while the page
+ * tone behind it is light), so the dark logo showed over the dark hero from the
+ * first paint, and over the dusk sections the bar went cream while the white
+ * logo stayed. Both directions wrong, one selector.
+ *
+ * Everything else is scoped to `section[…]` / `footer[…]` so it can never match
+ * `<html>` again — the same convention the ink rules already follow. */
+.cinematic-header--solid .ese-mark__art--on-dark { display: none; }
+.cinematic-header--solid .ese-mark__art--on-light { display: block; }
 
-.cinematic-header--solid .ese-mark__art--on-light,
-.admin .ese-mark__art--on-light,
-.admin-gate .ese-mark__art--on-light,
-[data-scroll-theme="haze"] .ese-mark__art--on-light,
-[data-scroll-theme="paper"] .ese-mark__art--on-light { display: block; }
+section[data-scroll-theme="haze"] .ese-mark__art--on-dark,
+section[data-scroll-theme="paper"] .ese-mark__art--on-dark,
+.admin-gate__mark .ese-mark__art--on-dark,
+.admin-bar .ese-mark__art--on-dark { display: none; }
+
+section[data-scroll-theme="haze"] .ese-mark__art--on-light,
+section[data-scroll-theme="paper"] .ese-mark__art--on-light,
+.admin-gate__mark .ese-mark__art--on-light,
+.admin-bar .ese-mark__art--on-light { display: block; }
 
 .cinematic-header__logo {
   height: 2.9rem;
