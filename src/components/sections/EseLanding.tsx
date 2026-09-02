@@ -176,10 +176,10 @@ export function EseLanding() {
             <h1 id="hero-title">{hero.heading}</h1>
             <p className="lede-hero__lede">{hero.lede}</p>
             <div className="link-row">
-              <a className="button button--light" href={hero.primaryCta.href}>
+              <a className="button" href={hero.primaryCta.href}>
                 {hero.primaryCta.label} <Arrow direction="down" />
               </a>
-              <a className="button button--ghost-light" href={hero.secondaryCta.href}>
+              <a className="button" href={hero.secondaryCta.href}>
                 {hero.secondaryCta.label} <Arrow />
               </a>
             </div>
@@ -209,7 +209,7 @@ export function EseLanding() {
             />
             {/* Each landing section is a summary; the button is the way through
                 to the full page the navigation also points at. */}
-            <Link className="button button--light" href="/about">
+            <Link className="button" href="/about">
               More about ESE <Arrow />
             </Link>
           </Reveal>
@@ -239,7 +239,7 @@ export function EseLanding() {
             <ScrollWords as="h2" id="network-title" text={ese.whoWeAre.heading} />
             <p className="org-intro__lede">{ese.whoWeAre.lede}</p>
             <StatementCards items={zip(ese.whoWeAre.cardHeadings, ese.whoWeAre.body, ese.whoWeAre.cardIcons)} offset={1} />
-            <Link className="button button--light" href="/about">
+            <Link className="button" href="/about">
               Who we are <Arrow />
             </Link>
           </Reveal>
@@ -515,7 +515,7 @@ export function EseLanding() {
             {/* `--light`, like 01 and 02. The default variant draws itself in
                 `--color-accent` (navy), which measures 1.74:1 on this section's
                 deep ground — the button was there, just invisible. */}
-            <a className="button button--light" href={ese.scholarship.cta.href}>
+            <a className="button" href={ese.scholarship.cta.href}>
               {ese.scholarship.cta.label} <Arrow />
             </a>
           </Reveal>

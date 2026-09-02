@@ -608,7 +608,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   --ink: var(--color-paper);
   --ink-muted: var(--ink-muted-olive);
   --rule: rgba(229, 232, 235, 0.18);
-  --label-color: var(--color-accent-light);
+  --label-color: var(--label-terracotta);
   --glow-colour: var(--color-accent-light);
   border-color: rgba(229, 232, 235, 0.14);
   background: var(--card-sheen-olive);

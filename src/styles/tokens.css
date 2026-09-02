@@ -91,6 +91,22 @@
   --color-accent: var(--color-ink);
   --color-accent-light: var(--color-paper);
 
+  /* THE EYEBROW AND THE BUTTON take two of the kit's colours back.
+   *
+   * Terracotta on the dark grounds is 5.66:1, comfortably legible, and it is
+   * the colour the sub-heading is drawn in. On the light grounds it is 2.53:1
+   * and fails outright, so those get the same hue darkened to 5.47:1 rather
+   * than a different colour: hue 24 either way, so it reads as one accent at
+   * two weights.
+   *
+   * Gold carries the buttons with ink on top — 10.10:1, the strongest pairing
+   * the palette offers after the two neutrals themselves, and it works on both
+   * grounds, so one button serves the whole site. */
+  --label-terracotta: #c98150;
+  --label-terracotta-deep: #854e29;
+  --button-gold: #dec26a;
+  --button-gold-lift: #e8d089;
+
   /* Secondary text — the ink and the paper at reduced alpha over each other, not
      separate greys. Both are measured against the ground they sit on, with
      margin over 4.5:1 rather than at it: ink at 0.62 is 4.61:1 on paper and

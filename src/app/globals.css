@@ -213,7 +213,7 @@ footer[data-scroll-theme="navy"]:not([data-ink="own"]) {
   --ink: var(--color-paper);
   --ink-muted: var(--color-muted-light);
   --rule: var(--color-line-dark);
-  --label-color: var(--color-accent-light);
+  --label-color: var(--label-terracotta);
   color: var(--ink);
 }
 
@@ -222,13 +222,13 @@ section[data-scroll-theme="paper"]:not([data-ink="own"]) {
   --ink: var(--color-ink);
   --ink-muted: var(--color-text-muted);
   --rule: var(--color-line);
-  --label-color: var(--color-accent);
+  --label-color: var(--label-terracotta-deep);
   color: var(--ink);
 }
 
 .section-label {
   font-family: var(--font-label);
-  color: var(--label-color, var(--color-accent));
+  color: var(--label-color, var(--label-terracotta-deep));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -317,48 +317,109 @@ section[data-scroll-theme="paper"]:not([data-ink="own"]) {
  * Padding is up from 0.9/1.35rem: at the old value the label sat tight inside the
  * rule, which is what made the button read as a boxed link rather than a
  * control. */
+/* THE BUTTON.
+ *
+ * Filled gold with ink on top, the same on every ground — one button for the
+ * whole site rather than a light variant and a ghost variant. Ink on gold is
+ * 10.10:1, the strongest pairing the palette offers after the two neutrals, and
+ * it holds on the dark grounds (10.10x separation) and the light ones (1.42x)
+ * alike, which is what lets one treatment serve everywhere.
+ *
+ * `overflow: hidden` contains the sheen. It does not clip the focus ring:
+ * `outline` is not subject to overflow, which matters because this site draws
+ * focus outside the element at `outline-offset: 4px`. */
 .button {
   font-family: var(--font-label);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 1.25rem;
   padding: 1.05rem 1.7rem;
-  border: 1px solid var(--button-border, var(--color-accent));
-  color: var(--button-ink, var(--color-accent));
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: var(--button-gold);
+  color: var(--color-ink);
   font-size: var(--type-meta);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   transition:
-    background-color var(--motion-ui) ease,
-    color var(--motion-ui) ease,
-    border-color var(--motion-ui) ease;
+    transform var(--motion-ui) var(--ease-out-expo),
+    box-shadow var(--motion-ui) var(--ease-out-expo),
+    background-color var(--motion-ui) ease;
 }
 
-.button:hover {
-  background: var(--button-hover-ground, var(--color-accent));
-  color: var(--button-hover-ink, var(--color-paper));
-  border-color: var(--button-hover-ground, var(--color-accent));
+/* The sheen. A single band of the paper neutral crossing the face once per
+   hover — skewed so it reads as light moving over a surface rather than a bar
+   sliding across it. It starts and ends outside the button, so at rest there is
+   nothing on screen to see. */
+.button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -50%;
+  bottom: -50%;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    rgba(229, 232, 235, 0),
+    rgba(229, 232, 235, 0.55),
+    rgba(229, 232, 235, 0)
+  );
+  transform: skewX(-18deg) translateX(0);
+  transition: transform 720ms var(--ease-out-expo);
 }
 
-/* On a dark or photographic ground. */
-.button--light {
-  --button-border: rgba(229, 232, 235, 0.7);
-  --button-ink: var(--color-paper);
-  --button-hover-ground: var(--color-paper);
-  --button-hover-ink: var(--color-ground-deep);
+.button:hover,
+.button:focus-visible {
+  transform: translateY(-2px);
+  background: var(--button-gold-lift);
+  box-shadow: 0 0.65rem 1.4rem -0.7rem rgba(8, 27, 35, 0.65);
 }
 
-/* The quieter of two adjacent actions on a dark ground. */
-.button--ghost-light {
-  --button-border: rgba(229, 232, 235, 0.34);
-  --button-ink: rgba(229, 232, 235, 0.86);
-  --button-hover-ground: transparent;
-  --button-hover-ink: var(--color-paper);
+.button:hover::before,
+.button:focus-visible::before {
+  transform: skewX(-18deg) translateX(420%);
 }
 
-.button--ghost-light:hover {
-  border-color: rgba(229, 232, 235, 0.8);
+/* Pressed returns it to the surface — the lift is what makes the press read. */
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 0.2rem 0.5rem -0.35rem rgba(8, 27, 35, 0.5);
+  transition-duration: 90ms;
+}
+
+/* The arrow leads the way the button goes. */
+.button .arrow {
+  margin-left: auto;
+  transition: transform var(--motion-ui) var(--ease-out-expo);
+}
+
+.button:hover .arrow {
+  transform: translateX(0.2rem);
+}
+
+/* A down arrow means the page moves, not the pointer. */
+.button:hover .arrow--down {
+  transform: translateY(0.2rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button::before,
+  .button .arrow {
+    transition: none !important;
+    transform: none !important;
+  }
+  /* The hover still has to be visible without movement, so the colour and the
+     shadow carry it alone. */
+  .button:hover,
+  .button:focus-visible {
+    background: var(--button-gold-lift);
+  }
 }
 
 .button .arrow {
@@ -1333,42 +1394,43 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    -4rem top and bottom so its parallax travel never reveals an edge, and clipping
    only the horizontal axis would let it spill into the section above. */
 .cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-ground-deep); color: var(--color-paper); }
-.footer-button {
-  font-family: var(--font-label); display: inline-flex; align-items: center; gap: 2rem; padding: 1rem 1.4rem; border: 1px solid rgba(229, 232, 235, 0.65); font-size: var(--type-meta); font-weight: 500; letter-spacing: var(--track-label); text-transform: uppercase; transition: background-color var(--motion-ui), color var(--motion-ui); }
-.footer-button:hover { background: var(--color-paper); color: var(--color-ground-deep); }
-
-/* The row that carries the two calls to action. The 2.5rem that used to sit on
-   `.footer-button` itself lives here instead: with two buttons, a per-button
-   top margin spaces them from the paragraph but does nothing between them.
-   It wraps because side by side the two labels are wider than a phone. */
-.cinematic-footer__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem 1.25rem;
-  margin-top: 2.5rem;
-}
-
-/* The secondary route. `--ghost` was written on the markup from the start and
-   never given a rule, so both buttons drew the same 0.65-white border and read
-   as one block of chrome; the mailto is the faster path and should be the one
-   that carries weight.
-   The alpha rose from 0.38 to 0.40 when the neutral changed. Paper is darker
-   than the pure white this used to composite against, and 0.38 paper measures
-   3.11:1 — still over the 3:1 WCAG asks of a control's boundary, but with no
-   margin left. 0.40 gives #606D73 and 3.30:1. It is dimmer than the primary's,
-   not invisible. */
+/* The footer's two calls to action are buttons like any other. They used to be
+   their own bordered system with a ghost variant; the site has one button now,
+   so they take the same fill, radius and lift and keep only their own padding. */
+.footer-button,
 .footer-button--ghost {
-  border-color: rgba(229, 232, 235, 0.4);
-  color: rgba(229, 232, 235, 0.78);
+  font-family: var(--font-label);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: var(--button-gold);
+  color: var(--color-ink);
+  font-size: var(--type-meta);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition:
+    transform var(--motion-ui) var(--ease-out-expo),
+    box-shadow var(--motion-ui) var(--ease-out-expo),
+    background-color var(--motion-ui) ease;
 }
 
-/* Hover lifts it toward the primary rather than flipping to a white fill, which
-   would make the secondary the loudest thing in the footer. */
-.footer-button--ghost:hover {
-  border-color: rgba(229, 232, 235, 0.65);
-  background: rgba(229, 232, 235, 0.1);
-  color: var(--color-paper);
+.footer-button:hover,
+.footer-button:focus-visible {
+  transform: translateY(-2px);
+  background: var(--button-gold-lift);
+  box-shadow: 0 0.65rem 1.4rem -0.7rem rgba(8, 27, 35, 0.75);
+}
+
+.footer-button:active {
+  transform: translateY(0);
+  transition-duration: 90ms;
 }
 .cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(229, 232, 235, 0.22); font-size: 0.72rem; }
 /* Wider than the header's mark, because this one is the footer's masthead rather
@@ -1827,11 +1889,15 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   overflow: hidden;
   color: var(--color-white);
   /* The eyebrow is near-white here, not the clay default and not the peach
-     `--light` variant used on the flat forest grounds. Measured against the
-     rendered photograph, peach reached only 4.22:1 where 4.5:1 is required — the
-     eyebrow is the topmost line of copy and sits over the brightest part of the
-     frame. This is also what the hero did before the redesign. */
-  --label-color: rgba(229, 232, 235, 0.94);
+     `--light` variant used on the flat forest grounds. Peach was rejected here
+     at 4.22:1 — but that was measured against the STILL PHOTOGRAPH the hero used
+     before it became video. Re-measured against the current clip's poster frame
+     where the eyebrow actually sits: the footage averages #343132 there, the
+     flat scrim and the left of the horizontal gradient take it to #162228, and
+     terracotta reads 5.21:1 on that. It clears, so the eyebrow matches every
+     other eyebrow on the site instead of being the one exception. */
+  /* The hero's eyebrow is terracotta like every other, not a brighter white. */
+  --label-color: var(--label-terracotta);
 }
 
 .lede-hero__media {
