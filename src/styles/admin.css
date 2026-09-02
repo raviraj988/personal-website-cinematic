@@ -30,7 +30,7 @@
   height: var(--admin-bar-height);
   padding-inline: clamp(1.25rem, 3vw, 2.5rem);
   border-bottom: 1px solid var(--color-line);
-  background: rgba(184, 208, 216, 0.96);
+  background: rgba(229, 232, 235, 0.96);
   backdrop-filter: blur(10px);
 }
 
@@ -486,7 +486,7 @@
   bottom: 0;
   padding: 1.1rem 0;
   border-top: 1px solid var(--color-line);
-  background: rgba(184, 208, 216, 0.95);
+  background: rgba(229, 232, 235, 0.95);
   backdrop-filter: blur(8px);
 }
 
@@ -599,7 +599,7 @@
   max-height: 22rem;
   object-fit: cover;
   border: 1px solid var(--color-line);
-  background: var(--color-ground-deep);
+  background: #081b23;
 }
 
 .admin-cover__meta {

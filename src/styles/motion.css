@@ -126,7 +126,7 @@
 .pinned-stack__media {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: var(--color-ground-deep);
+  background: #081b23;
 }
 
 .pinned-stack__number {
@@ -360,11 +360,11 @@
    * to be pulled back up. */
   background: linear-gradient(
     180deg,
-    rgba(43, 69, 82, 0) 0%,
-    rgba(43, 69, 82, 0.03) 50%,
-    rgba(43, 69, 82, 0.55) 63%,
-    rgba(43, 69, 82, 0.82) 70%,
-    rgba(43, 69, 82, 0.93) 100%
+    rgba(8, 27, 35, 0) 0%,
+    rgba(8, 27, 35, 0.03) 50%,
+    rgba(8, 27, 35, 0.55) 63%,
+    rgba(8, 27, 35, 0.82) 70%,
+    rgba(8, 27, 35, 0.93) 100%
   );
 }
 

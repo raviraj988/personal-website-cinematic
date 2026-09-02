@@ -131,7 +131,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: var(--color-ground-deep);
+  background: #081b23;
   border-radius: var(--card-radius-inner) var(--card-radius-inner) 0 0;
 }
 
