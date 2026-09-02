@@ -207,7 +207,13 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
    paragraph, lifted out of the card stack so the cards carry short statements
    rather than full paragraphs. */
 .org-intro__lede {
-  max-width: 54ch;
+  /* No character cap. Every container this sits in is a ~610-620px grid column,
+     and 54ch renders about 486px in the body serif — it filled 78% of the column
+     and stopped, which reads as a paragraph that failed to reach the edge. The
+     column is the measure, exactly as the note on `.scholarship-band__inner`
+     says for the same reason. 620px is roughly 68ch, still inside the readable
+     range. */
+  max-width: none;
   margin-top: clamp(1rem, 1.8vw, 1.4rem);
   color: var(--ink-muted, var(--color-text-muted));
   font-size: var(--type-body-md);

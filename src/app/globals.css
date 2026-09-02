@@ -540,8 +540,11 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 .ambient--dark {
-  --ambient-bloom: rgba(150, 108, 72, 0.26);
-  --ambient-bloom-alt: rgba(214, 160, 136, 0.14);
+  /* Both were off-palette: #966c48 at hue 28 and #d6a088 at hue 18, sitting
+     either side of terracotta without being it. They are the terracotta and the
+     gold now — the two spec colours the blooms were reaching for. */
+  --ambient-bloom: rgba(201, 129, 80, 0.26);
+  --ambient-bloom-alt: rgba(222, 194, 106, 0.14);
   --ambient-mark: rgba(229, 232, 235, 0.1);
   --ambient-vignette: rgba(8, 27, 35, 0.5);
 }
@@ -1115,14 +1118,24 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .section-heading-row h2 { font-size: var(--type-h2); }
-/* The lede in the third column. `.section-lede` is on the markup and had no rule
-   at all — every declaration below reached it only through `> p:last-child`, so
-   adding any fourth child to the row would have silently stripped its styling.
-   Both selectors, so naming the class is enough and the positional one still
-   covers anything that predates it. */
+/* The lede sits UNDER THE HEADING, not in the third column.
+ *
+ * It used to take column 3 of `5fr 12fr 7fr`. That works when the heading fills
+ * its column, and strands the lede when it does not: "Coming soon" is eleven
+ * characters in a 12fr column, so the lede was left floating at the far right
+ * with a void between the two, reading as pushed there rather than placed.
+ * Under the heading it is one block at any heading length.
+ *
+ * The narrow breakpoint already did this; it is simply the layout now, at every
+ * width. No character cap either — column 2 is the measure, about 66ch.
+ *
+ * `.section-lede` is on the markup and once had no rule at all: every
+ * declaration reached it through `> p:last-child`, so a fourth child in the row
+ * would have silently stripped its styling. Both selectors stay. */
 .section-heading-row > p:last-child,
 .section-heading-row .section-lede {
-  max-width: 40ch;
+  grid-column: 2;
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
   color: var(--color-text-muted);
 }
 
@@ -1363,8 +1376,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .about-editorial__portrait { grid-column: 15 / -1; }
   .about-editorial__copy { grid-column: 2 / span 10; }
   .section-heading-row { grid-template-columns: 1fr 2fr; }
-  .section-heading-row > p:last-child,
-  .section-heading-row .section-lede { grid-column: 2; }
   .approach-editorial { grid-template-columns: 1fr; }
   .approach-editorial__media { position: relative; height: 58vh; min-height: 29rem; }
   .approach-editorial__content { padding: var(--section-space) var(--gutter); }
@@ -1383,7 +1394,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .about-editorial__portrait figure { aspect-ratio: 4 / 5.25; }
   .section-heading-row h2 { margin-top: 1.2rem; }
   .section-heading-row > p:last-child,
-  .section-heading-row .section-lede { margin-top: 1.5rem; }
+  .section-heading-row .section-lede { margin-top: 1.25rem; }
   .approach-editorial__content h2 { max-width: none; }
   .selected-work-grid { grid-template-columns: 1fr; }
   .work-card:last-child { grid-column: auto; width: auto; }
@@ -1455,10 +1466,14 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
     transform: none;
   }
 
-  /* Text animation resolves to its settled state, with no tracking shift. */
+  /* Text animation resolves to its settled state, with no tracking shift. The
+     settled value is the kit's +25 and nothing else — this rule hard-coded
+     0.1em, which is precisely the failure the note on `.section-label` warns
+     about, and it meant reduced-motion visitors saw a tracking four times the
+     spec's while everyone else saw the right one. */
   .section-label,
   html[data-motion="ready"] .reveal:not([data-visible="true"]) .section-label {
-    --label-track: 0.1em;
+    --label-track: var(--track-label);
     opacity: 1;
   }
   /* The index resolves whole: no stagger, no wipe, and the rules simply exist. */
