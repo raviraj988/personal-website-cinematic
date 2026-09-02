@@ -658,7 +658,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   width: 2.6rem;
   height: 2.6rem;
   border-radius: 0.8rem;
-  background: rgba(43, 69, 82, 0.09);
+  /* Navy at 9% became ink at 9% — same wash, one of the two colours. */
+  background: rgba(8, 27, 35, 0.09);
   color: var(--color-accent);
   transition:
     background-color var(--motion-ui) var(--ease-standard),
@@ -672,7 +673,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 
 @media (hover: hover) {
   .statement-cards li:hover .statement-card__tile {
-    background: rgba(43, 69, 82, 0.16);
+    background: rgba(8, 27, 35, 0.16);
     transform: translateY(-0.1rem);
   }
 }

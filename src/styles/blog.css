@@ -228,7 +228,7 @@
 }
 
 .post-body a:hover {
-  color: var(--color-navy);
+  color: var(--color-ink);
 }
 
 .post-body strong {
@@ -267,7 +267,7 @@
 /* GFM task lists. */
 .post-body li input[type="checkbox"] {
   margin-right: 0.5em;
-  accent-color: var(--color-navy);
+  accent-color: var(--color-ink);
 }
 
 /* ACCENT — Dongra Script, the kit's fourth role, described there as "like a

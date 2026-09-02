@@ -198,8 +198,8 @@
   display: grid;
   gap: 0.25rem;
   padding: 0.7rem 0.85rem;
-  border-left: 2px solid var(--brand-terracotta);
-  background: rgba(201, 129, 80, 0.1);
+  border-left: 2px solid var(--color-ink);
+  background: rgba(8, 27, 35, 0.06);
   font-size: 0.86rem;
 }
 
@@ -212,7 +212,7 @@
   font-weight: 600;
   /* The olive card's dark stop — no kit colour clears 4.5:1 as text on a light
      ground except navy, and this needs to read as success rather than as a link. */
-  color: #34391e;
+  color: var(--color-ink);
 }
 
 .drop__preview {

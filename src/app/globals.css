@@ -62,7 +62,6 @@ body {
 html[data-scroll-theme="haze"] { --page-background: #e5e8eb; }
 html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
 html[data-scroll-theme="dusk"] { --page-background: #081b23; }
-html[data-scroll-theme="navy"] { --page-background: #2b4552; }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -138,8 +137,12 @@ p {
   text-wrap: pretty;
 }
 
+/* `currentColor`, not the accent. The accent is the ink now, and an ink ring on
+   the ink ground is an invisible focus indicator — a real failure, not a
+   cosmetic one. The ring takes the colour of the text it surrounds instead,
+   which is by construction whichever neutral contrasts with that ground. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid currentColor;
   outline-offset: 4px;
 }
 
@@ -163,7 +166,7 @@ p {
   transform: translateY(-160%);
   padding: 0.75rem 1rem;
   background: var(--color-paper);
-  color: var(--color-navy);
+  color: var(--color-ink);
   transition: transform var(--motion-ui) var(--ease-out-expo);
 }
 
@@ -533,18 +536,18 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 .ambient--light {
-  --ambient-bloom: rgba(137, 145, 99, 0.2);
-  --ambient-bloom-alt: rgba(201, 129, 80, 0.13);
+  --ambient-bloom: rgba(8, 27, 35, 0.05);
+  --ambient-bloom-alt: rgba(8, 27, 35, 0.035);
   --ambient-mark: rgba(8, 27, 35, 0.1);
   --ambient-vignette: rgba(8, 27, 35, 0.05);
 }
 
 .ambient--dark {
-  /* Both were off-palette: #966c48 at hue 28 and #d6a088 at hue 18, sitting
-     either side of terracotta without being it. They are the terracotta and the
-     gold now — the two spec colours the blooms were reaching for. */
-  --ambient-bloom: rgba(201, 129, 80, 0.26);
-  --ambient-bloom-alt: rgba(222, 194, 106, 0.14);
+  /* The blooms were terracotta and gold. On a two-colour system the only light
+     available is the paper, so they light the dark ground with that instead —
+     the glow stays, the hue goes. */
+  --ambient-bloom: rgba(229, 232, 235, 0.1);
+  --ambient-bloom-alt: rgba(229, 232, 235, 0.06);
   --ambient-mark: rgba(229, 232, 235, 0.1);
   --ambient-vignette: rgba(8, 27, 35, 0.5);
 }
@@ -885,7 +888,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 
 .cinematic-header--solid .header-auth__button:hover {
   color: var(--color-paper);
-  background: var(--color-navy);
+  background: var(--color-ink);
 }
 
 .fullscreen-menu__auth {

@@ -64,6 +64,39 @@ and snapped to the palette at each end:
 - **sunrise** — gold → terracotta → rose
 - **water** — sky → navy
 
+## The two-colour system
+
+The site is painted in the kit's two starred neutrals and nothing else:
+
+    #081b23  ink     backgrounds, text on light, every accent that was navy
+    #e5e8eb  paper   backgrounds, text on dark, every accent that was gold
+
+Every pair in the palette was measured before choosing. A two-colour system
+has to carry body copy both ways — dark on light and light on dark — and this
+pair is the strongest available by a wide margin:
+
+| pair | contrast | carries body text |
+| --- | --- | --- |
+| **paper + ink** | **14.33:1** | yes |
+| sky + ink | 10.96:1 | yes |
+| gold + ink | 10.10:1 | yes |
+| navy + paper | 8.23:1 | yes |
+| olive + ink | 5.28:1 | yes |
+| rose + ink | 3.91:1 | no |
+
+98.4% of every painted value on the site is one of the two. The remainder is
+four Google UI mocks — the sign-in button and the SERP preview, which imitate
+Google's interface rather than ESE's — and `#000` used as mask paint.
+
+**The emblem keeps its own colours.** `--ese-band-land/water/sunrise` stay
+olive, sky and gold: the mark is artwork with specified colours, and
+`scripts/prepare-brand.mjs` reads those tokens to generate the favicon and the
+social card. Say so if the mark should go monochrome too — it is a one-line
+change plus a re-run of that script.
+
+The other six colours remain defined as `--brand-*` for reference and for the
+emblem. Nothing in the interface paints with them.
+
 ## Type
 
 Wired into the site as four role tokens in `src/styles/tokens.css`. Every stack

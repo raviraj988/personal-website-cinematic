@@ -327,8 +327,10 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 /* ------------------------------------------------------------ premium polish
  *
  * A gradient band across the head of the card, matching the statement cards on
- * the dark sections so the two families read as one system. It uses the emblem's
- * land gradient, drawn on arrival like every other rule on the page. */
+ * the dark sections so the two families read as one system. It used the emblem's
+ * land gradient — olive into gold, neither of which is one of the two colours —
+ * and is the ink fading out instead. The band still draws on arrival; it is a
+ * rule now rather than a ribbon. */
 .person-card__band {
   position: absolute;
   z-index: 3;
@@ -336,7 +338,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
   left: 0;
   width: 100%;
   height: 3px;
-  background: var(--grad-land);
+  background: linear-gradient(90deg, var(--color-ink), rgba(8, 27, 35, 0.25));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 820ms var(--ease-out-expo);

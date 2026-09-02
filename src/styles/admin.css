@@ -168,7 +168,7 @@
   white-space: nowrap;
 }
 
-.admin-chip--live { color: var(--color-navy); }
+.admin-chip--live { color: var(--color-ink); }
 .admin-chip--draft { color: var(--color-text-muted); }
 .admin-chip--scheduled { color: var(--color-stone); }
 /* The one chip with a filled ground: an unreviewed machine-written draft is the
@@ -212,8 +212,8 @@
 }
 
 .admin-button--primary {
-  border-color: var(--color-navy);
-  background: var(--color-navy);
+  border-color: var(--color-ink);
+  background: var(--color-ink);
   color: var(--color-paper);
 }
 
@@ -254,7 +254,7 @@
 }
 
 .admin-button--primary:disabled:hover {
-  background: var(--color-navy);
+  background: var(--color-ink);
   color: var(--color-paper);
 }
 
@@ -403,7 +403,7 @@
 .admin-field input:focus,
 .admin-field select:focus,
 .admin-field textarea:focus {
-  border-color: var(--color-navy);
+  border-color: var(--color-ink);
 }
 
 .admin-field textarea {
@@ -520,7 +520,7 @@
 }
 
 .admin-notice--success {
-  border-left-color: var(--color-navy);
+  border-left-color: var(--color-ink);
   color: var(--color-ink);
 }
 
@@ -713,7 +713,7 @@
   display: block;
   height: 2.6rem;
   width: auto;
-  color: var(--color-navy);
+  color: var(--color-ink);
 }
 
 .admin-gate__panel h1 {
@@ -883,7 +883,7 @@
 }
 
 .admin-gate__foot a {
-  color: var(--color-navy);
+  color: var(--color-ink);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -924,14 +924,13 @@
 
 /* Colour is a reinforcement, never the only signal — every check also carries a
    word in its detail line and a visually-hidden status in its label. */
-/* Status chips take kit colours with ink on top, rather than the pale
-   green/amber/red pairs that were here — none of which was in the palette.
-   Ink measures 5.28:1 on olive, 10.10:1 on gold, 5.66:1 on terracotta. Rose is
-   the obvious "fail" colour and is the one that misses, at 3.91:1, so failure
-   takes terracotta. */
-.seo-score--good { background: var(--brand-olive); color: var(--color-ink); }
-.seo-score--fair { background: var(--brand-gold); color: var(--color-ink); }
-.seo-score--poor { background: var(--brand-terracotta); color: var(--color-ink); }
+/* Status chips in two colours. Green/amber/red is not available, so the three
+   states separate by WEIGHT instead of hue — solid ink, ink at 55%, ink at 14%.
+   Each chip also carries its state as a word, so colour was never the only cue;
+   that matters more here than it did when the hues did the work. */
+.seo-score--good { background: var(--color-ink); color: var(--color-paper); }
+.seo-score--fair { background: rgba(8, 27, 35, 0.55); color: var(--color-paper); }
+.seo-score--poor { background: rgba(8, 27, 35, 0.14); color: var(--color-ink); }
 
 .serp-preview {
   margin-top: 1.5rem;
@@ -994,9 +993,9 @@
   border-radius: 50%;
 }
 
-.seo-check--pass .seo-check__mark { background: var(--brand-olive); }
-.seo-check--warn .seo-check__mark { background: var(--brand-gold); }
-.seo-check--fail .seo-check__mark { background: var(--brand-terracotta); }
+.seo-check--pass .seo-check__mark { background: var(--color-ink); }
+.seo-check--warn .seo-check__mark { background: rgba(8, 27, 35, 0.55); }
+.seo-check--fail .seo-check__mark { background: rgba(8, 27, 35, 0.2); }
 .seo-check--skip .seo-check__mark { background: var(--color-line); }
 
 .seo-check__label {

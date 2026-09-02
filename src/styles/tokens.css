@@ -49,7 +49,6 @@
    *
    * Grounds, deep to light. */
   --color-ground-deep: #081b23;  /* brand ink — the page's primary ground */
-  --color-navy: #2b4552;         /* brand navy — the one non-neutral ground */
   --color-canvas: #e5e8eb;       /* the light default: the paper neutral */
   --color-paper: #e5e8eb;        /* brand paper, the kit's light neutral */
   /* THE CREAM REGISTER IS GONE. `--color-sand: #f0e7db` and
@@ -69,13 +68,28 @@
      kept only because 10 declarations use it. */
   --color-white: #e5e8eb;
 
-  /* Accents, one per polarity.
+  /* TWO COLOURS. THE WHOLE SITE.
    *
-   * On light grounds only navy clears 4.5:1 (8.23:1 on paper), so it is the
-   * accent there. On the dark grounds gold is the signature — 10.10:1 on ink,
-   * and it is the colour the sunset gradient resolves to. */
-  --color-accent: #2b4552;
-  --color-accent-light: #dec26a;
+   * Every pair in the palette was measured, and one is not close:
+   *
+   *     paper * + ink *      14.33:1      <- this pair
+   *     sky + ink *          10.96:1
+   *     gold + ink *         10.10:1
+   *     navy + paper *        8.23:1
+   *     ...
+   *     rose + ink *          3.91:1      fails body text
+   *
+   * A two-colour system has to carry body copy BOTH ways — dark on light and
+   * light on dark — and paper + ink is the strongest pair available by a wide
+   * margin. It is also the pair the kit itself stars, and the pair the grounds
+   * were already using, so it is the consistent answer and the best one at the
+   * same time.
+   *
+   * The accents therefore collapse into the neutrals. Navy was the light-ground
+   * accent at 8.23:1 and gold the dark-ground one at 10.10:1; both are now the
+   * opposing neutral at 14.33:1, so nothing loses contrast — only hue. */
+  --color-accent: var(--color-ink);
+  --color-accent-light: var(--color-paper);
 
   /* Secondary text — the ink and the paper at reduced alpha over each other, not
      separate greys. Both are measured against the ground they sit on, with
@@ -135,47 +149,13 @@
   --card-sheen-dark: linear-gradient(160deg, rgba(229, 232, 235, 0.15) 0%, rgba(229, 232, 235, 0.09) 100%), #081b23;
   /* Hover lifts one step in the same two colours. */
   --card-sheen-dark-hover: linear-gradient(160deg, rgba(229, 232, 235, 0.2) 0%, rgba(229, 232, 235, 0.15) 100%), #081b23;
-  /* The olive card, for cards sitting ON the deep grounds.
-   *
-   * THIS WAS THE PALETTE'S ONE REAL VIOLATION. The block that used to be here
-   * claimed the card was "a deep green in the hue of `--brand-olive` (#899163)".
-   * It was not, and the numbers are not close:
-   *
-   *                    hue      the kit's olive is hue 70
-   *     #1d3729        148 deg        +78 deg off
-   *     #162c20        147 deg        +77 deg off
-   *     #25422f        141 deg        +71 deg off
-   *
-   * Hue 148 is blue-green — forest green, the category default the brand
-   * walkthrough explicitly disowns. The kit's olive is a yellow-green. So the
-   * card was not a shade of the brand colour it named; it was a different colour
-   * wearing its label.
-   *
-   * These stops ARE hue 70, the olive's own, darkened to the same lightness the
-   * card had before so nothing else about the design shifts.
-   *
-   * HOW FAR IT CAN BLEND IS BOUNDED BELOW, NOT ABOVE — a card that matches its
-   * ground stops being a card. 1.26x is the working floor the light cards hold.
-   *
-   *              vs ground     paper     gold
-   *   top          1.47x       9.8:1    6.9:1
-   *   bottom       1.24x      11.5:1    8.1:1
-   *
-   * The gradient straddles that floor on purpose: the head of the card lifts
-   * clear of the ground while its foot settles into it, which is what reads as
-   * blending rather than as a flat panel at uniform low contrast. Both ends are
-   * a clear improvement on the old card, which ran 1.37x to 1.19x. The lit top
-   * edge in `cards.css` does the rest — on a dark ground a shadow is invisible,
-   * so the card has to be defined by light. */
-  --card-sheen-olive: linear-gradient(160deg, #34391e 0%, #292d18 100%);
-  /* Hover lifts 1.16x within the same hue: hover's foot is resting's head, the
-     same relationship the dark navy card uses. */
-  --card-sheen-olive-hover: linear-gradient(160deg, #3d4323 0%, #34391e 100%);
-  /* Secondary copy on the dark olive card. */
-  /* Was #a9bcc4 — a BLUE-grey at hue 198 sitting on a hue-70 card, which is the
-     same mismatch as the card itself. This is the olive's own hue desaturated:
-     6.2:1 on the card's head, 7.4:1 on its foot. */
-  --ink-muted-olive: #b9bda8;
+  /* The card on the deep grounds. It was olive, and olive is not one of the two,
+     so it is the same paper-over-ink wash as `--card-sheen-dark` — aliased
+     rather than copied so the two can never drift apart. Both dark card families
+     are now one surface, which is what a two-colour system means. */
+  --card-sheen-olive: var(--card-sheen-dark);
+  --card-sheen-olive-hover: var(--card-sheen-dark-hover);
+  --ink-muted-olive: var(--color-muted-light);
   --color-line: rgba(8, 27, 35, 0.14);
   --color-line-dark: rgba(229, 232, 235, 0.18);
 
