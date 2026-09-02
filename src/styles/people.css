@@ -124,7 +124,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 
 .person-card__media--monogram span {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: clamp(2.05rem, 4.1vw, 2.85rem);
   letter-spacing: 0.01em;
   color: var(--monogram-ink, var(--color-slate));
   text-transform: uppercase;

@@ -1001,7 +1001,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   gap: 1.25rem;
   padding-block: 0.5rem;
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4vw, 3.25rem);
+  font-size: clamp(1.8rem, 3.3vw, 2.65rem);
   line-height: 1;
   opacity: 0;
   transform: translateY(2rem);
@@ -1156,7 +1156,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   border-bottom: 1px solid rgba(8, 27, 35, 0.24);
 }
 .approach-editorial li > span { color: var(--color-accent); font-size: 0.72rem; letter-spacing: 0.08em; }
-.approach-editorial li h3 { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2;
+.approach-editorial li h3 { font-family: var(--font-display); font-size: 1.17rem; line-height: 1.2;
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
@@ -1865,7 +1865,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   max-width: 24ch;
   margin-top: 1.5rem;
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.4vw, 5.5rem);
+  font-size: clamp(2.05rem, 4.2vw, 4.3rem);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: 0.01em;
@@ -2012,7 +2012,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
 .principle-band h2 {
   margin-top: 1rem;
   color: var(--color-paper);
-  font-size: clamp(1.3rem, 2.05vw, 1.95rem);
+  font-size: clamp(1.15rem, 1.8vw, 1.72rem);
   line-height: 1.26;
   letter-spacing: -0.01em;
 }
@@ -2181,7 +2181,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .serve-index__name {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-size: clamp(1.05rem, 1.7vw, 1.44rem);
   font-weight: 400;
   line-height: 1.2;
   text-wrap: balance;
@@ -2332,7 +2332,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 
 .founder-card__attribution cite {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-style: normal;
   line-height: 1.1;
   letter-spacing: 0.01em;
@@ -2693,7 +2693,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 .news-teaser__list h3 {
   margin-top: 0.9rem;
   font-family: var(--font-display);
-  font-size: 1.32rem;
+  font-size: 1.22rem;
   font-weight: 300;
   line-height: 1.18;
   letter-spacing: 0.01em;

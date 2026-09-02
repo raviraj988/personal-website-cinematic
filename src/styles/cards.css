@@ -41,7 +41,7 @@
 .person-card .person-card__body h3 {
   /* `--type-h3` is a heading scale for a section title. On a 13rem card it wraps
      a two-word name onto three lines. */
-  font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+  font-size: clamp(1rem, 1.2vw, 1.13rem);
 }
 
 /* The whole name is the link. No underline — the card's own hover states are the
@@ -132,7 +132,7 @@
 
 .audience-card__name {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
   line-height: 1.24;
   text-wrap: balance;
   letter-spacing: 0.01em;
@@ -524,7 +524,7 @@ section.principle-band {
   margin-top: 0.75rem;
   color: var(--ink, var(--color-ink));
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  font-size: clamp(1.05rem, 1.55vw, 1.35rem);
   font-weight: 300;
   line-height: 1.18;
   text-wrap: balance;

@@ -389,13 +389,27 @@
 
   /* Type scale.
    *
-   * The previous values topped out at 4.5rem display and 2.75rem h2 — well under
-   * spec §2.2 and the reason the page read restrained rather than cinematic.
-   * These move most of the way to the spec while staying inside the column
-   * widths the editorial grid actually provides. */
-  --type-display: clamp(3.25rem, 7.2vw, 7.25rem);
-  --type-h2: clamp(2.4rem, 4.4vw, 4rem);
-  --type-h3: clamp(1.5rem, 2.3vw, 2.05rem);
+   * SET FOR THE HEADLINE FACE, NOT THE SERIF THESE NUMBERS WERE PICKED FOR.
+   * The scale was tuned when headings were Newsreader. Morvi (Anton, standing
+   * in) is a heavy condensed face set in capitals: at the same nominal size it
+   * puts far more ink on the page, and the gap widens as the size grows — a
+   * 7.25rem serif line and a 7.25rem condensed-caps line are not the same
+   * object.
+   *
+   * So the scale is COMPRESSED rather than shrunk by a flat percentage. The
+   * reduction is steepest where the mass is worst and lightest on card titles,
+   * which sit just above body copy and would fall under it at the display
+   * factor:
+   *
+   *     display          7.25rem -> 5.65rem    -22%
+   *     h2               4.00rem -> 3.30rem    -18%
+   *     h3, card titles  2.05rem -> 1.80rem    -12%
+   *     small card names 1.20rem -> 1.15rem     -4%
+   *
+   * Everything hard-coded outside this block moves with its band. */
+  --type-display: clamp(2.55rem, 5.6vw, 5.65rem);
+  --type-h2: clamp(1.95rem, 3.6vw, 3.3rem);
+  --type-h3: clamp(1.32rem, 2vw, 1.8rem);
   --type-body-lg: clamp(1.125rem, 1.4vw, 1.3rem);
   /* A step between `body` and `body-lg`, for lede and intro copy that wants to
      read as secondary to a heading rather than compete with it. `body-lg` at

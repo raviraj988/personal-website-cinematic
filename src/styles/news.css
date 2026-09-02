@@ -58,7 +58,7 @@
 .newsletter-card h3 {
   margin-top: 0.9rem;
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.26rem;
   font-weight: 300;
   line-height: 1.16;
   letter-spacing: 0.01em;
@@ -86,7 +86,7 @@
 .newsletter-signup h2 {
   margin-top: 0.9rem;
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+  font-size: clamp(1.32rem, 2.3vw, 1.8rem);
   font-weight: 300;
   line-height: 1.12;
   letter-spacing: 0.01em;
