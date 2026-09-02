@@ -410,12 +410,16 @@
   --type-display: clamp(2.55rem, 5.6vw, 5.65rem);
   --type-h2: clamp(1.95rem, 3.6vw, 3.3rem);
   --type-h3: clamp(1.32rem, 2vw, 1.8rem);
-  --type-body-lg: clamp(1.125rem, 1.4vw, 1.3rem);
+  --type-body-lg: clamp(1.19rem, 1.48vw, 1.38rem);
   /* A step between `body` and `body-lg`, for lede and intro copy that wants to
      read as secondary to a heading rather than compete with it. `body-lg` at
      1.3rem is right for a short pull line and too heavy for a full paragraph. */
-  --type-body-md: clamp(1rem, 1.15vw, 1.125rem);
-  --type-body: 1rem;
+  --type-body-md: clamp(1.06rem, 1.22vw, 1.19rem);
+  /* Body copy is up about 6%. The kit sets it in Marion, a book serif, where the
+     site previously used Inter — and a serif of this kind carries a smaller
+     x-height than Inter does, so the same nominal size renders visibly smaller.
+     The three body steps move together to keep their relationship. */
+  --type-body: 1.06rem;
   /* The label size. Matches the primary navigation exactly, which is the
      reference every small uppercase label on the site is now set against —
      previously they ranged from 0.6rem to 0.95rem with six different trackings. */

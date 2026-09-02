@@ -2527,8 +2527,12 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 /* `:not(.section-label)` because the eyebrow is also a direct-child <p>. Without
    it this rule out-specifies `.section-label` and renders the eyebrow at body-lg
    size — 20px against the 11.5px every other eyebrow on the page uses. */
+/* No cap. This is the rule that actually held the lede short — `.org-intro__lede`
+   sets `max-width: none` but loses to this at (0,2,1) against (0,1,0), so lifting
+   the cap there did nothing. The `>` reaches only the label and the lede; the
+   card text below is nested and untouched. The grid column is the measure. */
 .network-band__copy > p:not(.section-label) {
-  max-width: 52ch;
+  max-width: none;
   margin-top: 1.5rem;
   color: var(--ink-muted);
   font-size: var(--type-body-md);
@@ -2638,8 +2642,12 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   max-width: none;
 }
 
+/* Same trap as `.network-band__copy > p`, same fix. At (0,2,1) this beat
+   `.org-intro__lede`'s (0,1,0), so the shared lede class rendered at 42ch here,
+   52ch in the network band and uncapped in section 01 — three widths from one
+   class, none of them the class's own. The column is the measure in all three. */
 .scholarship-band__inner p:not(.section-label) {
-  max-width: 42ch;
+  max-width: none;
 }
 
 .scholarship-band__inner h2 {
