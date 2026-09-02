@@ -1006,33 +1006,6 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 
 .header-auth__link:hover { text-decoration: underline; text-underline-offset: 0.35em; }
 
-.header-auth__button {
-  font-family: var(--font-label);
-  padding: 0.55rem 1.05rem;
-  border: 1px solid currentColor;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition:
-    background-color var(--motion-ui) var(--ease-standard),
-    color var(--motion-ui) var(--ease-standard);
-}
-
-/* Two hover states, because the header has two grounds. Over the transparent
-   header on the photographic hero the button is white-on-nothing, so it fills
-   with paper; on the solid cream bar that would be invisible, so it fills with
-   forest instead. */
-.header-auth__button:hover {
-  color: var(--color-ground-deep);
-  background: var(--color-paper);
-}
-
-.cinematic-header--solid .header-auth__button:hover {
-  color: var(--color-paper);
-  background: var(--color-ink);
-}
 
 .fullscreen-menu__auth {
   display: flex;
@@ -1461,7 +1434,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 /* The footer's two calls to action are buttons like any other. They used to be
    their own bordered system with a ghost variant; the site has one button now,
    so they take the same fill, radius and lift and keep only their own padding. */
-.footer-button {
+.footer-button,
+.header-auth__button {
   font-family: var(--font-label);
   position: relative;
   isolation: isolate;
@@ -1485,15 +1459,33 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .footer-button:hover,
-.footer-button:focus-visible {
+.footer-button:focus-visible,
+.header-auth__button:hover,
+.header-auth__button:focus-visible {
   transform: translateY(-2px);
   background: var(--button-gold-lift);
   box-shadow: 0 0.65rem 1.4rem -0.7rem rgba(8, 27, 35, 0.75);
 }
 
-.footer-button:active {
+.footer-button:active,
+.header-auth__button:active {
   transform: translateY(0);
   transition-duration: 90ms;
+}
+
+/* Sign up is the same button as every other, at the scale a nav bar wants. Its
+   colour and its hover come from the shared block above; only the padding and
+   the type size are its own.
+
+   It used to be a `currentColor` outline with TWO hover states, one per header
+   ground — that is no longer needed. Gold carries ink at 10.10:1 and separates
+   from both grounds, which is the whole reason it was chosen: one button works
+   over the hero and on the solid bar alike. */
+.header-auth__button {
+  padding: 0.6rem 1.05rem;
+  border-radius: 0.4rem;
+  font-size: 0.72rem;
+  gap: 0;
 }
 .cinematic-footer__bottom { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3rem; width: min(100%, var(--container)); margin: clamp(7rem, 12vw, 11rem) auto 0; padding-top: 2rem; border-top: 1px solid rgba(229, 232, 235, 0.22); font-size: 0.72rem; }
 /* Wider than the header's mark, because this one is the footer's masthead rather
