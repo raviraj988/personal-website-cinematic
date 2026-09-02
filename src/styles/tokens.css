@@ -55,7 +55,11 @@
      are noted where they live. Paper on navy is 8.23:1, down from 14.33:1 and
      still comfortably over 4.5:1. */
   --color-ground-deep: #2b4552;
-  --color-canvas: #e5e8eb;       /* the light default: the paper neutral */
+  /* THE LIGHT GROUND IS THE KIT'S SKY. Paper has not left the palette — it is
+     still the text colour on the dark ground and, now, the CARD surface. The
+     roles simply moved down one step: sky is the ground, paper is what sits on
+     it, ink is the text. Ink on sky is 10.96:1 and muted copy 5.18:1. */
+  --color-canvas: #b8d0d8;
   --color-paper: #e5e8eb;        /* brand paper, the kit's light neutral */
   /* THE CREAM REGISTER IS GONE. `--color-sand: #f0e7db` and
      `--color-clay: #e3d5c4` sat at hue 33-34 deg, ~10 deg off terracotta but at
@@ -121,20 +125,19 @@
    * which is about 4% of luminance; anything wider and the cards start to look
    * like buttons. On the dark grounds the same idea is a 7%-to-2% wash of the
    * paper neutral, which is what gives a near-black card an edge to catch. */
-  /* The light card: an ink wash over the paper neutral. Two declared colours.
+  /* The light card: the paper neutral, on the sky ground.
    *
-   * The wash has to start above zero. The page ground IS the paper neutral now,
-   * so a card starting at 0 alpha begins exactly the colour it sits on. 0.04 to
-   * 0.10 keeps the range as shallow as it was designed to be — about 5% of
-   * luminance, and the comment above still applies: any wider and the cards
-   * start to look like buttons.
+   * The card is now LIGHTER than what it sits on, which is the reverse of the
+   * arrangement it had, and much stronger. Measured both ways before choosing:
    *
-   * For the record, since the note on the dark card claimed otherwise: the light
-   * card never held 1.26x. It was #f4f7f8 on a #eef1f2 ground, which separates by
-   * 1.05x — it is read by its hairline border and its shadow, not by its fill.
-   * This version manages 1.08x and 1.22x, and the border went from 1.20x to
-   * 1.33x, so every cue is stronger than before. */
-  --card-sheen: linear-gradient(160deg, rgba(8, 27, 35, 0.04) 0%, rgba(8, 27, 35, 0.1) 100%), #e5e8eb;
+   *                          separation      ink on it
+   *     ink wash on sky        1.07x          10.2:1
+   *     paper on sky           1.31x          14.3:1
+   *
+   * So the wash starts at 0 — the head of the card is the paper neutral, clear
+   * of the ground, and settles 0.07 toward the ink at its foot. For scale, the
+   * card never held more than 1.05x separation before any of this. */
+  --card-sheen: linear-gradient(160deg, rgba(8, 27, 35, 0) 0%, rgba(8, 27, 35, 0.07) 100%), #e5e8eb;
   /* The dark card, as the two neutrals and nothing else.
    *
    * This was navy (#1a3a47 -> #14313d), and before that a wash of white that was

@@ -59,8 +59,8 @@ body {
  * `sand` and `clay` used to sit here as "the warm light pair". They were not in
  * the kit — see the note in `tokens.css` — and both are gone. Four grounds
  * remain and every one of them is a kit colour or a tint of one. */
-html[data-scroll-theme="haze"] { --page-background: #e5e8eb; }
-html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
+html[data-scroll-theme="haze"] { --page-background: var(--color-canvas); }
+html[data-scroll-theme="paper"] { --page-background: var(--color-canvas); }
 html[data-scroll-theme="dusk"] { --page-background: var(--color-ground-deep); }
 
 main > .section-shell {
@@ -760,7 +760,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .cinematic-header--solid {
-  background: rgba(229, 232, 235, 0.96);
+  background: rgba(184, 208, 216, 0.96);
   color: var(--color-ink);
   border-color: var(--color-line);
   -webkit-backdrop-filter: blur(10px);
