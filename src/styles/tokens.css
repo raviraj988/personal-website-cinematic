@@ -25,11 +25,32 @@
    *
    * Every pairing below is measured. Nothing here is eyeballed. */
 
-  /* Grounds, deep to light. */
+  /* TWO NEUTRALS, AND ONLY TWO.
+   *
+   * The kit stars exactly two swatches and says to use them "instead of black
+   * and white (#000000/#ffffff) whenever possible, including text and
+   * backgrounds". Every neutral value below is now literally one of them.
+   *
+   * Where a surface or a secondary line of text needs a tone BETWEEN the two,
+   * it is one neutral at partial alpha over the other — never a third hex. So
+   * the palette holds two neutrals and every grey on the site is a composition
+   * of them, rather than a family of invented tints that only look related.
+   *
+   * What that replaced, all of it off-kit:
+   *
+   *     #44585f   muted text        61 declarations, the site's commonest ink
+   *     #eef1f2   the page ground    5, including the default
+   *     #cdd6da   rules              8
+   *     #1b333d   card media ground  7
+   *     #f4f7f8   "white"           10
+   *     #a9bcc4   muted on dark      4
+   *     #6f8791   monogram ink       2
+   *     #14313d   a second dark      0 — it was already dead
+   *
+   * Grounds, deep to light. */
   --color-ground-deep: #081b23;  /* brand ink — the page's primary ground */
-  --color-storm: #14313d;        /* one step up, for a second dark register */
-  --color-navy: #2b4552;         /* brand navy — the mid ground */
-  --color-canvas: #eef1f2;       /* the light default */
+  --color-navy: #2b4552;         /* brand navy — the one non-neutral ground */
+  --color-canvas: #e5e8eb;       /* the light default: the paper neutral */
   --color-paper: #e5e8eb;        /* brand paper, the kit's light neutral */
   /* THE CREAM REGISTER IS GONE. `--color-sand: #f0e7db` and
      `--color-clay: #e3d5c4` sat at hue 33-34 deg, ~10 deg off terracotta but at
@@ -44,7 +65,9 @@
      the kit is explicit that these two replace #000/#fff "whenever possible,
      including text and backgrounds". */
   --color-ink: #081b23;
-  --color-white: #f4f7f8;
+  /* Not a third value. `--color-white` is the paper neutral, and the name is
+     kept only because 10 declarations use it. */
+  --color-white: #e5e8eb;
 
   /* Accents, one per polarity.
    *
@@ -54,13 +77,20 @@
   --color-accent: #2b4552;
   --color-accent-light: #dec26a;
 
-  /* Secondary UI text. `--color-text-muted` is measured against the tightest
-     light ground it sits on — 6.08:1 on paper, 6.59:1 on haze — and
-     `--color-muted-light` against the darkest, 8.96:1 on ink. */
-  --color-text-muted: #44585f;
-  --color-muted-light: #a9bcc4;
-  --color-slate: #6f8791;
-  --color-stone: #44585f;
+  /* Secondary text — the ink and the paper at reduced alpha over each other, not
+     separate greys. Both are measured against the ground they sit on, with
+     margin over 4.5:1 rather than at it: ink at 0.62 is 4.61:1 on paper and
+     paper at 0.51 is 4.60:1 on ink, so both are carried a step further. */
+  --color-text-muted: rgba(8, 27, 35, 0.7);
+  /* 0.70, sized against NAVY and not against the ink.
+     This token is used on both dark grounds, and navy is the lighter of the two,
+     so the ink is the wrong ground to tune it on: 0.59 measured 5.69:1 on ink
+     but only 3.26:1 on navy, which fails. At 0.70 it is 4.95:1 on navy and
+     7.56:1 on ink — sized on the tighter of the two, which is the only way a
+     shared token can be safe on both. */
+  --color-muted-light: rgba(229, 232, 235, 0.7);
+  --color-slate: rgba(8, 27, 35, 0.55);
+  --color-stone: rgba(8, 27, 35, 0.7);
   /* Card shading.
    *
    * Every card surface is a gradient rather than a flat fill — a very shallow
@@ -71,31 +101,40 @@
    * which is about 4% of luminance; anything wider and the cards start to look
    * like buttons. On the dark grounds the same idea is a 7%-to-2% wash of the
    * paper neutral, which is what gives a near-black card an edge to catch. */
-  --card-sheen: linear-gradient(160deg, #f4f7f8 0%, #e5e8eb 100%);
-  /* The dark card surface is NAVY, not a wash of white.
+  /* The light card: an ink wash over the paper neutral. Two declared colours.
    *
-   * It was `rgba(226, 232, 235, 0.075 -> 0.02)` — a neutral lift of whatever was
-   * behind it. Over `--color-ground-deep` that composites to #12252d, which
-   * separates from the ground by only 1.11x. The light cards manage 1.26x, so the
-   * dark ones were the faintest surfaces on the site, and colourless with it: a
-   * grey card on a navy page.
+   * The wash has to start above zero. The page ground IS the paper neutral now,
+   * so a card starting at 0 alpha begins exactly the colour it sits on. 0.04 to
+   * 0.10 keeps the range as shallow as it was designed to be — about 5% of
+   * luminance, and the comment above still applies: any wider and the cards
+   * start to look like buttons.
    *
-   * These stops are the kit's own navy family, one step up from the ink the page
-   * is built on — the same relationship `data-scroll-theme="navy"` has to
-   * `dusk`. Opaque rather than translucent so the surface is a colour in its own
-   * right instead of a function of what it happens to sit on.
+   * For the record, since the note on the dark card claimed otherwise: the light
+   * card never held 1.26x. It was #f4f7f8 on a #eef1f2 ground, which separates by
+   * 1.05x — it is read by its hairline border and its shadow, not by its fill.
+   * This version manages 1.08x and 1.22x, and the border went from 1.20x to
+   * 1.33x, so every cue is stronger than before. */
+  --card-sheen: linear-gradient(160deg, rgba(8, 27, 35, 0.04) 0%, rgba(8, 27, 35, 0.1) 100%), #e5e8eb;
+  /* The dark card, as the two neutrals and nothing else.
    *
-   *            separation      paper      muted       gold
-   *   top       1.46x         9.8:1      6.1:1      6.9:1
-   *   bottom    1.29x        11.1:1      6.9:1      7.8:1
+   * This was navy (#1a3a47 -> #14313d), and before that a wash of white that was
+   * rejected for compositing to #12252d — only 1.11x off the ground, the faintest
+   * surface on the site. That rejection was right about the symptom and wrong
+   * about the cause: the wash failed because it ran at 0.075 alpha, not because
+   * it was neutral. At 0.15 it clears the ground by 1.49x.
    *
-   * Every value clears 4.5:1 and both ends beat the 1.26x bar. */
-  --card-sheen-dark: linear-gradient(160deg, #1a3a47 0%, #14313d 100%);
-  /* Hover lifts within the same family — 1.26x above resting, which reads as a
-     lift without becoming a different colour. Its top stop is the tightest
-     measurement in the set at 4.9:1 for muted copy, so do not brighten it
-     further without re-checking that number. */
-  --card-sheen-dark-hover: linear-gradient(160deg, #224a5b 0%, #1a3a47 100%);
+   * So it is a wash again, now of the PAPER NEUTRAL over the INK NEUTRAL, and the
+   * separation profile is identical to the olive card's by construction:
+   *
+   *              composites   vs ground    paper     gold
+   *   top          #293a41      1.49x      9.6:1    6.8:1
+   *   bottom       #1c2d35      1.24x     11.6:1    8.2:1
+   *
+   * Two declared colours, both starred in the kit; every tone between them is
+   * the alpha doing the work. */
+  --card-sheen-dark: linear-gradient(160deg, rgba(229, 232, 235, 0.15) 0%, rgba(229, 232, 235, 0.09) 100%), #081b23;
+  /* Hover lifts one step in the same two colours. */
+  --card-sheen-dark-hover: linear-gradient(160deg, rgba(229, 232, 235, 0.2) 0%, rgba(229, 232, 235, 0.15) 100%), #081b23;
   /* The olive card, for cards sitting ON the deep grounds.
    *
    * THIS WAS THE PALETTE'S ONE REAL VIOLATION. The block that used to be here
@@ -137,7 +176,7 @@
      same mismatch as the card itself. This is the olive's own hue desaturated:
      6.2:1 on the card's head, 7.4:1 on its foot. */
   --ink-muted-olive: #b9bda8;
-  --color-line: #cdd6da;
+  --color-line: rgba(8, 27, 35, 0.14);
   --color-line-dark: rgba(229, 232, 235, 0.18);
 
   /* ------------------------------------------------------------ photographs

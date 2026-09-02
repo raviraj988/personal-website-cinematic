@@ -59,7 +59,7 @@ body {
  * `sand` and `clay` used to sit here as "the warm light pair". They were not in
  * the kit — see the note in `tokens.css` — and both are gone. Four grounds
  * remain and every one of them is a kit colour or a tint of one. */
-html[data-scroll-theme="haze"] { --page-background: #eef1f2; }
+html[data-scroll-theme="haze"] { --page-background: #e5e8eb; }
 html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
 html[data-scroll-theme="dusk"] { --page-background: #081b23; }
 html[data-scroll-theme="navy"] { --page-background: #2b4552; }
@@ -534,7 +534,7 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 
 .ambient--light {
   --ambient-bloom: rgba(137, 145, 99, 0.2);
-  --ambient-bloom-alt: rgba(186, 121, 82, 0.13);
+  --ambient-bloom-alt: rgba(201, 129, 80, 0.13);
   --ambient-mark: rgba(8, 27, 35, 0.1);
   --ambient-vignette: rgba(8, 27, 35, 0.05);
 }
@@ -761,10 +761,11 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   backdrop-filter: blur(10px);
 }
 
-/* The solid state is already 96% opaque, so with transparency reduced it only
-   needs the last 4% — the *same* cream, not a different one. `--color-canvas` is
-   #eef1f2, which is what the rgba above is 96% of; `--color-paper` is #e5e8eb and
-   would make the bar visibly whiter than it is with transparency on. */
+/* The solid state is the paper neutral at 96%, so with transparency reduced it
+   only needs the last 4% of the same colour. `--color-canvas` IS #e5e8eb now, so
+   the fallback and the translucent state are the one neutral either way — which
+   is what this comment used to have to explain around, back when canvas was a
+   fourth off-kit near-white. */
 @media (prefers-reduced-transparency: reduce) {
   .cinematic-header--solid {
     -webkit-backdrop-filter: none;
@@ -983,7 +984,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 .fullscreen-menu__inner > p:first-child {
   font-family: var(--font-label);
   align-self: start;
-  color: #d6a088;
+  color: var(--color-accent-light);
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -1087,7 +1088,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   width: 100%;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: #e8e2d6;
+  background: var(--color-paper);
 }
 .about-editorial__portrait img { object-fit: cover; object-position: center 24%; }
 .about-editorial__portrait figcaption {
@@ -1132,9 +1133,11 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   min-height: 60rem;
-  /* Matches the olive card tone. This section paints its own full-bleed
-     background, so it would otherwise drift away from the scroll palette. */
-  background: #f0e7db;
+  /* This section paints its own full-bleed background, so it would otherwise
+     drift away from the scroll palette. It was #f0e7db — the retired cream — and
+     is the paper neutral now. (No component renders `.approach-editorial`; the
+     rule is kept in step with the rest rather than left as a stale exception.) */
+  background: var(--color-paper);
 }
 
 .approach-editorial__media { position: sticky; top: 0; height: 100vh; overflow: hidden; }
@@ -1197,7 +1200,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 
 .work-card article { display: flex; flex-direction: column; height: 100%; }
-.work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #1b333d; }
+.work-card__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--color-ground-deep); }
 
 .work-card__media .parallax-media { width: 100%; height: 100%; }
 
@@ -1819,17 +1822,17 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   background:
     linear-gradient(
       90deg,
-      rgba(6, 20, 26, 0.54),
-      rgba(6, 20, 26, 0.22) 52%,
-      rgba(6, 20, 26, 0.02) 78%
+      rgba(8, 27, 35, 0.54),
+      rgba(8, 27, 35, 0.22) 52%,
+      rgba(8, 27, 35, 0.02) 78%
     ),
     /* Reaches to 68% rather than 46%: the eyebrow is the topmost line of the copy
        block and sat just above where the old foot gradient stopped, landing it on
        bright water at 3.90:1 against the 4.5:1 it needs as small text. */
     linear-gradient(
       0deg,
-      rgba(6, 20, 26, 0.48),
-      rgba(6, 20, 26, 0.22) 46%,
+      rgba(8, 27, 35, 0.48),
+      rgba(8, 27, 35, 0.22) 46%,
       transparent 68%
     ),
     /* A short band under the header only.
@@ -1841,8 +1844,8 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
      * strip that needs it. */
     linear-gradient(
       180deg,
-      rgba(6, 20, 26, 0.62),
-      rgba(6, 20, 26, 0.28) 12%,
+      rgba(8, 27, 35, 0.62),
+      rgba(8, 27, 35, 0.28) 12%,
       transparent 22%
     );
 }
@@ -1984,12 +1987,12 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   background:
     linear-gradient(
       180deg,
-      rgba(7, 24, 31, 0.08) 0%,
-      rgba(6, 21, 27, 0.3) 40%,
-      rgba(5, 18, 24, 0.76) 72%,
-      rgba(4, 15, 20, 0.92) 100%
+      rgba(8, 27, 35, 0.08) 0%,
+      rgba(8, 27, 35, 0.3) 40%,
+      rgba(8, 27, 35, 0.76) 72%,
+      rgba(8, 27, 35, 0.92) 100%
     ),
-    linear-gradient(90deg, rgba(5, 19, 25, 0.5), transparent 58%);
+    linear-gradient(90deg, rgba(8, 27, 35, 0.5), transparent 58%);
 }
 
 .principle-band__content {
@@ -2849,9 +2852,9 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   .lede-hero__scrim::after {
     background: linear-gradient(
       0deg,
-      rgba(6, 20, 26, 0.66),
-      rgba(6, 20, 26, 0.3) 58%,
-      rgba(6, 20, 26, 0.12)
+      rgba(8, 27, 35, 0.66),
+      rgba(8, 27, 35, 0.3) 58%,
+      rgba(8, 27, 35, 0.12)
     );
   }
 

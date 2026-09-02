@@ -599,7 +599,7 @@
   max-height: 22rem;
   object-fit: cover;
   border: 1px solid var(--color-line);
-  background: #1b333d;
+  background: #081b23;
 }
 
 .admin-cover__meta {
@@ -924,9 +924,14 @@
 
 /* Colour is a reinforcement, never the only signal — every check also carries a
    word in its detail line and a visually-hidden status in its label. */
-.seo-score--good { background: #e3ede2; color: #1c4229; }
-.seo-score--fair { background: #f6ecd9; color: #6b4a15; }
-.seo-score--poor { background: #f6e0da; color: #7a2f1c; }
+/* Status chips take kit colours with ink on top, rather than the pale
+   green/amber/red pairs that were here — none of which was in the palette.
+   Ink measures 5.28:1 on olive, 10.10:1 on gold, 5.66:1 on terracotta. Rose is
+   the obvious "fail" colour and is the one that misses, at 3.91:1, so failure
+   takes terracotta. */
+.seo-score--good { background: var(--brand-olive); color: var(--color-ink); }
+.seo-score--fair { background: var(--brand-gold); color: var(--color-ink); }
+.seo-score--poor { background: var(--brand-terracotta); color: var(--color-ink); }
 
 .serp-preview {
   margin-top: 1.5rem;
@@ -989,9 +994,9 @@
   border-radius: 50%;
 }
 
-.seo-check--pass .seo-check__mark { background: #3f7a4e; }
-.seo-check--warn .seo-check__mark { background: #c08a2e; }
-.seo-check--fail .seo-check__mark { background: #b1452c; }
+.seo-check--pass .seo-check__mark { background: var(--brand-olive); }
+.seo-check--warn .seo-check__mark { background: var(--brand-gold); }
+.seo-check--fail .seo-check__mark { background: var(--brand-terracotta); }
 .seo-check--skip .seo-check__mark { background: var(--color-line); }
 
 .seo-check__label {

@@ -27,7 +27,7 @@
   aspect-ratio: 16 / 9;
   margin-top: clamp(2.5rem, 5vw, 4rem);
   overflow: hidden;
-  background: #1b333d;
+  background: #081b23;
 }
 
 .service-page__media .parallax-media {
