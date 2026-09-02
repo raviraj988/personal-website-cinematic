@@ -18,11 +18,50 @@ export function CinematicHeader({ solid = false }: { solid?: boolean }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * The bar turns solid when the HERO'S BOTTOM EDGE reaches it, not before.
+   *
+   * This was `window.innerHeight * 0.72`, a guess at where the hero ends. The
+   * hero is a full viewport, so the guess fired with 28% of it still on screen:
+   * the bar went cream and the logo flipped to its dark version while the white
+   * one was still sitting over the photograph, which is where it belongs.
+   *
+   * Measuring the element instead is both correct and robust to the hero not
+   * being exactly 100vh. The bar is fixed at the top, so it stops overlapping
+   * the hero once the hero's height has passed under it — minus the bar's own
+   * height, which is the part of it still covering the photograph.
+   *
+   * Re-measured on resize because the hero is sized in viewport units.
+   */
   useEffect(() => {
     if (solid) return;
-    return onScrollFrame(() => {
-      setScrolled(window.scrollY > window.innerHeight * 0.72);
+
+    const threshold = () => {
+      const hero = document.querySelector<HTMLElement>("#top");
+      const bar = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--header-height"),
+      );
+      const barPx = Number.isFinite(bar)
+        ? bar * parseFloat(getComputedStyle(document.documentElement).fontSize)
+        : 100;
+      return hero ? hero.offsetHeight - barPx : window.innerHeight;
+    };
+
+    let cutoff = threshold();
+    const remeasure = () => {
+      cutoff = threshold();
+      setScrolled(window.scrollY > cutoff);
+    };
+    window.addEventListener("resize", remeasure);
+
+    const stop = onScrollFrame(() => {
+      setScrolled(window.scrollY > cutoff);
     });
+
+    return () => {
+      window.removeEventListener("resize", remeasure);
+      stop();
+    };
   }, [solid]);
 
   useEffect(() => {
