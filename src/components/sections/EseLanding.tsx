@@ -318,7 +318,7 @@ export function EseLanding() {
         aria-labelledby="people-title"
         data-scroll-theme="haze"
       >
-        <AmbientLayer blooms={1} marks contours />
+        <AmbientLayer blooms={1} marks watershed />
 
         <Reveal className="people-group people-group--standalone">
           <div className="people-group__head">

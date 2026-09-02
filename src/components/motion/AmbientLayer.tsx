@@ -1,4 +1,5 @@
 import { BotanicalMark } from "./BotanicalMark";
+import { WatershedMark } from "./WatershedMark";
 
 type AmbientLayerProps = {
   /** Slow-drifting soft light fields. Two reads as a landscape, one as a hint. */
@@ -6,17 +7,14 @@ type AmbientLayerProps = {
   /** Drifting botanical line marks. */
   marks?: boolean;
   /**
-   * A topographic contour field, weighted to the right of the section.
+   * A watershed drawn across the space a section's content does not fill.
    *
-   * For sections whose content does not fill their width — `people` lays out
-   * for four columns and has two — where the remainder otherwise reads as a
-   * section that failed to finish rather than as space.
-   *
-   * Contours rather than an abstract pattern: cumulative-impact mapping, water
-   * systems and air-quality work are what ESE does, so the reference is to the
-   * subject rather than to decoration in general.
+   * For sections that lay out wider than they fill — `people` sizes for four
+   * columns and has two — where the remainder otherwise reads as a section that
+   * failed to finish rather than as space. See `WatershedMark` for why a
+   * drainage network rather than a texture.
    */
-  contours?: boolean;
+  watershed?: boolean;
   /** Adds an inner vignette; suits the dark sections. */
   vignette?: boolean;
   /** Chooses the ink used by every layer. */
@@ -37,7 +35,7 @@ type AmbientLayerProps = {
 export function AmbientLayer({
   blooms = 0,
   marks = false,
-  contours = false,
+  watershed = false,
   vignette = false,
   tone = "light",
 }: AmbientLayerProps) {
@@ -53,7 +51,7 @@ export function AmbientLayer({
         </>
       ) : null}
 
-      {contours ? <div className="ambient__contours" /> : null}
+      {watershed ? <WatershedMark className="ambient__watershed" /> : null}
 
       {vignette ? <div className="ambient__vignette" /> : null}
     </div>
