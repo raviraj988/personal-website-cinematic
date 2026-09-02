@@ -61,7 +61,7 @@ body {
  * remain and every one of them is a kit colour or a tint of one. */
 html[data-scroll-theme="haze"] { --page-background: #e5e8eb; }
 html[data-scroll-theme="paper"] { --page-background: #e5e8eb; }
-html[data-scroll-theme="dusk"] { --page-background: #081b23; }
+html[data-scroll-theme="dusk"] { --page-background: var(--color-ground-deep); }
 
 main > .section-shell {
   transition: background-color 900ms var(--ease-standard), color 500ms ease;
@@ -730,7 +730,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    * 0.28 is deliberately light. Enough to separate the bar from the image at a
    * glance, not enough to read as a solid band across the top of the composition.
    */
-  background: rgba(8, 27, 35, 0.28);
+  background: rgba(43, 69, 82, 0.28);
   /* Unprefixed alone is not enough — Safari still needs the prefix, and without
      it the scrim renders flat rather than glassy on every Apple browser. */
   -webkit-backdrop-filter: blur(10px) saturate(115%);
@@ -755,7 +755,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   .cinematic-header {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: rgba(8, 27, 35, 0.62);
+    background: rgba(43, 69, 82, 0.62);
   }
 }
 
@@ -1265,7 +1265,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   position: absolute;
   inset: auto 0 0 0;
   height: 30%;
-  background: linear-gradient(to top, rgba(8, 27, 35, 0.14), transparent);
+  background: linear-gradient(to top, rgba(43, 69, 82, 0.14), transparent);
   pointer-events: none;
 }
 
@@ -1321,13 +1321,12 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    never given a rule, so both buttons drew the same 0.65-white border and read
    as one block of chrome; the mailto is the faster path and should be the one
    that carries weight.
-   The alpha rose from 0.38 to 0.40 when the neutral changed. Paper is darker
-   than the pure white this used to composite against, and 0.38 paper measures
-   3.11:1 — still over the 3:1 WCAG asks of a control's boundary, but with no
-   margin left. 0.40 gives #606D73 and 3.30:1. It is dimmer than the primary's,
-   not invisible. */
+   Sized against the ground, twice over. Against the ink 0.40 gave 3.30:1; the
+   ground is navy now, which is lighter, and the same alpha falls to 2.68:1 —
+   under the 3:1 WCAG asks of a control's boundary. 0.49 gives #86959D and
+   3.28:1. It is dimmer than the primary's, not invisible. */
 .footer-button--ghost {
-  border-color: rgba(229, 232, 235, 0.4);
+  border-color: rgba(229, 232, 235, 0.49);
   color: rgba(229, 232, 235, 0.78);
 }
 
@@ -1830,7 +1829,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: rgba(8, 27, 35, 0.36);
+  background: rgba(43, 69, 82, 0.36);
 }
 
 .lede-hero__scrim::after {
@@ -1840,17 +1839,17 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   background:
     linear-gradient(
       90deg,
-      rgba(8, 27, 35, 0.54),
-      rgba(8, 27, 35, 0.22) 52%,
-      rgba(8, 27, 35, 0.02) 78%
+      rgba(43, 69, 82, 0.54),
+      rgba(43, 69, 82, 0.22) 52%,
+      rgba(43, 69, 82, 0.02) 78%
     ),
     /* Reaches to 68% rather than 46%: the eyebrow is the topmost line of the copy
        block and sat just above where the old foot gradient stopped, landing it on
        bright water at 3.90:1 against the 4.5:1 it needs as small text. */
     linear-gradient(
       0deg,
-      rgba(8, 27, 35, 0.48),
-      rgba(8, 27, 35, 0.22) 46%,
+      rgba(43, 69, 82, 0.48),
+      rgba(43, 69, 82, 0.22) 46%,
       transparent 68%
     ),
     /* A short band under the header only.
@@ -1862,8 +1861,8 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
      * strip that needs it. */
     linear-gradient(
       180deg,
-      rgba(8, 27, 35, 0.62),
-      rgba(8, 27, 35, 0.28) 12%,
+      rgba(43, 69, 82, 0.62),
+      rgba(43, 69, 82, 0.28) 12%,
       transparent 22%
     );
 }
@@ -2005,12 +2004,12 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   background:
     linear-gradient(
       180deg,
-      rgba(8, 27, 35, 0.08) 0%,
-      rgba(8, 27, 35, 0.3) 40%,
-      rgba(8, 27, 35, 0.76) 72%,
-      rgba(8, 27, 35, 0.92) 100%
+      rgba(43, 69, 82, 0.08) 0%,
+      rgba(43, 69, 82, 0.3) 40%,
+      rgba(43, 69, 82, 0.76) 72%,
+      rgba(43, 69, 82, 0.92) 100%
     ),
-    linear-gradient(90deg, rgba(8, 27, 35, 0.5), transparent 58%);
+    linear-gradient(90deg, rgba(43, 69, 82, 0.5), transparent 58%);
 }
 
 .principle-band__content {
@@ -2763,7 +2762,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 48%, rgba(8, 27, 35, 0.7));
+  background: linear-gradient(180deg, transparent 48%, rgba(43, 69, 82, 0.7));
 }
 
 .cinematic-footer__visual > p {
@@ -2797,13 +2796,14 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   color: rgba(229, 232, 235, 0.72);
 }
 
-/* 0.55, not the 0.45 that was here. This line failed 4.5:1 before the neutral
-   changed — 0.45 white measured 4.47:1 — and swapping white for the darker paper
-   took it to 3.83:1. 0.55 paper is #828C91, 5.13:1, which clears it properly. */
+/* 0.68. This line has been re-sized twice: 0.45 white measured 4.47:1 and
+   already failed; 0.55 paper cleared it at 5.13:1 on the ink ground; and the
+   ground is navy now, which took the same alpha to 3.72:1. 0.68 is #A9B4BA and
+   4.78:1. Small print is the first thing to fail when a ground lightens. */
 .cinematic-footer__cta small {
   display: block;
   margin-top: 1rem;
-  color: rgba(229, 232, 235, 0.55);
+  color: rgba(229, 232, 235, 0.68);
   font-size: 0.65rem;
 }
 
@@ -2878,9 +2878,9 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   .lede-hero__scrim::after {
     background: linear-gradient(
       0deg,
-      rgba(8, 27, 35, 0.66),
-      rgba(8, 27, 35, 0.3) 58%,
-      rgba(8, 27, 35, 0.12)
+      rgba(43, 69, 82, 0.66),
+      rgba(43, 69, 82, 0.3) 58%,
+      rgba(43, 69, 82, 0.12)
     );
   }
 

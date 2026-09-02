@@ -97,7 +97,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
      service cards' 4:3 was cutting a portrait down to head and shoulders. */
   aspect-ratio: 2 / 3;
   overflow: hidden;
-  background: #081b23;
+  background: var(--color-ground-deep);
 }
 
 .person-card__media img {

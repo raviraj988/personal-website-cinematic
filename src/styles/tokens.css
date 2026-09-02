@@ -48,7 +48,13 @@
    *     #14313d   a second dark      0 — it was already dead
    *
    * Grounds, deep to light. */
-  --color-ground-deep: #081b23;  /* brand ink — the page's primary ground */
+  /* THE DARK GROUND IS THE KIT'S NAVY. It was the ink (#081b23), which is still
+     the text colour on light grounds — so the ink has not left the palette, it
+     has stopped being a background. Navy is lighter, so every alpha that was
+     sized against the ink was re-measured against it; two needed raising and
+     are noted where they live. Paper on navy is 8.23:1, down from 14.33:1 and
+     still comfortably over 4.5:1. */
+  --color-ground-deep: #2b4552;
   --color-canvas: #e5e8eb;       /* the light default: the paper neutral */
   --color-paper: #e5e8eb;        /* brand paper, the kit's light neutral */
   /* THE CREAM REGISTER IS GONE. `--color-sand: #f0e7db` and
@@ -146,9 +152,9 @@
    *
    * Two declared colours, both starred in the kit; every tone between them is
    * the alpha doing the work. */
-  --card-sheen-dark: linear-gradient(160deg, rgba(229, 232, 235, 0.15) 0%, rgba(229, 232, 235, 0.09) 100%), #081b23;
+  --card-sheen-dark: linear-gradient(160deg, rgba(229, 232, 235, 0.15) 0%, rgba(229, 232, 235, 0.09) 100%), var(--color-ground-deep);
   /* Hover lifts one step in the same two colours. */
-  --card-sheen-dark-hover: linear-gradient(160deg, rgba(229, 232, 235, 0.2) 0%, rgba(229, 232, 235, 0.15) 100%), #081b23;
+  --card-sheen-dark-hover: linear-gradient(160deg, rgba(229, 232, 235, 0.2) 0%, rgba(229, 232, 235, 0.15) 100%), var(--color-ground-deep);
   /* The card on the deep grounds. It was olive, and olive is not one of the two,
      so it is the same paper-over-ink wash as `--card-sheen-dark` — aliased
      rather than copied so the two can never drift apart. Both dark card families
