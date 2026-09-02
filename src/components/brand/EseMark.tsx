@@ -31,7 +31,7 @@ type MarkProps = {
   priority?: boolean;
 };
 
-/** The primary lockup: emblem plus wordmark, 2.32:1. */
+/** The primary lockup: emblem plus wordmark, 2.86:1 once trimmed to its ink. */
 export function EseLogo({ className, label, priority }: MarkProps) {
   return (
     <span className={`ese-mark ese-mark--lockup ${className ?? ""}`.trim()}>
@@ -40,7 +40,7 @@ export function EseLogo({ className, label, priority }: MarkProps) {
         src="/brand/ese-logo-light.webp"
         alt={label ?? ""}
         width={900}
-        height={388}
+        height={315}
         priority={priority}
         aria-hidden={label ? undefined : true}
       />
@@ -49,7 +49,7 @@ export function EseLogo({ className, label, priority }: MarkProps) {
         src="/brand/ese-logo-dark.webp"
         alt=""
         width={900}
-        height={388}
+        height={315}
         priority={priority}
         aria-hidden
       />
@@ -68,8 +68,8 @@ export function EseEmblem({ className, label, priority }: MarkProps) {
         className="ese-mark__art ese-mark__art--on-dark"
         src="/brand/ese-emblem-light.webp"
         alt={label ?? ""}
-        width={560}
-        height={560}
+        width={520}
+        height={517}
         priority={priority}
         aria-hidden={label ? undefined : true}
       />
@@ -77,8 +77,8 @@ export function EseEmblem({ className, label, priority }: MarkProps) {
         className="ese-mark__art ese-mark__art--on-light"
         src="/brand/ese-emblem-dark.webp"
         alt=""
-        width={560}
-        height={560}
+        width={520}
+        height={517}
         priority={priority}
         aria-hidden
       />

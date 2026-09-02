@@ -911,9 +911,16 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
  * width and the image filled it, which is why the logo came out enormous.
  *
  * With `aspect-ratio` here, whichever axis the caller sets resolves the other,
- * and every existing size rule works untouched. */
-.ese-mark--lockup { aspect-ratio: 900 / 388; }
-.ese-mark--emblem { aspect-ratio: 1; }
+ * and every existing size rule works untouched.
+ *
+ * The ratios are the TRIMMED artwork's. As supplied, the files carried 12.8%
+ * transparent margin top and bottom, so the mark filled only 74.4% of its own
+ * box — at `height: 2.9rem` you saw a 2.16rem logo and it read as too small for
+ * the bar. The assets are cropped to their alpha bounds now, so the box is the
+ * mark: same rule, a third more logo. Both tones of a pair share one crop, so
+ * they stay registered with each other. */
+.ese-mark--lockup { aspect-ratio: 900 / 315; }
+.ese-mark--emblem { aspect-ratio: 520 / 517; }
 
 .ese-mark__art {
   display: block;

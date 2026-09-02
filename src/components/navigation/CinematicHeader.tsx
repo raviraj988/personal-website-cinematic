@@ -69,12 +69,11 @@ export function CinematicHeader({ solid = false }: { solid?: boolean }) {
           href="/"
           aria-label={`${site.name}, home`}
         >
-          {/* The real primary logo, drawn in `currentColor` — so it crosses from
-              near-white over the hero to ink in the solid state on the same
-              transition the nav links already use, with no second asset.
-
-              This replaced a serif "ESE" over the full name as a subtitle, which
-              was standing in for a logo the repository did not yet have. */}
+          {/* ESE's own primary lockup. Both tones ship and CSS picks one off
+              `--solid` on the header above: the light-on-dark version over the
+              hero, the dark-on-light version once the bar turns solid. It used
+              to be traced SVG in `currentColor`, which could recolour itself but
+              could not reproduce the gradients in the real artwork. */}
           <EseLogo className="cinematic-header__logo" />
         </a>
 
