@@ -57,7 +57,6 @@ export function PersonCard({
     <article className="person-card" style={{ "--i": index } as CSSProperties} data-glow-card>
       {/* The gradient band, matching the statement cards on the dark sections so
           the two card families read as one system. */}
-      <span className="person-card__band" aria-hidden="true" />
       {person.portrait ? (
         <div className="person-card__media photo-frame">
           <ParallaxImage

@@ -5,6 +5,18 @@ type AmbientLayerProps = {
   blooms?: 0 | 1 | 2;
   /** Drifting botanical line marks. */
   marks?: boolean;
+  /**
+   * A topographic contour field, weighted to the right of the section.
+   *
+   * For sections whose content does not fill their width — `people` lays out
+   * for four columns and has two — where the remainder otherwise reads as a
+   * section that failed to finish rather than as space.
+   *
+   * Contours rather than an abstract pattern: cumulative-impact mapping, water
+   * systems and air-quality work are what ESE does, so the reference is to the
+   * subject rather than to decoration in general.
+   */
+  contours?: boolean;
   /** Adds an inner vignette; suits the dark sections. */
   vignette?: boolean;
   /** Chooses the ink used by every layer. */
@@ -25,6 +37,7 @@ type AmbientLayerProps = {
 export function AmbientLayer({
   blooms = 0,
   marks = false,
+  contours = false,
   vignette = false,
   tone = "light",
 }: AmbientLayerProps) {
@@ -39,6 +52,8 @@ export function AmbientLayer({
           <BotanicalMark className="ambient__mark ambient__mark--b" />
         </>
       ) : null}
+
+      {contours ? <div className="ambient__contours" /> : null}
 
       {vignette ? <div className="ambient__vignette" /> : null}
     </div>
