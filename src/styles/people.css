@@ -125,8 +125,9 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
 .person-card__media--monogram span {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 3.5rem);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   color: var(--monogram-ink, var(--color-slate));
+  text-transform: uppercase;
 }
 
 /* Column, matching `.service-card__body`, so the CTA can be pinned to the foot
@@ -146,7 +147,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
      reads as elegance. At card size it reads as faint, so this steps up. */
   font-weight: 400;
   line-height: 1.12;
-  letter-spacing: -0.012em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .person-card__role {
@@ -236,6 +238,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
   font-family: var(--font-display);
   font-size: var(--type-h3);
   line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* As a section of its own the heading is an h2 on the page's own scale, matching
@@ -246,6 +250,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
   font-size: var(--type-h2);
   line-height: 1.05;
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .people-group__lede {

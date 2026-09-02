@@ -208,7 +208,7 @@
   font-family: var(--font-label);
   font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -420,7 +420,7 @@
   font-family: var(--font-label);
   margin-top: 0.4rem;
   color: rgba(229, 232, 235, 0.62);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -436,7 +436,7 @@
   font-family: var(--font-label);
   padding-bottom: 0.2rem;
   border-bottom: 1px solid transparent;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   transition: border-color var(--motion-ui) ease;
 }

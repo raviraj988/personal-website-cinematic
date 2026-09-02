@@ -83,11 +83,20 @@ and Dongra Script is the one outstanding thing between this and a faithful
 implementation.**
 
 The site used to set headlines in a serif and body in a sans — the kit's
-arrangement exactly inverted. That is fixed. One deliberate departure remains:
-seven landing-page headings are whole sentences (the mission statement is 218
-characters), and those take the Body role at heading scale rather than caps,
-because capitals destroy the word-shape cue long text is read by. See the
-comment on `#hero-title` in `globals.css`; the real fix is shorter headings.
+arrangement exactly inverted. That is fixed, with no exceptions: the kit
+describes two all-caps roles and the site now has exactly two treatments, one
+per role, applied to all 68 rules that carry either.
+
+    HEADLINE     --font-display  caps  letter-spacing 0.01em
+    SUB-HEADING  --font-label    caps  letter-spacing var(--track-label)
+
+Nothing opts out. Anything that needs to read as sentence case is body copy and
+belongs in the Body role, not in a heading with a local override.
+
+Seven landing headings are whole sentences — the mission statement is 218
+characters — and they are set in caps like every other heading. Capitals do slow
+long text down, so the fix is to shorten those headings rather than to give them
+their own type treatment.
 
 ## The walkthrough
 

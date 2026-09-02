@@ -109,7 +109,7 @@ ol {
   list-style: none;
 }
 
-/* HEADLINE — Morvi, all caps, per the kit.
+/* HEADLINE — Morvi, all caps, per the kit. The only heading treatment there is.
  *
  * `text-transform` is here rather than on each heading because the kit states it
  * as a property of the face's role, not of any one component.
@@ -122,63 +122,16 @@ ol {
  * two lines is larger than the number suggests. */
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   text-wrap: balance;
-}
-
-/* Article structure is not a brand headline. In-post subheads stay sentence case
-   — a 40-word `<h3>` set in caps inside running prose is a different thing from
-   a section headline, and the kit's "Headline" role is the latter. */
-.post-body h2,
-.post-body h3,
-.post-body h4 {
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-/* STATEMENTS ARE NOT HEADLINES EITHER, and this is the one place the kit cannot
-   be applied literally.
- *
- * The kit's specimen for the headline role is the word "HEADLINE" — one word.
- * Seven of the landing page's headings are whole sentences:
- *
- *     mission-title        218 characters
- *     hero-title            94
- *     serve-title           76
- *     about-title           74
- *     network-title         70
- *     scholarship-title     59
- *     case-title            57
- *
- * A 218-character sentence set in a heavy condensed face in capitals is not a
- * more faithful reading of the kit, it is a misreading of what "headline" means:
- * caps destroy word-shape, which is exactly the cue long text is read by. So
- * these take the kit's BODY role at heading scale instead — still one of the
- * four faces, still the section's visual weight, and readable.
- *
- * Every other heading on the site IS short — the four remaining landing
- * headings run 11 to 48 characters, and every standalone page's `h1` is 48 or
- * under — so they all take the caps treatment above with nothing to correct.
- *
- * The real fix is shorter headings; this rule is what to do until there are
- * some. Delete an id from the list as its heading is rewritten. */
-#hero-title,
-#about-title,
-#network-title,
-#mission-title,
-#serve-title,
-#case-title,
-#scholarship-title {
-  font-family: var(--font-body);
-  font-weight: 300;
-  line-height: 1.12;
-  letter-spacing: -0.015em;
-  text-transform: none;
 }
 
 p {
@@ -856,7 +809,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   padding-block: 0.6rem;
   font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -896,7 +849,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   font-family: var(--font-label);
   font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -909,7 +862,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   border: 1px solid currentColor;
   font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   white-space: nowrap;
   transition:
@@ -944,7 +897,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   font-family: var(--font-label);
   font-size: 0.8rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -1055,6 +1008,8 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
     opacity 600ms var(--ease-standard) calc(var(--menu-index) * 80ms + 140ms),
     transform 600ms var(--ease-out-expo) calc(var(--menu-index) * 80ms + 140ms),
     color var(--motion-ui) ease;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .fullscreen-menu--open nav a {
@@ -1198,7 +1153,10 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   border-bottom: 1px solid rgba(8, 27, 35, 0.24);
 }
 .approach-editorial li > span { color: var(--color-accent); font-size: 0.72rem; letter-spacing: 0.08em; }
-.approach-editorial li h3 { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; }
+.approach-editorial li h3 { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
 .approach-editorial li p { max-width: 45ch; margin-top: 0.55rem; color: var(--color-text-muted); font-size: 0.92rem; }
 
 .selected-work-grid {
@@ -1380,7 +1338,7 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
 }
 .cinematic-footer__bottom > div:first-child > p:last-child { margin-top: 0.5rem; color: rgba(229, 232, 235, 0.65); }
 .cinematic-footer__bottom nav {
-  font-family: var(--font-label); display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem 2rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  font-family: var(--font-label); display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0.5rem 2rem; text-transform: uppercase; letter-spacing: var(--track-label); }
 .cinematic-footer__bottom nav a:hover { color: var(--color-accent-light); }
 .cinematic-footer__legal { justify-self: end; text-align: right; color: rgba(229, 232, 235, 0.55); }
 .cinematic-footer__legal a { display: inline-block; margin-top: 0.75rem; color: var(--color-paper); }
@@ -1907,9 +1865,10 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   font-size: clamp(2.6rem, 5.4vw, 5.5rem);
   font-weight: 300;
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
   text-shadow: 0 2px 30px rgba(8, 27, 35, 0.18);
   text-wrap: balance;
+  text-transform: uppercase;
 }
 
 .lede-hero__lede {
@@ -1941,6 +1900,8 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .org-intro__copy p + p,
@@ -2138,7 +2099,8 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.12;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .service-card__body p {
@@ -2220,6 +2182,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-weight: 400;
   line-height: 1.2;
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* The rule, as an element so it can be drawn from one end. */
@@ -2368,6 +2332,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-size: 1.45rem;
   font-style: normal;
   line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .founder-card__attribution span {
@@ -2428,6 +2394,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* `:not(.section-label)` because the eyebrow is also a direct-child <p>. Without
@@ -2496,6 +2464,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .tools-list li p:not(.tools-list__status) {
@@ -2532,6 +2502,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   margin-top: 1.25rem;
   font-family: var(--font-display);
   font-size: var(--type-h2);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* `:not(.section-label)` because the eyebrow is also a direct-child <p>. Without
@@ -2558,6 +2530,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-size: var(--type-h3);
   font-weight: 300;
   line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .network-band__partner p {
@@ -2655,6 +2629,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-family: var(--font-display);
   font-size: var(--type-h2);
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .scholarship-band__inner p:not(.section-label) {
@@ -2717,6 +2693,8 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
   font-size: 1.32rem;
   font-weight: 300;
   line-height: 1.18;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .news-teaser__list li p:not(.news-teaser__meta) {

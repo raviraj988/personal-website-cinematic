@@ -44,6 +44,8 @@
 .admin-bar__brand span {
   font-family: var(--font-display);
   font-size: 1.25rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .admin-bar__brand small {
@@ -52,7 +54,7 @@
   color: var(--color-text-muted);
   font-size: 0.58rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -68,7 +70,7 @@
   border-bottom: 1px solid transparent;
   font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   transition: border-color var(--motion-fast) ease;
 }
@@ -146,7 +148,7 @@
   font-size: var(--type-meta);
   font-weight: 600;
   font-family: var(--font-label);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -161,7 +163,7 @@
   border: 1px solid currentColor;
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -196,7 +198,7 @@
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   transition:
     background-color var(--motion-fast) ease,
@@ -319,7 +321,7 @@
   color: var(--color-text-muted);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -369,15 +371,15 @@
   align-items: baseline;
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
+/* Sits inside `.admin-field label`, which is a sub-heading, so it takes that
+   role's case and tracking by inheritance rather than opting out of both. */
 .admin-required {
   color: var(--color-accent);
   font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: none;
 }
 
 .admin-field input[type="text"],
@@ -468,7 +470,7 @@
   padding-inline: 0.6rem;
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -547,7 +549,7 @@
   cursor: pointer;
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -837,7 +839,7 @@
   margin: 1.75rem 0;
   color: var(--color-text-muted);
   font-size: 0.75rem;
-  letter-spacing: var(--track-label, 0.1em);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 

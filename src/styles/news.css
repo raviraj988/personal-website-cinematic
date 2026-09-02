@@ -61,6 +61,8 @@
   font-size: 1.4rem;
   font-weight: 300;
   line-height: 1.16;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .newsletter-card__body > p {
@@ -87,6 +89,8 @@
   font-size: clamp(1.5rem, 2.6vw, 2.05rem);
   font-weight: 300;
   line-height: 1.12;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .newsletter-signup > p {
@@ -119,6 +123,7 @@
 }
 
 .newsletter-signup__form button {
+  font-family: var(--font-label);
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;

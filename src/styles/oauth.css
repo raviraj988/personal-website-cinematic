@@ -112,7 +112,7 @@
   margin: 0;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }

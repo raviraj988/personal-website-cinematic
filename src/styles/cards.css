@@ -135,6 +135,8 @@
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   line-height: 1.24;
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 /* Staggered arrival off the single parent reveal, the same mechanism the rest of
@@ -526,6 +528,8 @@ section.principle-band {
   font-weight: 300;
   line-height: 1.18;
   text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 @media (hover: hover) {
