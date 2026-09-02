@@ -2142,6 +2142,18 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   font-size: var(--type-h2);
 }
 
+/* The paragraph under section 04's heading. It had NO RULE AT ALL — the class
+   was on the markup and no stylesheet ever claimed it, so it inherited body
+   copy with zero margin and sat flush against the heading. That is the missing
+   padding. Same treatment as every other section lede. */
+.serve-band__intro {
+  max-width: none;
+  margin-top: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: var(--type-body-md);
+  line-height: 1.7;
+}
+
 /* The audience index.
  *
  * Six institutions, set as a table of contents rather than a bulleted list —
