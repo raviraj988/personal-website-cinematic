@@ -902,10 +902,25 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
   line-height: 0;
 }
 
+/* THE WRAPPER CARRIES THE ASPECT RATIO, and it has to.
+ *
+ * Callers size the mark the way they always have — `height: 2.9rem; width: auto`
+ * in the header, `width: min(13rem, 70%); height: auto` in the footer. That
+ * worked when the mark was an inline SVG, which has intrinsic proportions. A
+ * `<span>` wrapping an image does not: `width: auto` resolved to the full parent
+ * width and the image filled it, which is why the logo came out enormous.
+ *
+ * With `aspect-ratio` here, whichever axis the caller sets resolves the other,
+ * and every existing size rule works untouched. */
+.ese-mark--lockup { aspect-ratio: 900 / 388; }
+.ese-mark--emblem { aspect-ratio: 1; }
+
 .ese-mark__art {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .ese-mark__art--on-light { display: none; }
