@@ -888,6 +888,41 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
  * height in clear space above and below, which is roughly the exclusion zone the
  * brand walkthrough draws around it. `width: auto` lets the aspect ratio set the
  * 8.3rem it occupies in the 12rem column. */
+/* THE MARK.
+ *
+ * Two tones ship and CSS picks one, because the header changes ground under it:
+ * transparent over the hero, solid and light once the page scrolls. A runtime
+ * swap would flash; this one costs nothing.
+ *
+ * `--on-dark` is the default because every fixed use of the mark — the header
+ * over the hero, the footer — sits on the ink. Light grounds opt in. */
+.ese-mark {
+  display: block;
+  position: relative;
+  line-height: 0;
+}
+
+.ese-mark__art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ese-mark__art--on-light { display: none; }
+
+/* Light grounds: the dark-ink version of the mark. */
+.cinematic-header--solid .ese-mark__art--on-dark,
+.admin .ese-mark__art--on-dark,
+.admin-gate .ese-mark__art--on-dark,
+[data-scroll-theme="haze"] .ese-mark__art--on-dark,
+[data-scroll-theme="paper"] .ese-mark__art--on-dark { display: none; }
+
+.cinematic-header--solid .ese-mark__art--on-light,
+.admin .ese-mark__art--on-light,
+.admin-gate .ese-mark__art--on-light,
+[data-scroll-theme="haze"] .ese-mark__art--on-light,
+[data-scroll-theme="paper"] .ese-mark__art--on-light { display: block; }
+
 .cinematic-header__logo {
   height: 2.9rem;
   width: auto;
