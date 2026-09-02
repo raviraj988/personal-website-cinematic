@@ -643,7 +643,7 @@ export function EseLanding() {
                 secondary, which `--ghost` promised but never delivered: the
                 modifier was written here and never given a rule, so the two
                 buttons rendered identically. */}
-            <Link className="footer-button footer-button--ghost" href="/contact">
+            <Link className="footer-button" href="/contact">
               All the ways to reach us <Arrow />
             </Link>
           </div>

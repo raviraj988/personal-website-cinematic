@@ -1444,11 +1444,24 @@ html[data-motion="ready"] .reveal--rule:not([data-visible="true"])::before {
    -4rem top and bottom so its parallax travel never reveals an edge, and clipping
    only the horizontal axis would let it spill into the section above. */
 .cinematic-footer { position: relative; isolation: isolate; overflow: clip; padding: clamp(6rem, 11vw, 10rem) var(--gutter) 2rem; background: var(--color-ground-deep); color: var(--color-paper); }
+/* THE ROW THE TWO FOOTER BUTTONS SIT IN. Restore this if it ever disappears
+   again — it has now been deleted twice by edits to the `.footer-button` rules
+   that follow it, and without it the two buttons are inline-flex siblings with
+   nothing between them: JSX drops the newline between sibling elements, so they
+   render edge to edge. It wraps because side by side these labels are wider
+   than a phone. */
+.cinematic-footer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.25rem;
+  margin-top: 2.5rem;
+}
+
 /* The footer's two calls to action are buttons like any other. They used to be
    their own bordered system with a ghost variant; the site has one button now,
    so they take the same fill, radius and lift and keep only their own padding. */
-.footer-button,
-.footer-button--ghost {
+.footer-button {
   font-family: var(--font-label);
   position: relative;
   isolation: isolate;
