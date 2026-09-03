@@ -143,7 +143,7 @@
 
 .pinned-stack__number {
   display: block;
-  color: var(--label-color, var(--heading-navy));
+  color: var(--label-color, var(--label-terracotta));
   font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;

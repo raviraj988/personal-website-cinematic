@@ -154,7 +154,7 @@
 }
 
 .index-card__num {
-  color: var(--label-color, var(--heading-navy));
+  color: var(--label-color, var(--label-terracotta));
   font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;
@@ -326,7 +326,7 @@
 .known-for__index {
   flex: none;
   min-width: 1.6rem;
-  color: var(--heading-navy);
+  color: var(--label-terracotta);
   font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;

@@ -247,13 +247,25 @@ section[data-scroll-theme="paper"]:not([data-ink="own"]) {
   --heading-ink: var(--heading-navy);
   --ink-muted: var(--color-text-muted);
   --rule: var(--color-line);
-  --label-color: var(--heading-navy);
+  /* TERRACOTTA ON THE LIGHT GROUNDS TOO, so every eyebrow on the site is the
+     same colour — 05 reads like 06 rather than like a different system.
+     
+     This is a deliberate trade and the number should be on record: terracotta
+     measures 2.26:1 on the light ground and 2.53:1 on a card, against the 4.5:1
+     WCAG asks of text this size. It is visible, not compliant. No orange in the
+     kit does better — the eight offer only ink at 12.78:1 and navy at 7.33:1
+     above the bar, and neither is orange.
+     
+     The kit's own specimen sets its sub-heading in terracotta on white, so this
+     matches the sheet. Raise it back to navy on light grounds if compliance
+     wins over consistency. */
+  --label-color: var(--label-terracotta);
   color: var(--ink);
 }
 
 .section-label {
   font-family: var(--font-label);
-  color: var(--label-color, var(--heading-navy));
+  color: var(--label-color, var(--label-terracotta));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);
@@ -2352,7 +2364,7 @@ footer[data-scroll-theme="navy"] .photo-frame--plate {
   right: 1rem;
   bottom: 0.75rem;
   z-index: 4;
-  color: var(--label-color, var(--heading-navy));
+  color: var(--label-color, var(--label-terracotta));
   font-family: var(--font-label);
   font-size: 1.5rem;
   opacity: 0.85;
@@ -2461,7 +2473,7 @@ html[data-motion="ready"] .serve-index:not([data-visible="true"]) li {
 }
 
 .serve-index__num {
-  color: var(--label-color, var(--heading-navy));
+  color: var(--label-color, var(--label-terracotta));
   font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;

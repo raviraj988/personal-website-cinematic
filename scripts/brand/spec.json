@@ -92,5 +92,15 @@
   },
   "hueTolerance": 0,
   "hueToleranceNote": "ZERO. Only the eight, exactly. A tone between two of them must be one of them at partial alpha over another \u2014 declared as a kit colour with an alpha \u2014 never a new hex. Darkened or lightened variants are not permitted, however close to a kit hue they sit.",
-  "allowedExceptionsNote": "An exception is granted to a SELECTOR, not to a colour. #ffffff is allowed on Google's button; it is not allowed anywhere else, which is the whole point of the kit's neutral rule."
+  "allowedExceptionsNote": "An exception is granted to a SELECTOR, not to a colour. #ffffff is allowed on Google's button; it is not allowed anywhere else, which is the whole point of the kit's neutral rule.",
+  "accentUsage": {
+    "_note": "Which grounds each accent token is actually used as TEXT on. Measuring an accent against a ground it never appears on reports a failure nobody can see \u2014 navy on the ink ground is 1.74:1 and also never happens, because headings there take the paper neutral.",
+    "--label-terracotta": [
+      "light",
+      "dark"
+    ],
+    "--heading-navy": [
+      "light"
+    ]
+  }
 }

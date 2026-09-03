@@ -200,6 +200,46 @@ check("contrast: text on every declared ground clears 4.5:1", (fail) => {
   }
 });
 
+/* 6b — ACCENT colours as text on the grounds they sit on.
+ *
+ * Check 6 only measured the ink tokens, so it reported 4.5:1 everywhere while
+ * the eyebrow sat at 2.26:1 — a pass that was true of the thing it tested and
+ * false of the page. An accent used as TEXT has to be measured like text.
+ *
+ * A WARNING rather than a failure. The kit's own specimen sets its sub-heading
+ * in terracotta on white, and terracotta clears 4.5:1 on none of the light
+ * grounds — no orange in the eight does. That is a standing trade between the
+ * kit's look and WCAG, and it is the owner's to make; the lint's job is to keep
+ * the number visible every run rather than to block on it or hide it. */
+warn("contrast: accent colours used as text, measured on their grounds", (fail) => {
+  const grounds = [];
+  for (const m of ALL.matchAll(/html\[data-scroll-theme="([\w-]+)"\][^{]*\{\s*--page-background:\s*([^;}]+)/g))
+    grounds.push({ name: m[1], hex: coloursIn(resolve(m[2]))[0]?.hex });
+  // the light grounds carry a constant ink wash laid over them on `body`
+  const wash = /background-image:\s*linear-gradient\(rgba\(8,\s*27,\s*35,\s*([\d.]+)/.exec(ALL);
+  const a = wash ? Number(wash[1]) : 0;
+  const over = (fg, bg, alpha) =>
+    toHex(hex(fg).map((c, i) => alpha * c + (1 - alpha) * hex(bg)[i]));
+
+  for (const [token, usedOn] of Object.entries(SPEC.accentUsage ?? {})) {
+    if (token.startsWith("_")) continue;
+    const raw = tokens.get(token);
+    if (!raw) continue;
+    const c = coloursIn(resolve(raw))[0];
+    if (!c) continue;
+    for (const g of grounds) {
+      if (!g.hex) continue;
+      const light = lum(hex(g.hex)) > 0.2;
+      // only the pairings that actually occur — see `accentUsage` in the spec
+      if (!usedOn.includes(light ? "light" : "dark")) continue;
+      const ground = light && a ? over("#081b23", g.hex, a) : g.hex;
+      const ratio = contrast(c.hex, ground);
+      if (ratio < SPEC.contrast.text)
+        fail(`${token} on "${g.name}" (${ground}): ${ratio.toFixed(2)}:1, under ${SPEC.contrast.text}`);
+    }
+  }
+});
+
 /* 7 — the bug this project keeps hitting: a class in markup with no rule.
  *
  * A WARNING, not a failure. A class with no rule of its own is often fine: it
