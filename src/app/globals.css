@@ -669,6 +669,30 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 }
 
 /* Inner vignette — settles the edges of the dark sections. */
+/* The emblem as a watermark.
+ *
+ * Barely visible, and that is the whole specification. It is ESE's mark sitting
+ * in the ground, not a second logo placement — at 3.5% on a light ground it
+ * reads as texture, and anything stronger turns a background into a statement.
+ *
+ * Bled off the right edge so it is a fragment rather than a centred badge, and
+ * hidden below 900px where there is no spare width for it to occupy without
+ * sitting under the content. */
+.ambient__emblem {
+  position: absolute;
+  top: 50%;
+  right: -8%;
+  width: clamp(18rem, 38vw, 34rem);
+  transform: translateY(-50%);
+  opacity: 0.035;
+}
+
+.ambient--dark .ambient__emblem { opacity: 0.05; }
+
+@media (max-width: 900px) {
+  .ambient__emblem { display: none; }
+}
+
 /* The watershed.
  *
  * Sits in the space a section's content leaves, weighted to the right and

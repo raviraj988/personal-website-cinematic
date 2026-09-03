@@ -81,8 +81,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  padding: clamp(1rem, 1.8vw, 1.35rem);
-  border: 1px solid var(--color-line);
+  padding: clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--card-hairline);
   border-radius: var(--card-radius);
   background: var(--card-sheen);
   box-shadow: var(--shadow-card);
@@ -176,7 +176,7 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .audience-cards li 
 
 .tools-index .tools-list li {
   padding: clamp(1.5rem, 2.6vw, 2rem);
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--card-hairline);
   border-radius: var(--card-radius);
   background: var(--card-sheen);
   box-shadow: var(--shadow-card);
@@ -485,8 +485,8 @@ section.principle-band {
    * the size the grid gave them and only the height responds. */
   min-width: 0;
   overflow: hidden;
-  padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.15rem, 2.2vw, 1.6rem);
-  border: 1px solid var(--color-line);
+  padding: clamp(1.6rem, 2.8vw, 2.15rem) clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--card-hairline);
   border-radius: var(--card-radius);
   background: var(--card-sheen);
   transition:
@@ -660,9 +660,9 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 0.8rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.85rem;
   /* Navy at 9% became ink at 9% — same wash, one of the two colours. */
   background: rgba(8, 27, 35, 0.09);
   color: var(--color-accent);

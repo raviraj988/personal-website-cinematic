@@ -245,7 +245,7 @@
    * stay concentric — matched radii make the photograph look like it is bulging
    * past the card's own corner. The gap matters more at 14px than it did at 6px,
    * where both were small enough for the error to hide. */
-  --card-radius: 14px;
+  --card-radius: 18px;
   --card-radius-inner: calc(var(--card-radius) - 1px);
   --frame-shadow:
     0 1px 2px rgba(8, 27, 35, 0.07),
@@ -470,8 +470,20 @@
    * Two layers each, and the lifted one adds a third. A single large blur reads
    * as a smudge; a tight contact shadow plus a wide ambient one is what makes a
    * surface look like it is resting on something. */
-  --shadow-card: 0 1px 1px rgba(8, 27, 35, 0.03),
-    0 3px 10px -6px rgba(8, 27, 35, 0.08);
+  /* A LARGER, SOFTER SHADOW, and a hairline that has stopped doing the work.
+     The card used to be read by a 1px border at 14% ink with a tight 3px
+     shadow, which reads as a bordered panel. The reference this was matched
+     against reads as a card resting on the page: almost no edge, and a wide
+     diffuse shadow underneath. Three stops rather than two — a tight contact
+     shadow, a mid, and a wide ambient — which is what stops a big blur looking
+     like a grey smudge. */
+  --shadow-card:
+    0 1px 2px rgba(8, 27, 35, 0.04),
+    0 6px 12px -6px rgba(8, 27, 35, 0.08),
+    0 18px 36px -18px rgba(8, 27, 35, 0.14);
+  /* The card edge, separate from `--color-line` so rules and dividers elsewhere
+     keep their weight. */
+  --card-hairline: rgba(8, 27, 35, 0.07);
   --shadow-card-lift: 0 2px 3px rgba(8, 27, 35, 0.05),
     0 18px 34px -16px rgba(8, 27, 35, 0.2),
     0 44px 64px -44px rgba(8, 27, 35, 0.16);

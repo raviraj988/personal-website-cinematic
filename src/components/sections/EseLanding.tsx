@@ -395,7 +395,7 @@ export function EseLanding() {
 
       {/* -------------------------------------------------------- services */}
       <section id="services" className="service-index section-shell" aria-labelledby="services-title" data-scroll-theme="haze">
-        <AmbientLayer blooms={2} marks />
+        <AmbientLayer blooms={2} marks emblem />
         <Reveal className="section-heading-row" variant="rule">
           <p className="section-label">05 — {ese.services.eyebrow}</p>
           <ScrollWords as="h2" id="services-title" text={ese.services.heading} />
@@ -455,7 +455,7 @@ export function EseLanding() {
 
       {/* ------------------------------------------------------ case study */}
       <section className="case-study" aria-labelledby="case-title" data-scroll-theme="dusk">
-        <AmbientLayer blooms={1} vignette tone="dark" />
+        <AmbientLayer blooms={1} vignette emblem tone="dark" />
         <div className="case-study__inner">
           <Reveal className="case-study__media" variant="fade">
             <figure className="photo-frame photo-frame--plate">
