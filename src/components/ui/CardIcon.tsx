@@ -6,7 +6,11 @@ type IconName =
   | "seal"
   | "flask"
   | "return"
-  | "ask";
+  | "ask"
+  | "consortium"
+  | "enterprise"
+  | "institution"
+  | "households";
 
 /**
  * The small line icons on the statement cards.
@@ -21,6 +25,42 @@ type IconName =
  * the glyph would just repeat it.
  */
 const PATHS: Record<IconName, React.ReactNode> = {
+  /* Three bodies overlapping — a consortium is separate nations sharing a
+     boundary, not one body with branches. */
+  consortium: (
+    <>
+      <circle cx="8.5" cy="9" r="4.6" />
+      <circle cx="15.5" cy="9" r="4.6" />
+      <circle cx="12" cy="15.5" r="4.6" />
+    </>
+  ),
+  /* Rising measures on a baseline — an enterprise, drawn as what it does rather
+     than as a building, since a tribal enterprise is not always premises. */
+  enterprise: (
+    <>
+      <path d="M3 20.5h18" />
+      <path d="M6.5 20.5v-5M12 20.5v-9.5M17.5 20.5v-14" />
+      <path d="M14.6 6.2h3.4v3.4" />
+    </>
+  ),
+  /* Pediment and columns — the one shape that reads as a public agency at
+     16px without a label. */
+  institution: (
+    <>
+      <path d="M3.2 9.2 12 4l8.8 5.2" />
+      <path d="M4.5 20.5h15" />
+      <path d="M6.8 11.4v7.2M12 11.4v7.2M17.2 11.4v7.2" />
+    </>
+  ),
+  /* Roofs side by side — a community read as the households in it. */
+  households: (
+    <>
+      <path d="M2.5 12.2 7 8.4l4.5 3.8" />
+      <path d="M4.2 13.6v6.2h5.6v-6.2" />
+      <path d="M12.8 14.6 16.5 11.4l4 3.2" />
+      <path d="M14.3 15.8v4h4.4v-4" />
+    </>
+  ),
   /* Stacked planes — accumulated expertise. */
   layers: (
     <>

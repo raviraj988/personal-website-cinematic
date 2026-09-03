@@ -121,15 +121,6 @@
   }
 }
 
-.audience-card__num {
-  color: var(--label-color, var(--heading-navy));
-  font-family: var(--font-label);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-label);
-}
-
 .audience-card__name {
   font-family: var(--font-display);
   font-size: clamp(1rem, 1.3vw, 1.15rem);
@@ -633,7 +624,9 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 /* The icon tile inverts with the card: a light wash instead of a navy one, and
    the glyph in gold, which reads at 7.4:1 on the card's lightest stop. */
 [data-scroll-theme="dusk"] .statement-card__tile,
-[data-scroll-theme="navy"] .statement-card__tile {
+[data-scroll-theme="dusk"] .audience-card__tile,
+[data-scroll-theme="navy"] .statement-card__tile,
+[data-scroll-theme="navy"] .audience-card__tile {
   background: rgba(229, 232, 235, 0.1);
   color: var(--color-accent-light);
 }
@@ -655,8 +648,13 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
  * Those were the emblem's own — gold, sky, olive — and they are chosen to glow on
  * the deep ink: on a pale card gold measures 1.42:1 and olive 2.71:1, both under
  * the 3:1 a non-text mark needs. Navy is the only one of the kit's colours that
- * reads on this surface, which is why it is also the accent and the ring. */
-.statement-card__tile {
+ * reads on this surface, which is why it is also the accent and the ring.
+
+   `.audience-card__tile` shares it outright: the two card families sit on the
+   same grounds and a second tile drawn slightly differently would read as an
+   inconsistency, not a variation. */
+.statement-card__tile,
+.audience-card__tile {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -677,14 +675,16 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .statement-cards li
 }
 
 @media (hover: hover) {
-  .statement-cards li:hover .statement-card__tile {
+  .statement-cards li:hover .statement-card__tile,
+  .audience-cards li:hover .audience-card__tile {
     background: rgba(8, 27, 35, 0.16);
     transform: translateY(-0.1rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .statement-card__tile { transition: none !important; transform: none !important; }
+  .statement-card__tile,
+  .audience-card__tile { transition: none !important; transform: none !important; }
 }
 
 /* ------------------------------ clearance between a card group and its button

@@ -426,34 +426,48 @@ export const ese = {
      */
     intro:
       "Environmental responsibility rarely sits with a single body. ESE works across the governments, agencies, enterprises and community organizations that share the same land, water and air — and with the communities living with the results.",
+    /* Each audience carries its own icon rather than a position number.
+       `seal` for Native Nations governments because a seal is sovereignty;
+       `consortium` as separate bodies overlapping rather than one with
+       branches; `enterprise` drawn as rising measures, since a tribal
+       enterprise is not always premises; `institution` because a pediment and
+       columns is the one shape that reads as a public agency without a label;
+       `households` for a community read as the homes in it; and `network` for
+       community-based organizations, which is what they are. */
     audiences: [
       {
         name: "Native Nations governments",
+        icon: "seal",
         description:
           "Tribal governments exercising environmental authority over their own lands.",
       },
       {
         name: "Tribal consortia",
+        icon: "consortium",
         description:
           "Groups of Tribes working together on shared environmental priorities.",
       },
       {
         name: "Tribal enterprises",
+        icon: "enterprise",
         description:
           "Tribally owned operations balancing commercial activity with environmental responsibility.",
       },
       {
         name: "Federal and state agencies and grant programs",
+        icon: "institution",
         description:
           "Public bodies administering environmental programs and the funding behind them.",
       },
       {
         name: "Individual communities",
+        icon: "households",
         description:
           "Neighborhoods and towns living with environmental conditions that affect daily life.",
       },
       {
         name: "Community-based organizations",
+        icon: "network",
         description:
           "Local organizations advocating for the places and people they belong to.",
       },

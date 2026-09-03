@@ -368,8 +368,12 @@ export function EseLanding() {
             <ol>
               {ese.whoWeServe.audiences.map((audience, index) => (
                 <li key={audience.name} style={{ "--i": index } as CSSProperties} data-glow-card>
-                  <span className="audience-card__num" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+                  {/* An icon rather than the card's position in the list. The
+                      number told you where you were in six items you can already
+                      see; the glyph says which constituency this is. Same tile
+                      the statement cards use, so the two families read as one. */}
+                  <span className="audience-card__tile" aria-hidden="true">
+                    <CardIcon name={audience.icon as IconName} />
                   </span>
                   <span className="audience-card__name">{audience.name}</span>
                   <span className="glow-card__desc">
