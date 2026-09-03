@@ -125,6 +125,11 @@ h3,
 h4,
 h5,
 h6 {
+  /* Navy on the light grounds, the paper neutral on the dark ones. Themed
+     alongside `--ink` in the blocks below, and defaulting to `inherit` so a
+     context nobody themed keeps whatever ink it already had rather than
+     rendering navy on a dark ground at 1.74:1. */
+  color: var(--heading-ink, inherit);
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 0.98;
@@ -211,6 +216,7 @@ section[data-scroll-theme="navy"]:not([data-ink="own"]),
 footer[data-scroll-theme="dusk"]:not([data-ink="own"]),
 footer[data-scroll-theme="navy"]:not([data-ink="own"]) {
   --ink: var(--color-paper);
+  --heading-ink: var(--color-paper);
   --ink-muted: var(--color-muted-light);
   --rule: var(--color-line-dark);
   --label-color: var(--label-terracotta);
@@ -220,15 +226,16 @@ footer[data-scroll-theme="navy"]:not([data-ink="own"]) {
 section[data-scroll-theme="haze"]:not([data-ink="own"]),
 section[data-scroll-theme="paper"]:not([data-ink="own"]) {
   --ink: var(--color-ink);
+  --heading-ink: var(--heading-navy);
   --ink-muted: var(--color-text-muted);
   --rule: var(--color-line);
-  --label-color: var(--label-terracotta-deep);
+  --label-color: var(--heading-navy);
   color: var(--ink);
 }
 
 .section-label {
   font-family: var(--font-label);
-  color: var(--label-color, var(--label-terracotta-deep));
+  color: var(--label-color, var(--heading-navy));
   font-size: var(--type-meta);
   font-weight: 500;
   letter-spacing: var(--track-label);

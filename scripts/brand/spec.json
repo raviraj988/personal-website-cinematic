@@ -88,15 +88,9 @@
       "selectors": [
         "serp-preview"
       ]
-    },
-    "#000000": {
-      "reason": "The opening curtain. Not one of the site's surfaces \u2014 it is what covers the viewport before the site is there, for under a second, and the kit's darkest neutral reads as a very dark blue rather than as absence.",
-      "selectors": [
-        "loading-cover__half"
-      ]
     }
   },
-  "hueTolerance": 15,
-  "hueToleranceNote": "A derived tint or shade is allowed if its hue is within this many degrees of a kit colour. Greys along the ink/navy axis and alpha compositions of the two neutrals are the intended use.",
+  "hueTolerance": 0,
+  "hueToleranceNote": "ZERO. Only the eight, exactly. A tone between two of them must be one of them at partial alpha over another \u2014 declared as a kit colour with an alpha \u2014 never a new hex. Darkened or lightened variants are not permitted, however close to a kit hue they sit.",
   "allowedExceptionsNote": "An exception is granted to a SELECTOR, not to a colour. #ffffff is allowed on Google's button; it is not allowed anywhere else, which is the whole point of the kit's neutral rule."
 }

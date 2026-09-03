@@ -55,6 +55,9 @@
 /* ------------------------------------------------------------- the body */
 
 .page-body {
+  /* A light ground, but not a `section[data-scroll-theme]`, so it does not pick
+     the heading colour up from the theme block. */
+  --heading-ink: var(--heading-navy);
   padding: clamp(3.5rem, 8vw, 6rem) var(--gutter);
 }
 
@@ -321,7 +324,7 @@
 .known-for__index {
   flex: none;
   min-width: 1.6rem;
-  color: var(--label-terracotta-deep);
+  color: var(--heading-navy);
   font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;

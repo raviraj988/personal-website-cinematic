@@ -102,10 +102,21 @@
    * Gold carries the buttons with ink on top — 10.10:1, the strongest pairing
    * the palette offers after the two neutrals themselves, and it works on both
    * grounds, so one button serves the whole site. */
+  /* TERRACOTTA IS A DARK-GROUND COLOUR. 5.66:1 on the ink, 2.53:1 on the paper
+     — so it carries the eyebrow on the dark grounds and nothing on the light
+     ones, where NAVY does the job at 8.23:1. Both are kit colours. There is no
+     darkened terracotta: the kit is eight colours, and a ninth mixed to pass a
+     contrast check is not one of them.
+
+     Same for the accent. The kit sets it in olive; olive is 2.71:1 on paper, so
+     the quote's TEXT is navy and the olive is the rule beside it, which carries
+     no reading load. */
   --label-terracotta: #c98150;
-  --label-terracotta-deep: #854e29;
   --button-gold: #dec26a;
-  --button-gold-lift: #e8d089;
+  /* The hover does NOT change colour. There is no lighter gold in the kit, and
+     mixing one would be a ninth colour — the 2px lift, the shadow, the sheen and
+     the arrow carry the state between them. */
+  --button-gold-lift: var(--button-gold);
 
   /* Secondary text — the ink and the paper at reduced alpha over each other, not
      separate greys. Both are measured against the ground they sit on, with
