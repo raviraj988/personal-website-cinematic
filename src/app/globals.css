@@ -689,6 +689,25 @@ html[data-motion="ready"] .reveal--line:not([data-visible="true"]) img {
 
 .ambient--dark .ambient__emblem { opacity: 0.05; }
 
+/* The wide placement, for a section that already carries another mark.
+ *
+ * Section 03 has the watershed in its top-right, where the grid runs out. A
+ * second mark in that corner is mush, so this one goes very large and sits low
+ * and left of it — under the cards rather than beside them — and drops to 2.5%,
+ * because a mark this size at the same opacity is no longer a watermark.
+ *
+ * Bled off the bottom so what shows is the shoulder of the shield, not a badge
+ * sitting in the corner. */
+.ambient__emblem--wide {
+  top: auto;
+  bottom: -22%;
+  right: auto;
+  left: 4%;
+  width: clamp(24rem, 52vw, 46rem);
+  transform: none;
+  opacity: 0.025;
+}
+
 @media (max-width: 900px) {
   .ambient__emblem { display: none; }
 }

@@ -23,7 +23,7 @@ type AmbientLayerProps = {
    * this size and opacity it reads as texture in the ground rather than as the
    * mark being shown twice on one page.
    */
-  emblem?: boolean;
+  emblem?: boolean | "wide";
   /** Adds an inner vignette; suits the dark sections. */
   vignette?: boolean;
   /** Chooses the ink used by every layer. */
@@ -62,7 +62,7 @@ export function AmbientLayer({
       ) : null}
 
       {emblem ? (
-        <div className="ambient__emblem">
+        <div className={`ambient__emblem${emblem === "wide" ? " ambient__emblem--wide" : ""}`}>
           <EseEmblem />
         </div>
       ) : null}
