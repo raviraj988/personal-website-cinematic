@@ -253,6 +253,44 @@ check("brand: the mark ships as artwork, at the declared ratio", (fail) => {
     if (!ratio.test(ALL)) fail(`.ese-mark${cls} does not declare the trimmed artwork's ratio`);
 });
 
+/* 10 — a `var()` that resolves to nothing.
+ *
+ * THIS SHIPPED. `--heading-ink: var(--heading-navy)` went to production with
+ * `--heading-navy` never defined, because the edit that removed two derived
+ * shades spliced through the line that defined it. The rule parsed, the build
+ * passed, the page rendered — and every heading on a light ground silently kept
+ * the colour it had. A custom property that resolves to nothing fails silently
+ * by design, which is exactly why it needs a check.
+ *
+ * Variables set from JavaScript are declared here rather than found, because
+ * they legitimately never appear in a stylesheet. Anything else must either be
+ * defined in CSS or carry a fallback. */
+const RUNTIME_VARS = new Set([
+  "--i", "--glow", "--glow-x", "--glow-y", "--reveal-delay", "--parallax-y",
+  "--scroll-scale", "--page-progress", "--panel-count", "--menu-index",
+  "--edge-colour", "--card-border", "--card-ground", "--card-ink", "--card-meta",
+  "--card-muted",
+  // next/font writes these onto <html> through the loader's `.variable` class,
+  // so they are real at runtime and absent from every stylesheet by design.
+  "--font-anton", "--font-montserrat", "--font-newsreader", "--font-caveat",
+]);
+
+check("css: no var() resolves to nothing", (fail) => {
+  const defined = new Set([...ALL.matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]));
+  const seen = new Set();
+  for (const { file, selector, body } of rules) {
+    // `var(--x, fallback)` is safe even when --x is undefined; `var(--x)` is not
+    for (const m of body.matchAll(/var\(\s*(--[\w-]+)\s*\)/g)) {
+      const name = m[1];
+      if (defined.has(name) || RUNTIME_VARS.has(name)) continue;
+      const key = name + selector;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      fail(`${file}  ${selector.slice(0, 44)}  var(${name}) — never defined, no fallback`);
+    }
+  }
+});
+
 /* ---------------------------------------------------------------- report */
 
 const pad = (s, n) => s + " ".repeat(Math.max(0, n - s.length));

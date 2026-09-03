@@ -112,6 +112,15 @@
      the quote's TEXT is navy and the olive is the rule beside it, which carries
      no reading load. */
   --label-terracotta: #c98150;
+
+  /* THE HEADLINE COLOUR, and it is the kit's navy — measured off the kit's own
+     specimen, not read by eye. The word "HEADLINE" samples #2c4553 in its solid
+     core: 1.4 away from #2b4552 and 68.7 from the ink.
+
+     8.23:1 on the light grounds. On the dark ones navy is 1.74:1, so those keep
+     the paper neutral — see `--heading-ink`, themed beside `--ink`. */
+  --heading-navy: #2b4552;
+
   --button-gold: #dec26a;
   /* The hover does NOT change colour. There is no lighter gold in the kit, and
      mixing one would be a ninth colour — the 2px lift, the shadow, the sheen and
