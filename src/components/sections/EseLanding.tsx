@@ -647,8 +647,6 @@ export function EseLanding() {
               All the ways to reach us <Arrow />
             </Link>
           </div>
-          {/* TODO(ese): replace with the real contact address before launch. */}
-          <small>Placeholder address — replace with ESE&apos;s approved contact method.</small>
         </div>
 
         <div className="cinematic-footer__bottom">

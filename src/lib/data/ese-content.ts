@@ -716,7 +716,13 @@ export const ese = {
          * those run from 26 to 222 characters across the five and would give the
          * row five cards of wildly different heights.
          */
-        summary: "Reaching Tribal members, youth, and elected leaders.",
+        /* 52 characters against 62-83 for the other four, which is why this
+           card read thin next to them. Extended to 90 using the second half of
+           its own `covers` — PR support, advertising, marketing — so it still
+           names only work the source document lists, and the row now runs
+           62-90 instead of 52-83. */
+        summary:
+          "Reaching Tribal members, youth, and elected leaders through PR, advertising, and marketing.",
         description:
           "Good work needs a good message. We help tribal programs communicate initiatives to members, youth, and elected leaders. Through PR support, advertising, marketing, and other outreach strategies, we can help you get the word out.",
         image: wideImage(
@@ -846,8 +852,7 @@ export const contact = {
    */
   heading: "Contact us",
   copy: "If you are an environmental professional or facilitator and have worked in place-based community problem-solving and would like to work with us, contact us.",
-  /** TODO(ese): no contact address was supplied. Replace before launch. */
-  email: "replace-before-launch@example.com",
+    email: "lauradmckelvey@gmail.com",
   /**
    * Contained inside `.cinematic-footer__visual`, not a full-bleed section
    * ground — the footer's composition is back to the one on `main`.

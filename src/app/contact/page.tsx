@@ -18,11 +18,10 @@ export const metadata = pageMetadata({
 /**
  * Contact.
  *
- * TODO(ese): `contact.email` is still `replace-before-launch@example.com`. It is
- * rendered as written rather than hidden, because a visible placeholder gets
- * fixed and a quietly omitted one ships — this page is now the primary route to
- * ESE from the navigation, so the wrong address here is the most expensive
- * placeholder on the site.
+ * `contact.email` is ESE's real address. It was
+ * `replace-before-launch@example.com` for the whole build, rendered as written
+ * rather than hidden — because a visible placeholder gets fixed and a quietly
+ * omitted one ships. It got fixed.
  */
 export default function ContactPage() {
   return (
