@@ -164,7 +164,7 @@
    * 1.05x — it is read by its hairline border and its shadow, not by its fill.
    * This version manages 1.08x and 1.22x, and the border went from 1.20x to
    * 1.33x, so every cue is stronger than before. */
-  --card-sheen: linear-gradient(160deg, rgba(8, 27, 35, 0.04) 0%, rgba(8, 27, 35, 0.1) 100%), #e5e8eb;
+  --card-sheen: linear-gradient(160deg, rgba(8, 27, 35, 0) 0%, rgba(8, 27, 35, 0.035) 100%), #e5e8eb;
   /* The dark card, as the two neutrals and nothing else.
    *
    * This was navy (#1a3a47 -> #14313d), and before that a wash of white that was

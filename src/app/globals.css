@@ -32,8 +32,25 @@ body {
   overflow-x: hidden;
   background: var(--page-background, var(--color-canvas));
   color: var(--color-ink);
-  /* The kit sets body copy in Marion Regular, a serif. The site set it in Inter
-     and its headlines in a serif — the kit's arrangement exactly inverted. */
+  /* THE GROUND SITS BELOW THE CARDS, not level with them.
+   *
+   * The light ground was the paper neutral and so were the cards, so a card had
+   * to be a wash DARKER than the page to be seen at all — it read as recessed.
+   * Inverting that needs a ground darker than paper, and paper is the lightest
+   * of the eight, so the darkening has to come from the other neutral: ink at
+   * 6% over it. Two kit colours, no ninth mixed.
+   *
+   * It is a `background-image` rather than part of `--page-background` on
+   * purpose. The scroll crossfade animates `background-color`, and a gradient
+   * cannot transition to a colour — declaring the wash as a constant image
+   * layer leaves the colour beneath it free to keep animating. Over the ink
+   * ground the wash is 6% ink on ink, which is invisible, so only the light
+   * grounds move.
+   *
+   *     ground   #d8dcdf   ink 12.78:1, muted copy 5.62:1
+   *     card     #e5e8eb   1.12x lighter than the ground it rests on
+   */
+  background-image: linear-gradient(rgba(8, 27, 35, 0.06), rgba(8, 27, 35, 0.06));
   font-family: var(--font-body);
   font-size: var(--type-body);
   line-height: 1.65;
