@@ -73,7 +73,21 @@ export default function ServicesPage() {
                             {service.title}
                           </Link>
                         </h2>
-                        <p className="index-card__summary">{service.summary}</p>
+                        {/* The FULL description, not the one-line summary.
+                            The landing page shows the summary because five
+                            cards sit in a row there; this page is the one you
+                            come to in order to choose, so it carries what each
+                            service actually says about itself. */}
+                        <p className="index-card__summary">{service.description}</p>
+                        {/* And what it covers — the concrete list, transcribed.
+                            29 phrases across the five, and until now they
+                            appeared only on the individual service pages, which
+                            is one click too late to compare with. */}
+                        <ul className="detail-card__covers">
+                          {service.covers.map((c) => (
+                            <li key={c}>{c}</li>
+                          ))}
+                        </ul>
                         <span className="index-card__cta">
                           Learn more <Arrow />
                         </span>

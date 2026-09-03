@@ -233,3 +233,61 @@
     transform: none !important;
   }
 }
+
+/* ------------------------------------------------ descriptive cards on a page
+ *
+ * The statement cards carry a heading and, on the landing page, a sentence that
+ * appears on hover. On a standalone page there is room to show the whole thing
+ * at once, so `/about` uses the same card with its body and — for a service —
+ * the list of what it actually covers.
+ *
+ * These sit ALONGSIDE `.statement-cards`, not instead of it: the card surface,
+ * the glow ring and the icon tile all still come from `cards.css`. Only the two
+ * blocks below are new, so nothing here can drift from the card family. */
+.detail-card__body {
+  margin-top: 0.75rem;
+  color: var(--ink-muted, var(--color-text-muted));
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+/* The `covers` list. Rules rather than bullets: these are capabilities, and a
+   bulleted list of five phrases inside a card reads as a form. The hairline is
+   the card's own rule colour, so it belongs to the surface it sits on. */
+.detail-card__covers {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--rule, var(--color-line));
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.detail-card__covers li {
+  position: relative;
+  padding-left: 1rem;
+  color: var(--ink-muted, var(--color-text-muted));
+  font-family: var(--font-label);
+  font-size: 0.76rem;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  line-height: 1.45;
+}
+
+.detail-card__covers li::before {
+  content: "";
+  position: absolute;
+  top: 0.52em;
+  left: 0;
+  width: 0.4rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+/* Two columns once there is room — five short phrases in one column leaves a
+   tall thin card beside a short one. */
+@media (min-width: 900px) {
+  .detail-cards .detail-card__covers { grid-template-columns: 1fr 1fr; gap: 0.4rem 1.25rem; }
+}
