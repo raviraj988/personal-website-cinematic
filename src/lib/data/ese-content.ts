@@ -505,6 +505,32 @@ export const ese = {
     cta: { label: "Ask about the scholarship program", href: "#contact" },
   },
 
+  /**
+   * What ESE wants to be known for.
+   *
+   * TODO(ese): TRANSCRIBED FROM THE BRAND WALKTHROUGH, not from the website
+   * copy document — `ESE Magic Hour.pdf`, recorded in
+   * `ref_docs/brand/README.md` under "Business attributes". It is ESE's own
+   * list, in ESE's own order, but it was written as internal brand strategy
+   * rather than as public copy, so it wants a look before launch.
+   *
+   * The first three are the tagline, which is why the lockup carries them: the
+   * tagline is the public face of this list, and the remaining seven are what
+   * it rests on.
+   */
+  knownFor: [
+    "Protect the environment",
+    "Empower people",
+    "Connect resources",
+    "Fairness",
+    "Respect",
+    "Compassion",
+    "Hope",
+    "Work worth doing",
+    "Native American ethic",
+    "Being the bridge",
+  ],
+
   becomePartner: {
     eyebrow: "Become a partner",
     /** Names the audience; the body then qualifies it. The old heading restated

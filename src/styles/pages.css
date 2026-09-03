@@ -291,3 +291,55 @@
 @media (min-width: 900px) {
   .detail-cards .detail-card__covers { grid-template-columns: 1fr 1fr; gap: 0.4rem 1.25rem; }
 }
+
+/* ------------------------------------------------------ what we want to be
+ *
+ * Ten values, which is too many for cards — a grid of ten panels reads as a
+ * feature matrix, and these are not features. They are set as a numbered index
+ * instead, the same device the landing page uses down its left edge, so the
+ * list reads as one statement in ten parts rather than ten separate claims.
+ *
+ * Two columns from 640px: ten single-file lines is a long scroll for what is
+ * really one idea. */
+.known-for {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  display: grid;
+  gap: 0;
+  list-style: none;
+  padding-left: 0;
+  border-top: 1px solid var(--rule, var(--color-line));
+}
+
+.known-for li {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  padding: 0.85rem 0.25rem;
+  border-bottom: 1px solid var(--rule, var(--color-line));
+}
+
+.known-for__index {
+  flex: none;
+  min-width: 1.6rem;
+  color: var(--label-terracotta-deep);
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.known-for__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .known-for { grid-template-columns: 1fr 1fr; column-gap: clamp(1.5rem, 4vw, 3rem); }
+  /* The border-top belongs to the list, but with two columns each column needs
+     its own — otherwise the second column starts with no rule above it. */
+  .known-for li:nth-child(-n + 2) { border-top: 1px solid var(--rule, var(--color-line)); margin-top: -1px; }
+}
