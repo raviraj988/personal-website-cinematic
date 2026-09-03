@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { EseEmblem } from "@/components/brand/EseMark";
 
 /**
  * The opening curtain — two halves that part upward and downward off the page.
@@ -58,16 +59,24 @@ export function LoadingCover() {
       /* The mark holds alone for a beat before anything moves. Without the hold
          the curtain is already leaving as the eye arrives and the whole gesture
          reads as a stutter. */
-      .to(root.querySelector("[data-cover-mark]"), {
-        opacity: 1,
-        duration: 0.55,
-        ease: "power2.out",
-      })
+      .fromTo(
+        root.querySelector("[data-cover-mark]"),
+        { opacity: 0, scale: 0.88 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.7,
+          ease: "power3.out",
+        },
+      )
+      /* It leaves by growing very slightly, not by shrinking — the mark should
+         feel like it is passing the viewer rather than retreating from them. */
       .to(root.querySelector("[data-cover-mark]"), {
         opacity: 0,
-        duration: 0.35,
+        scale: 1.06,
+        duration: 0.4,
         ease: "power1.in",
-      }, "+=0.25")
+      }, "+=0.35")
       /* The two halves leave together, in opposite directions. `yPercent` is a
          composited transform — animating `height` here would relayout the whole
          document on every frame of the intro, which is the worst possible moment
@@ -93,8 +102,12 @@ export function LoadingCover() {
     <div className="loading-cover" ref={rootRef} aria-hidden="true">
       <div className="loading-cover__half" data-cover-half="top" />
       <div className="loading-cover__half" data-cover-half="bottom" />
+      {/* ESE's own emblem, not the name set in type. The curtain is the first
+          thing anyone sees on a refresh, and a wordmark spelled out in the label
+          face is a caption where the mark itself is an image. `priority` because
+          this paints before anything else on the page. */}
       <div className="loading-cover__mark" data-cover-mark>
-        <span>Environment Sovereignty &amp; Equity</span>
+        <EseEmblem priority />
       </div>
     </div>
   );

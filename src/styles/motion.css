@@ -48,19 +48,27 @@
 .loading-cover__half[data-cover-half="top"] { top: 0; }
 .loading-cover__half[data-cover-half="bottom"] { bottom: 0; }
 
+/* The mark on the curtain.
+ *
+ * It was the organisation's name set in the label face — a caption standing in
+ * for the emblem. It is the emblem now, which is the thing the mark IS.
+ *
+ * Sized in `min()` against the viewport so it is generous on a phone and does
+ * not become a billboard on a desktop, and `will-change` is declared because
+ * GSAP animates opacity and scale on it from the first frame after paint.
+ *
+ * `opacity: 0` is the starting state and it matters: the emblem must not flash
+ * at full strength before the timeline takes over. The reduced-motion and
+ * `<noscript>` paths in globals.css hide the whole curtain, so nothing depends
+ * on the timeline running to reveal it. */
 .loading-cover__mark {
   position: relative;
   z-index: 1;
+  width: min(8.5rem, 26vw);
   opacity: 0;
-  padding: 0 var(--gutter);
-  color: var(--color-paper);
-  font-family: var(--font-label);
-  font-size: var(--type-meta);
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  text-align: center;
-  text-transform: uppercase;
+  will-change: opacity, transform;
 }
+
 
 /* ---------------------------------------------------------- the hero video */
 

@@ -27,7 +27,14 @@ type MarkProps = {
    * the name — then both images are decorative and the mark is hidden.
    */
   label?: string;
-  /** Loads eagerly. For the header, which is above the fold on every route. */
+  /**
+   * Loads eagerly. For the header and the opening curtain, both of which paint
+   * before anything else.
+   *
+   * Only the DEFAULT-VISIBLE tone takes it. The other variant is `display: none`
+   * until a light ground calls for it, and preloading an image that is not going
+   * to be shown spends the same priority the visible one needs.
+   */
   priority?: boolean;
 };
 
@@ -50,8 +57,7 @@ export function EseLogo({ className, label, priority }: MarkProps) {
         alt=""
         width={900}
         height={315}
-        priority={priority}
-        aria-hidden
+                aria-hidden
       />
     </span>
   );
@@ -79,8 +85,7 @@ export function EseEmblem({ className, label, priority }: MarkProps) {
         alt=""
         width={520}
         height={517}
-        priority={priority}
-        aria-hidden
+                aria-hidden
       />
     </span>
   );
