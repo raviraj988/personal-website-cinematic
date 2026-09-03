@@ -240,6 +240,8 @@ html[data-motion="ready"] .reveal:not([data-visible="true"]) .person-card {
   line-height: 1.15;
   letter-spacing: 0.01em;
   text-transform: uppercase;
+  color: var(--heading-ink, inherit);
+  color: var(--heading-ink, inherit);
 }
 
 /* As a section of its own the heading is an h2 on the page's own scale, matching

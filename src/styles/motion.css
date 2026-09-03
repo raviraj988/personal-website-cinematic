@@ -135,7 +135,7 @@
 
 .pinned-stack__number {
   display: block;
-  color: var(--color-accent);
+  color: var(--label-color, var(--heading-navy));
   font-family: var(--font-label);
   font-size: var(--type-meta);
   font-weight: 500;

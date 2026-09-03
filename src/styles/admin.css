@@ -46,6 +46,7 @@
   font-size: 1.18rem;
   letter-spacing: 0.01em;
   text-transform: uppercase;
+  color: var(--heading-ink, inherit);
 }
 
 .admin-bar__brand small {
