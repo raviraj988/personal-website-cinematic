@@ -34,7 +34,21 @@
   left: 0;
   width: 100%;
   height: 50.5%;
-  background: var(--color-ground-deep);
+  /* TRUE BLACK, and the one place on the site that uses it.
+   *
+   * Everywhere else the kit's rule holds: its two starred neutrals replace
+   * black and white, "including text and backgrounds", and #081b23 is what
+   * the site's darkest ground is made of.
+   *
+   * The curtain is not one of the site's surfaces. It is what is there before
+   * the site is — it covers the whole viewport, carries no content but the
+   * mark, and exists for under a second. #081b23 reads as a very dark blue,
+   * which is right for a ground the page sits on and wrong for the absence of
+   * a page.
+   *
+   * `scripts/brand/spec.json` grants this to `.loading-cover__half` by name, so
+   * the lint still catches raw black anywhere else. */
+  background: #000000;
 }
 
 /* The half-percent overlap above is deliberate. Two elements meeting at exactly

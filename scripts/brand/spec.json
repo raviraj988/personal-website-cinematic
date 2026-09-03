@@ -88,6 +88,12 @@
       "selectors": [
         "serp-preview"
       ]
+    },
+    "#000000": {
+      "reason": "The opening curtain. Not one of the site's surfaces \u2014 it is what covers the viewport before the site is there, for under a second, and the kit's darkest neutral reads as a very dark blue rather than as absence.",
+      "selectors": [
+        "loading-cover__half"
+      ]
     }
   },
   "hueTolerance": 15,
