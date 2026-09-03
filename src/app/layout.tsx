@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Caveat, Montserrat, Newsreader } from "next/font/google";
 import { site } from "@/lib/data/ese-content";
 import { SEARCH_ENGINE_INDEXING } from "@/lib/blog/config";
 import { LoadingCover } from "@/components/motion/LoadingCover";
@@ -7,60 +6,21 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import "./globals.css";
 
 /**
- * Fonts via next/font — self-hosted at build time and subset to Latin.
+ * NO WEBFONT LOADER. Every face is ESE's own file, self-hosted from
+ * `src/styles/fonts.css` — Morvi, Gotham Book, Marion and Dongra Script.
  *
- * THESE ARE STAND-INS. The brand kit (`ref_docs/brand/colors-and-fonts.jpg`)
- * names Morvi, Gotham Book, Marion Regular and Dongra Script. All four are
- * licensed retail faces, none was supplied with the kit, and none can be
- * self-hosted here without that licence. `--font-*` in `tokens.css` names the
- * real face FIRST in every stack, so dropping in a licensed `@font-face` later
- * switches the site over with no other change.
+ * This used to load four substitutes from Google. Anton stood in for Morvi,
+ * and measured rather than assumed the difference is real but modest: Morvi's
+ * mean cap advance is 0.564 em against Anton's ~0.51, so the real face sets
+ * about 10% wider. Enough to explain headings reading squished; not enough to
+ * need the type scale re-cut, and the longest heading still wraps to the same
+ * number of lines it was designed for.
  *
- * Each stand-in is picked to match the specimen's shape, not just its category:
- *
- *   Morvi          -> Anton       heavy condensed caps display; the specimen's
- *                                 "HEADLINE" is tight, flat-terminalled and
- *                                 very bold, which is Anton's entire brief.
- *   Gotham Book    -> Montserrat  geometric sans drawn from the same signage
- *                                 tradition; the standard Gotham substitute.
- *   Marion Regular -> Newsreader  transitional book serif, already loaded, and
- *                                 the closest thing on hand to the specimen's
- *                                 moderate-contrast body face.
- *   Dongra Script  -> Caveat      monoline casual hand rather than a formal
- *                                 calligraphic script, which is what the
- *                                 specimen's "Accent - like a quote" is.
+ * Serving them from this origin also removes a third-party connection from the
+ * critical path.
  */
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-newsreader",
-});
 
-/* One weight is all Anton has, and all a caps display face needs. */
-const anton = Anton({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  variable: "--font-anton",
-});
 
-/* Gotham Book is the kit's sub-heading weight, so 400 carries the labels; 500
-   and 600 are here for buttons and the navigation's active state. */
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-  variable: "--font-montserrat",
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
-  variable: "--font-caveat",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.canonicalBase),
@@ -129,7 +89,6 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${anton.variable} ${montserrat.variable} ${caveat.variable}`}
       suppressHydrationWarning
     >
       <body>

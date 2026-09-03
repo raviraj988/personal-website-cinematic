@@ -1,3 +1,4 @@
+@import "../styles/fonts.css";
 @import "../styles/tokens.css";
 /* The cinematic layer — curtain, hero video and dissolve, pinned stack. Global
    rather than per-route: the curtain and the smooth-scroll provider are mounted

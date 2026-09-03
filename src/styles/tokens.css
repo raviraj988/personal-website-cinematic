@@ -379,21 +379,17 @@
    *   Body            Marion Regular
    *   Accent / quote  Dongra Script
    *
-   * Every stack NAMES THE KIT FACE FIRST. All four are licensed retail faces and
-   * none was supplied with the kit, so none is self-hosted here — but a visitor
-   * or a design machine that has one installed gets the real thing, and dropping
-   * a licensed `@font-face` into the app switches the site over with no other
-   * change. See `layout.tsx` for why each stand-in was picked.
+   * THREE OF THE FOUR ARE ESE'S ACTUAL FILES NOW, self-hosted from the
+   * originals ESE supplied — see `fonts.css`. No stand-in sits behind them:
+   * Morvi, Marion and Dongra Script are the faces the page renders.
    *
-   * The trade-off in naming the kit faces first is that the page renders in the
-   * real face for anyone who owns it and the stand-in for everyone else. That is
-   * the correct behaviour for a brand implementation and the wrong behaviour for
-   * pixel-identical rendering; if the latter matters more, drop the quoted names
-   * and leave only the `var()` stand-ins. */
-  --font-display: "Morvi", var(--font-anton), "Haettenschweiler", "Arial Narrow", sans-serif;
-  --font-label: "Gotham Book", "Gotham", var(--font-montserrat), Arial, sans-serif;
-  --font-body: "Marion", var(--font-newsreader), Georgia, serif;
-  --font-accent: "Dongra Script", var(--font-caveat), cursive;
+   * ALL FOUR ARE ESE'S ACTUAL FILES. Nothing here is a substitute, and there is
+   * no Google Fonts request left in the page — the faces are served from this
+   * origin. */
+  --font-display: "Morvi", "Haettenschweiler", "Arial Narrow", sans-serif;
+  --font-label: "Gotham Book", "Gotham", Arial, sans-serif;
+  --font-body: "Marion", Georgia, serif;
+  --font-accent: "Dongra Script", cursive;
 
   /* Deprecated role-blind aliases. Kept so no stylesheet is ever left pointing
      at an undefined variable, and mapped to the role each name actually served:
@@ -402,6 +398,13 @@
      the display face ended up being a serif in the first place. */
   --font-serif: var(--font-body);
   --font-sans: var(--font-label);
+
+  /* NOTE ON THE SCALE AND THE REAL FACE. These numbers were compressed 22% at
+     the display end for Anton, the stand-in. Morvi sets about 10% wider — mean
+     cap advance 0.564 em against Anton's ~0.51 — so the same sizes now carry a
+     little more width. Checked rather than assumed: at the shipped maximums the
+     hero still wraps to ~3.4 lines and the longest h2 to ~1.6, which is what
+     the layout was built around, so the scale stands. */
 
   /* Type scale.
    *

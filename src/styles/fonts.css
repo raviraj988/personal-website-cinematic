@@ -1,0 +1,64 @@
+/* ESE's own faces, self-hosted.
+ *
+ * These are the kit's actual fonts, supplied by ESE and converted from the
+ * originals — MORVI.ttf, Marion.ttc and Dongra Script.otf — to woff2 with
+ * fontTools. Until now the site ran stand-ins (Anton, Newsreader, Caveat) and
+ * said so in every stack; those are gone for these three roles.
+ *
+ * ALL FOUR ROLES ARE ESE'S OWN FILES. Gotham Book arrived in the second drop,
+ * so nothing on this site is a substitute any more and next/font is gone
+ * entirely — no Google Fonts request, no third-party origin in the critical
+ * path.
+ *
+ * `font-display: swap` on all of them: the fallback shows immediately and the
+ * real face replaces it. `block` would hold the text invisible, and on a site
+ * whose opening curtain is already covering the page that is a double wait.
+ */
+
+@font-face {
+  font-family: "Gotham Book";
+  src: url("/fonts/gotham-book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Morvi";
+  src: url("/fonts/morvi.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Marion";
+  src: url("/fonts/marion-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Marion";
+  src: url("/fonts/marion-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Marion";
+  src: url("/fonts/marion-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dongra Script";
+  src: url("/fonts/dongra-script.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
