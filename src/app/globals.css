@@ -245,8 +245,21 @@ section[data-scroll-theme="paper"]:not([data-ink="own"]) {
    it under 4.5:1. Both grounds are gone; muted copy now measures 6.59:1 on haze
    and 6.08:1 on paper, so there is nothing left to correct for. */
 
+/* The modifier for eyebrows on a ground the section paints itself — a
+   photograph, a video, a flat dark band — where the page's own scroll theme is
+   not what the label sits on.
+   
+   It set `--color-accent-light`, which is the paper neutral, so these four
+   stayed pale while every other eyebrow on the site went terracotta: 01, the
+   mission, 06 and the contact footer, plus every standalone page's hero. The
+   modifier's job is to force the DARK-ground treatment, and terracotta is what
+   that treatment is now.
+
+   Measured on the two grounds it actually sits on: 5.66:1 on the flat ink, and
+   5.53:1 on the mission's video once `.principle-band__scrim` reaches 0.92 at
+   the foot of the frame where the copy is. Both clear 4.5:1. */
 .section-label--light {
-  color: var(--color-accent-light);
+  color: var(--label-terracotta);
 }
 
 .text-link {
