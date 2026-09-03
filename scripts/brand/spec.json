@@ -1,0 +1,96 @@
+{
+  "_source": "ref_docs/brand/colors-and-fonts.jpg, from the ESE brand kit (Drive export ESE \ud83d\udc22-20260826T071706Z-1-001.zip). The sheet is an image, so these values are TRANSCRIBED, not parsed. This file is the single source of truth for scripts/brand-lint.mjs \u2014 correct it here if the kit changes, never in the lint.",
+  "palette": {
+    "navy": {
+      "hex": "#2b4552"
+    },
+    "olive": {
+      "hex": "#899163"
+    },
+    "paper": {
+      "hex": "#e5e8eb",
+      "neutral": true
+    },
+    "terracotta": {
+      "hex": "#c98150"
+    },
+    "rose": {
+      "hex": "#c24e78"
+    },
+    "gold": {
+      "hex": "#dec26a"
+    },
+    "sky": {
+      "hex": "#b8d0d8"
+    },
+    "ink": {
+      "hex": "#081b23",
+      "neutral": true
+    }
+  },
+  "neutralRule": "The two starred swatches replace black and white 'whenever possible, including text and backgrounds'. So #ffffff and #000000 must not appear as COLOUR values.",
+  "type": {
+    "headline": {
+      "face": "Morvi",
+      "caps": true,
+      "token": "--font-display"
+    },
+    "subheading": {
+      "face": "Gotham Book",
+      "caps": true,
+      "token": "--font-label",
+      "tracking": "0.025em",
+      "trackingNote": "the kit says +25; Adobe tracking is 1/1000 em"
+    },
+    "body": {
+      "face": "Marion",
+      "caps": false,
+      "token": "--font-body"
+    },
+    "accent": {
+      "face": "Dongra Script",
+      "caps": false,
+      "token": "--font-accent"
+    }
+  },
+  "contrast": {
+    "text": 4.5,
+    "nonText": 3.0
+  },
+  "allowedExceptions": {
+    "#ffffff": {
+      "reason": "Google's sign-in button and the SERP preview imitate Google's UI, not ESE's",
+      "selectors": [
+        "admin-button--google",
+        "serp-preview"
+      ]
+    },
+    "#f4f3f1": {
+      "reason": "Google sign-in button hover",
+      "selectors": [
+        "admin-button--google"
+      ]
+    },
+    "#1f1f1f": {
+      "reason": "Google sign-in button label",
+      "selectors": [
+        "admin-button--google"
+      ]
+    },
+    "#4d5156": {
+      "reason": "Google SERP preview snippet text",
+      "selectors": [
+        "serp-preview"
+      ]
+    },
+    "#1a0dab": {
+      "reason": "Google SERP preview link",
+      "selectors": [
+        "serp-preview"
+      ]
+    }
+  },
+  "hueTolerance": 15,
+  "hueToleranceNote": "A derived tint or shade is allowed if its hue is within this many degrees of a kit colour. Greys along the ink/navy axis and alpha compositions of the two neutrals are the intended use.",
+  "allowedExceptionsNote": "An exception is granted to a SELECTOR, not to a colour. #ffffff is allowed on Google's button; it is not allowed anywhere else, which is the whole point of the kit's neutral rule."
+}
