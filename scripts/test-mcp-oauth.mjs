@@ -18,6 +18,7 @@ import { verifyPkceS256, hashToken, safeEqual } from "../src/lib/mcp-auth/crypto
 import { buildRedirect, readAuthorizeParams } from "../src/lib/mcp-auth/params.ts";
 import { safeReturnTo } from "../src/lib/mcp-auth/return-to.ts";
 import { parseScopes, scopeChoices } from "../src/lib/mcp-auth/config.ts";
+import { SITE_ORIGIN } from "../src/lib/blog/config.ts";
 import { resolveOrigin } from "../src/lib/mcp-auth/origin.ts";
 import { createHash, randomBytes } from "node:crypto";
 
@@ -162,9 +163,16 @@ const savedVercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 delete process.env.MCP_OAUTH_ORIGIN;
 delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
-// SITE_ORIGIN is still the `https://example.com` placeholder, so with nothing set
-// there is deliberately no answer rather than a wrong one.
-ok(resolveOrigin() === null, "Nothing configured resolves to null, not to the placeholder");
+// STEP 2 IS LIVE NOW. `site.canonicalBase` is the real domain, so `SITE_ORIGIN`
+// is usable and `resolveOrigin` falls through to it — which is exactly what
+// `origin.ts` says should happen once the placeholder is gone.
+//
+// That changes what "refused" looks like. It used to mean `null`, because there
+// was nothing behind step 1 to fall through TO. It now means "does not become
+// the origin", and every rejection below is asserted that way, so the security
+// property each one covers is still covered: a bad `MCP_OAUTH_ORIGIN` must
+// never be published as this server's identity.
+ok(resolveOrigin() === SITE_ORIGIN, "Nothing configured falls through to the site's canonical origin");
 
 process.env.MCP_OAUTH_ORIGIN = "https://real.example";
 ok(resolveOrigin() === "https://real.example", "An explicit origin is used");
@@ -173,25 +181,32 @@ process.env.MCP_OAUTH_ORIGIN = "https://real.example/";
 ok(resolveOrigin() === "https://real.example", "A trailing slash is stripped — an issuer carries none");
 
 process.env.MCP_OAUTH_ORIGIN = "https://real.example/some/path";
-ok(resolveOrigin() === null, "An origin with a path is refused");
+ok(resolveOrigin() === SITE_ORIGIN, "An origin with a path is refused — it does not become the issuer");
 
 process.env.MCP_OAUTH_ORIGIN = "http://insecure.example";
-ok(resolveOrigin() === null, "Plain http is refused for a non-loopback host");
+ok(resolveOrigin() === SITE_ORIGIN, "Plain http is refused for a non-loopback host");
 
 process.env.MCP_OAUTH_ORIGIN = "http://localhost:3000";
 ok(resolveOrigin() === "http://localhost:3000", "http is allowed on loopback, for local development");
 
 process.env.MCP_OAUTH_ORIGIN = "https://example.com";
-ok(resolveOrigin() === null, "The placeholder is refused even when set explicitly");
+ok(resolveOrigin() === SITE_ORIGIN, "The placeholder is refused even when set explicitly");
 
 process.env.MCP_OAUTH_ORIGIN = "not-a-url";
-ok(resolveOrigin() === null, "A malformed origin is refused");
+ok(resolveOrigin() === SITE_ORIGIN, "A malformed origin is refused");
+
+// And none of those refusals leaked the bad value through, which is the property
+// that actually matters — assert it directly rather than inferring it.
+for (const bad of ["https://real.example/some/path", "http://insecure.example", "https://example.com", "not-a-url"]) {
+  process.env.MCP_OAUTH_ORIGIN = bad;
+  ok(resolveOrigin() !== bad, `A refused origin never becomes the issuer — ${bad}`);
+}
 
 delete process.env.MCP_OAUTH_ORIGIN;
 process.env.VERCEL_PROJECT_PRODUCTION_URL = "my-project.vercel.app";
 ok(
-  resolveOrigin() === "https://my-project.vercel.app",
-  "Vercel's production domain is the last resort",
+  resolveOrigin() === SITE_ORIGIN,
+  "The canonical origin outranks Vercel's domain — the last resort is only reached when it is unset",
 );
 
 if (savedOrigin === undefined) delete process.env.MCP_OAUTH_ORIGIN;

@@ -196,7 +196,11 @@ try {
   const guideText = guide.result?.content?.[0]?.text ?? "";
   ok(guideText.length > 3000, "The guide comes back", `${guideText.length} chars`);
   ok(guideText.includes("noindex"), "It states the site is not indexed yet");
-  ok(guideText.includes("example.com"), "It states the domain is a placeholder");
+  // The guide used to warn that the canonical domain was a placeholder. It is a
+  // real domain now, so the paragraph is gone — and its absence is what to
+  // assert: a guide still saying "example.com" would be telling a writer their
+  // canonicals are fictional when they are not.
+  ok(!guideText.includes("example.com"), "It no longer calls the domain a placeholder");
   ok(guideText.includes("rehype-raw"), "It warns that raw HTML is dropped");
   ok(guideText.includes("list_posts"), "It tells the client to check for duplicates");
   ok(

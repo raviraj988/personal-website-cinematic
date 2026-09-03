@@ -441,8 +441,8 @@ ok(
 section("9. Placeholder origin");
 
 ok(
-  statusOf(clean, "placeholder-origin") === "warn",
-  "While SITE_ORIGIN is example.com, the canonical warning fires",
+  statusOf(clean, "placeholder-origin") === "pass",
+  "With a real SITE_ORIGIN the canonical warning does not fire",
 );
 ok(
   buildSeoReport(cleanDraft(), {

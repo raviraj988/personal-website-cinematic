@@ -233,6 +233,8 @@ section("5. The writing guide says what it must");
 
 const guide = renderWritingGuide(site);
 
+ok(!guide.includes("example.com"), "Guide no longer calls the canonical domain a placeholder");
+
 for (const [needle, why] of [
   ["list_posts", "tells the client to check for duplicates first"],
   ["generate_cover_image", "tells the client to make a cover before drafting"],
@@ -241,7 +243,11 @@ for (const [needle, why] of [
   ["/services/<slug>", "warns that /services itself does not exist"],
   ["mailto:", "forbids the placeholder address"],
   ["noindex", "states the site is not indexed yet"],
-  ["example.com", "states the canonical domain is a placeholder"],
+  // The guide used to be checked for "example.com" — it warned that the canonical
+  // domain was a placeholder. The domain is real now, so that paragraph is gone
+  // and its absence is the thing worth asserting: a guide that still warned
+  // would be telling a writer their URLs are fictional when they are not.
+  ["not indexed yet", "still states the site is not indexed"],
   ["only ever create **drafts**", "states it cannot publish"],
   ["Native Nations", "uses ESE's own terminology"],
   ["deficit framing", "forbids deficit framing"],
